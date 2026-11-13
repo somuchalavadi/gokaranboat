@@ -1,0 +1,7 @@
+import type { Metadata } from "next";
+import Link from "next/link";
+import { ArrowUpRight } from "lucide-react";
+import { Media } from "@/components/ui/Media";
+import { whatsappUrl } from "@/lib/site";
+export const metadata: Metadata = { title: "About", description: "Meet the Rudra Gokarna boat and discover coastal boat experiences from Gokarna Beach.", alternates: { canonical: "/about" } };
+export default function AboutPage() { return <div className="inner-page"><section className="page-hero"><div className="container"><p className="eyebrow">About us</p><h1>Meet the Rudra Gokarna</h1><p>A boat for exploring the Gokarna coastline and making time for experiences on the water.</p></div></section><section className="section"><div className="container about-grid"><div className="about-media"><Media slot="boat" /></div><div><p className="eyebrow">Rudra Gokarna Adventures</p><h2>Discover Gokarna beyond the shore.</h2><p>The listed pick-up point is Gokarna Beach in Karnataka. Rudra Gokarna Adventures offers boat tours and water experiences along the coast and river.</p><p>The boat features navy and white livery with gold lines, a trident-and-waves emblem, an open upper deck and a covered cabin with wide windows.</p><div className="hero-actions"><a className="button button-dark" href={whatsappUrl("Hello, I would like to enquire about the Rudra Gokarna boat.")} target="_blank" rel="noreferrer">Enquire about the boat <ArrowUpRight size={16} /></a><Link className="text-link" href="/packages">View packages</Link></div></div></div></section></div>; }
