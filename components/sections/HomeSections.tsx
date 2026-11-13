@@ -7,7 +7,26 @@ import { whatsappUrl } from "@/lib/site";
 import { Reveal } from "@/components/ui/Reveal";
 import { GalleryWall } from "@/components/sections/GalleryWall";
 import { coastalDestinations } from "@/lib/destinations";
-export function Hero() { return <section className="hero"><div className="hero-photo"><Media slot="hero" priority /></div><div className="hero-shade" /><div className="container hero-content"><Reveal><p className="eyebrow">Gokarna, Karnataka</p><h1>Discover Gokarna<br />Beyond the Shore</h1><p className="hero-copy">Explore the coastline, discover hidden experiences and experience the beauty of Gokarna through unforgettable boat adventures.</p><div className="hero-actions"><Link className="button button-light" href="/adventures">Explore Adventures <ArrowDown size={17} /></Link><a className="button button-glass" href={whatsappUrl("Hello, I would like to book a boat experience in Gokarna.")} target="_blank" rel="noreferrer">Book Your Experience <ArrowUpRight size={17} /></a></div></Reveal><div className="hero-location glass-dark"><span className="location-pin" /><div><small>Pick-up point</small><strong>Gokarna Beach, Gokarna, Karnataka</strong></div><Link href="/contact" aria-label="Contact for directions"><ArrowUpRight size={18} /></Link></div></div></section>; }
+export function Hero() {
+  return <section className="hero">
+    <div className="hero-photo"><Media slot="hero" priority /></div>
+    <div className="hero-shade" />
+    <div className="hero-frame" aria-hidden="true" />
+    <div className="container hero-content">
+      <Reveal className="hero-copy-block">
+        <p className="eyebrow hero-eyebrow">Gokarna, Karnataka</p>
+        <h1>Discover Gokarna<br />Beyond the Shore</h1>
+        <p className="hero-copy">Explore the coastline, discover hidden experiences and experience the beauty of Gokarna through unforgettable boat adventures.</p>
+        <div className="hero-actions hero-enquiry-rail">
+          <span>Plan your coastal escape</span>
+          <Link className="button button-light" href="/adventures">Explore Adventures <ArrowDown size={17} /></Link>
+          <a className="button button-glass" href={whatsappUrl("Hello, I would like to book a boat experience in Gokarna.")} target="_blank" rel="noreferrer">Book Your Experience <ArrowUpRight size={17} /></a>
+        </div>
+      </Reveal>
+      <div className="hero-location glass-dark"><span className="location-pin" /><div><small>Pick-up point</small><strong>Gokarna Beach, Gokarna, Karnataka</strong></div><Link href="/contact" aria-label="Contact for directions"><ArrowUpRight size={18} /></Link></div>
+    </div>
+  </section>;
+}
 export function Intro() { return <section className="section intro-section"><div className="container intro-layout"><p className="eyebrow">A different view of the coast</p><div><h2>Where Every Journey Becomes an Adventure</h2><p>Set out from Gokarna Beach to explore the coastline, take in local sights and enjoy water activities. Choose a listed package or ask us about a customised experience.</p><Link href="/about" className="text-link">Get to know us <ArrowUpRight size={16} /></Link></div></div></section>; }
 export function ExperiencesSection() { return <section className="section experiences-section"><div className="container"><Reveal><SectionHeading eyebrow="Out on the water" title="Find your kind of adventure" copy="From a coastal boat tour to kayaking among mangroves, explore the experiences on offer in Gokarna." /><ExperienceGrid limit={6} /></Reveal><div className="section-more"><Link href="/adventures" className="text-link">See all adventures <ArrowUpRight size={16} /></Link></div></div></section>; }
 export function BoatFeature() { return <section className="boat-feature"><div className="boat-photo"><Media slot="boatFeature" fallbackSlot="boatDesign" /></div><div className="boat-overlay" /><div className="container boat-content"><div className="boat-panel glass-dark"><p className="eyebrow">Your boat for the journey</p><h2>The Rudra Gokarna</h2><p>A boat for coastal exploration and water experiences around Gokarna.</p><ul><li>Navy and white livery with gold lines</li><li>Trident-and-waves emblem</li><li>Open upper deck and covered cabin with wide windows</li></ul><Link className="button button-light" href="/about">Meet the boat <ArrowUpRight size={16} /></Link></div></div></section>; }

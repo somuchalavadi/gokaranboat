@@ -1,7 +1,7 @@
 export const imageSlots = {
-  hero: { src: "", alt: "The Rudra Gokarna boat or coastal ocean view in Gokarna" },
-  boat: { src: "", alt: "The Rudra Gokarna boat on the Gokarna coast" },
-  boatFeature: { src: "", alt: "The Rudra Gokarna boat for the boat feature" },
+  hero: { src: "/images/rudra-hero.jpeg", alt: "The Rudra Gokarna boat on the Gokarna coast" },
+  boat: { src: "/images/rudra-coast.jpeg", alt: "The Rudra Gokarna boat viewed from the Gokarna shore" },
+  boatFeature: { src: "/images/rudra-boat-showcase.jpeg", alt: "The Rudra Gokarna boat showcase" },
   boatDesign: { src: "", alt: "Four-angle design render sheet of the Rudra Gokarna boat" },
   kayaking: { src: "", alt: "Kayaking on the Gokarna coast" },
   snorkelling: { src: "", alt: "Snorkelling in the waters around Gokarna" },
