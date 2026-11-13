@@ -1,4 +1,14 @@
-export const coastalDestinations = [
+import type { imageSlots } from "@/lib/images";
+
+export type CoastalDestination = {
+  name: string;
+  note: string;
+  image: keyof typeof imageSlots;
+  description: string;
+  operated?: boolean;
+};
+
+export const coastalDestinations: readonly CoastalDestination[] = [
   {
     name: "Gokarna",
     note: "Coastal base",
@@ -36,4 +46,4 @@ export const coastalDestinations = [
     image: "maravantheGuide",
     description: "A striking stretch of coastline on Karnataka’s western shore.",
   },
-] as const;
+];
