@@ -9,8 +9,8 @@ export type Experience = {
 };
 
 export const experiences: readonly Experience[] = [
-  { name: "Boat Adventures", group: "Boat adventures", slug: "boat-adventures", image: "boat", description: "Explore Gokarna by water with premium tours, standard tours, exclusive fishing trips, river trips and customised experiences." },
-  { name: "Kayaking", group: "Water Activities", slug: "kayaking", image: "hero", description: "Paddle through the water on a kayaking experience, including kayaking in the mangroves on river trips." },
+  { name: "Boat Adventures", group: "Boat Adventures", slug: "boat-adventures", image: "boat", description: "Explore Gokarna by water with premium tours, standard tours, exclusive fishing trips, river trips and customised experiences." },
+  { name: "Kayaking", group: "Water Activities", slug: "kayaking", description: "Ask about kayaking on selected Gokarna boat experiences and River Trips." },
   { name: "Snorkelling", group: "Water Activities", slug: "snorkelling", description: "Add snorkelling to the Premium Package and explore the water around Gokarna." },
   { name: "Swimming", group: "Water Activities", slug: "swimming", description: "Swimming is included in the Premium Package experience." },
   { name: "Dolphin Watching", group: "Sightseeing and Coastal Exploration", slug: "dolphin-watching", description: "Look out for dolphins on the coast, included in the Premium and Standard packages." },
@@ -21,8 +21,8 @@ export const experiences: readonly Experience[] = [
   { name: "Sea and River Joining Point", group: "Sightseeing and Coastal Exploration", slug: "joining-point", description: "Visit the sea and river joining point on the Premium Package." },
   { name: "Mangrove Exploration", group: "River and Mangrove Trips", slug: "mangroves", description: "Take in mangrove views and kayak in the mangroves on River Trips." },
   { name: "Bioluminescence Trips", group: "Fishing and Special Experiences", slug: "bioluminescence", description: "Bioluminescence trips are part of the Exclusive Package." },
-  { name: "Couple Packages", group: "Customised Events", slug: "couples", description: "Ask about a customised package for couples." },
-  { name: "Family Packages", group: "Customised Events", slug: "families", description: "Ask about a customised family experience." },
-  { name: "New Year Celebrations", group: "Customised Events", slug: "new-year", description: "Plan a customised New Year celebration on the water." },
-  { name: "Special Occasions", group: "Customised Events", slug: "special-occasions", description: "Ask about a customised experience for your special occasion." },
+  { name: "Couple Packages", group: "Customised Experiences", slug: "couples", description: "Ask about a customised package for couples." },
+  { name: "Family Packages", group: "Customised Experiences", slug: "families", description: "Ask about a customised family experience." },
+  { name: "New Year Celebrations", group: "Customised Experiences", slug: "new-year", description: "Plan a customised New Year celebration on the water." },
+  { name: "Special Occasions", group: "Customised Experiences", slug: "special-occasions", description: "Ask about a customised experience for your special occasion." },
 ];

@@ -12,10 +12,4 @@ export const imageSlots = {
   harbour: { src: "", alt: "Fishing harbour trip in Gokarna" },
   joiningPoint: { src: "", alt: "The sea and river joining point near Gokarna" },
   coast: { src: "", alt: "Coastal landscape around Gokarna" },
-  gokarnaGuide: { src: "", alt: "Gokarna coastal landscape" },
-  murudeshwarGuide: { src: "", alt: "Murudeshwar coastline and landmark" },
-  honnavarGuide: { src: "", alt: "Honnavar river and coastal landscape" },
-  karwarGuide: { src: "", alt: "Karwar shoreline where river and sea meet" },
-  udupiGuide: { src: "", alt: "Udupi coastal landscape" },
-  maravantheGuide: { src: "", alt: "Maravanthe coastal landscape" },
 } as const;

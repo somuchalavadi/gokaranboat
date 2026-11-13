@@ -1,33 +1,49 @@
 import Link from "next/link";
-import { ArrowDown, ArrowUpRight } from "lucide-react";
+import { ArrowDown, ArrowUpRight, Compass, MapPinned } from "lucide-react";
 import { Media } from "@/components/ui/Media";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { ExperienceGrid } from "@/components/sections/ExperienceGrid";
 import { whatsappUrl } from "@/lib/site";
 import { Reveal } from "@/components/ui/Reveal";
 import { GalleryWall } from "@/components/sections/GalleryWall";
+
 export function Hero() {
   return <section className="hero">
     <div className="hero-photo"><Media slot="hero" priority /></div>
-    <div className="hero-shade" />
+    <div className="hero-shade" aria-hidden="true" />
     <div className="hero-frame" aria-hidden="true" />
     <div className="container hero-content">
       <Reveal className="hero-copy-block">
         <p className="eyebrow hero-eyebrow">Gokarna, Karnataka</p>
-        <h1>Discover Gokarna<br />Beyond the Shore</h1>
-        <p className="hero-copy">Explore the coastline, discover hidden experiences and experience the beauty of Gokarna through unforgettable boat adventures.</p>
+        <h1>See Gokarna<br />from the water.</h1>
+        <p className="hero-copy">Boat adventures, water activities and unhurried coastal moments from Gokarna Beach.</p>
         <div className="hero-actions hero-enquiry-rail">
-          <span>Plan your coastal escape</span>
-          <Link className="button button-light" href="/adventures">Explore Adventures <ArrowDown size={17} /></Link>
-          <a className="button button-glass" href={whatsappUrl("Hello, I would like to book a boat experience in Gokarna.")} target="_blank" rel="noreferrer">Book Your Experience <ArrowUpRight size={17} /></a>
+          <span>Start with an experience</span>
+          <Link className="button button-light" href="/adventures">Explore adventures <ArrowDown size={17} /></Link>
+          <a className="button button-glass" href={whatsappUrl("Hello, I would like to book a boat experience in Gokarna.")} target="_blank" rel="noreferrer">Book your experience <ArrowUpRight size={17} /></a>
         </div>
       </Reveal>
-      <div className="hero-location glass-dark"><span className="location-pin" /><div><small>Pick-up point</small><strong>Gokarna Beach, Gokarna, Karnataka</strong></div><Link href="/contact" aria-label="Contact for directions"><ArrowUpRight size={18} /></Link></div>
+      <div className="hero-location glass-dark"><MapPinned size={18} /><div><small>Pick-up point</small><strong>Gokarna Beach, Gokarna, Karnataka</strong></div><Link href="/contact" aria-label="Contact for directions"><ArrowUpRight size={18} /></Link></div>
     </div>
   </section>;
 }
-export function Intro() { return <section className="section intro-section"><div className="container intro-layout"><p className="eyebrow">A different view of the coast</p><div><h2>Where Every Journey Becomes an Adventure</h2><p>Set out from Gokarna Beach to explore the coastline, take in local sights and enjoy water activities. Choose a listed package or ask us about a customised experience.</p><Link href="/about" className="text-link">Get to know us <ArrowUpRight size={16} /></Link></div></div></section>; }
-export function ExperiencesSection() { return <section className="section experiences-section"><div className="container"><Reveal><SectionHeading eyebrow="Out on the water" title="Find your kind of adventure" copy="From a coastal boat tour to kayaking among mangroves, explore the experiences on offer in Gokarna." /><ExperienceGrid limit={6} /></Reveal><div className="section-more"><Link href="/adventures" className="text-link">See all adventures <ArrowUpRight size={16} /></Link></div></div></section>; }
-export function BoatFeature() { return <section className="boat-feature"><div className="boat-photo"><Media slot="boatFeature" fallbackSlot="boatDesign" /></div><div className="boat-overlay" /><div className="container boat-content"><div className="boat-panel glass-dark"><p className="eyebrow">Your boat for the journey</p><h2>The Rudra Gokarna</h2><p>A boat for coastal exploration and water experiences around Gokarna.</p><ul><li>Navy and white livery with gold lines</li><li>Open upper deck</li><li>Covered cabin with windows</li></ul><Link className="button button-light" href="/about">Meet the boat <ArrowUpRight size={16} /></Link></div></div></section>; }
-export function ExploreSection() { const entries = [{ t: "Coastal landscape", s: "coast" }, { t: "Lighthouse", s: "lighthouse" }, { t: "Mystery cave", s: "cave" }, { t: "Mangroves", s: "mangroves" }, { t: "Fishing harbour", s: "harbour" }, { t: "Sea and river joining point", s: "joiningPoint" }] as const; return <section className="section explore-section"><div className="container"><SectionHeading eyebrow="Along the Gokarna coast" title="Places to discover" copy="Explore the coast, local landmarks and river scenery on selected experiences." /><div className="editorial-grid">{entries.map((x, i) => <article className={`editorial-tile editorial-${i + 1}`} key={x.t}><div className="editorial-media"><Media slot={x.s} /></div><h3>{x.t}</h3></article>)}</div></div></section>; }
-export function GalleryPreview() { return <section className="section gallery-section"><div className="container"><div className="gallery-head"><SectionHeading eyebrow="Scenes from Gokarna" title="A closer look at the coast" copy="Browse a selection of genuine Rudra Gokarna boat photographs from the coast." /><Link href="/gallery" className="text-link">View gallery <ArrowUpRight size={16} /></Link></div><GalleryWall preview /></div></section>; }
+
+export function Intro() { return <section className="section intro-section"><div className="container intro-layout"><p className="eyebrow">A different view of the coast</p><div><h2>Time on the water, made personal.</h2><p>Set out from Gokarna Beach for a relaxed boat experience shaped around the coast, your group and the time you have.</p><Link href="/about" className="text-link">Meet the Rudra Gokarna <ArrowUpRight size={16} /></Link></div></div></section>; }
+
+export function ExperiencesSection() { return <section className="section experiences-section"><div className="container"><SectionHeading eyebrow="On the water" title="Choose your way to explore" copy="From a boat tour to kayaking and time among the mangroves, enquire about the experience that fits your day." /><ExperienceGrid limit={6} /><div className="section-more"><Link href="/adventures" className="text-link">See all adventures <ArrowUpRight size={16} /></Link></div></div></section>; }
+
+export function BoatFeature() { return <section className="boat-feature"><div className="boat-photo"><Media slot="boatFeature" /></div><div className="boat-overlay" aria-hidden="true" /><div className="container boat-content"><div className="boat-panel glass-dark"><p className="eyebrow">Your boat for the journey</p><h2>The Rudra Gokarna</h2><p>A closer look at the vessel that carries your Gokarna experience.</p><Link className="button button-light" href="/about">Discover the boat <ArrowUpRight size={16} /></Link></div></div></section>; }
+
+export function ExploreSection() {
+  const entries = [
+    ["01", "Gokarna sightseeing", "See the coastline from the water."],
+    ["02", "Lighthouse", "A listed stop on the Premium experience."],
+    ["03", "Mystery cave", "Explore a distinctive coastal stop."],
+    ["04", "Fishing harbour", "Take in the working harbour on a selected trip."],
+    ["05", "Sea & river joining point", "Follow the meeting point of two waters."],
+    ["06", "Mangrove views", "Choose River Trips for a quieter landscape."],
+  ] as const;
+  return <section className="section explore-section"><div className="container"><SectionHeading eyebrow="Along the Gokarna coast" title="Places to discover" copy="These places are listed as part of selected Rudra Gokarna experiences. Ask us what is included in your package." /><div className="place-list">{entries.map(([number, title, copy]) => <article className="place-item" key={title}><span>{number}</span><Compass size={20} aria-hidden="true" /><div><h3>{title}</h3><p>{copy}</p></div></article>)}</div></div></section>;
+}
+
+export function GalleryPreview() { return <section className="section gallery-section"><div className="container"><div className="gallery-head"><SectionHeading eyebrow="Genuine photographs" title="A closer look at the boat" copy="Browse the supplied Rudra Gokarna photographs and open any image for a closer view." /><Link href="/gallery" className="text-link">View gallery <ArrowUpRight size={16} /></Link></div><GalleryWall preview /></div></section>; }
