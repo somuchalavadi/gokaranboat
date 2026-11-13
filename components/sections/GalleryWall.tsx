@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
 import { imageSlots } from "@/lib/images";
 import { Media } from "@/components/ui/Media";
-const slots: (keyof typeof imageSlots)[] = ["boat", "boatFeature", "kayaking", "snorkelling", "dolphins", "mangroves", "lighthouse", "cave", "harbour", "joiningPoint", "coast"];
+const slots = (Object.keys(imageSlots) as (keyof typeof imageSlots)[]).filter((slot) => Boolean(imageSlots[slot].src));
 export function GalleryWall({ preview = false }: { preview?: boolean }) {
  const list = preview ? slots.slice(0, 4) : slots;
  const [active, setActive] = useState<number | null>(null);

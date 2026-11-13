@@ -230,6 +230,9 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
 .desktop-nav a[aria-current="page"], .desktop-nav a:hover { text-decoration: none; background: rgba(255,255,255,.18); }
 .navbar-scrolled .desktop-nav { background: rgba(11,31,68,.88); }
 .nav-book { min-height: 44px; padding-inline: 20px; box-shadow: 0 11px 30px -18px rgba(11,31,68,.8); }
+.brand-logo { display: block; width: 210px; flex: 0 0 auto; line-height: 0; text-shadow: none; }
+.brand-logo-image { display: block; width: 100%; height: auto; filter: drop-shadow(0 5px 12px rgba(0,0,0,.3)); }
+.footer-logo { width: 245px; }
 
 .hero { min-height: 760px; min-height: 100svh; padding: 24px 0; isolation: isolate; }
 .hero-photo { inset: 14px; border-radius: 28px; overflow: hidden; }
@@ -337,6 +340,10 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
 .inner-page > .section:not(.packages-section) { background: var(--white); }
 .inner-page .experiences-section { background: var(--slate); }
 .inner-page .packages-section { background: var(--sky); }
+.adventure-categories { background: var(--sky) !important; }
+.adventure-category { padding-top: 76px; margin-top: 76px; border-top: 1px solid var(--blue-border); }
+.adventure-category .section-heading { margin-bottom: 30px; }
+.adventure-category .section-heading h2 { font-size: clamp(31px, 3.4vw, 46px); }
 .about-grid { gap: 9%; }
 .about-media { border-radius: 20px; box-shadow: 18px 18px 0 rgba(11,31,68,.09); }
 .gallery-full { gap: 12px; }
@@ -349,7 +356,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
 }
 @media(max-width: 760px) {
   .navbar { width: calc(100% - 24px); }
-  .navbar .brand { max-width: calc(100% - 58px); }
+  .navbar .brand-logo { width: min(120px, calc(100% - 58px)); }
   .mobile-menu { top: 52px; min-height: calc(100svh - 61px); border-radius: 20px; border: 1px solid rgba(255,255,255,.24); background: rgba(11,31,68,.96); box-shadow: 0 18px 44px -28px rgba(11,31,68,.85); }
   .hero { min-height: 760px; padding: 10px 0; }
   .hero-photo { inset: 8px; border-radius: 20px; }
@@ -388,6 +395,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
   .page-hero h1 { font-size: clamp(48px, 13vw, 68px); }
   .page-hero::before { top: 66%; font-size: 39vw; }
   .about-media { box-shadow: 10px 10px 0 rgba(11,31,68,.09); }
+  .adventure-category { padding-top: 58px; margin-top: 58px; }
 }
 @media(max-width: 390px) {
   .hero h1 { font-size: 47px; }
