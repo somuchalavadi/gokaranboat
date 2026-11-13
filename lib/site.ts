@@ -10,4 +10,7 @@ export const site = {
 export function whatsappUrl(message = "Hello, I would like to enquire about a Gokarna boat experience.") {
   return `https://wa.me/${site.primaryWhatsApp}?text=${encodeURIComponent(message)}`;
 }
+export function whatsappEnquiry(subject: string) {
+  return whatsappUrl(`Hello, I would like to enquire about ${subject}.`);
+}
 export function phoneHref(phone: string) { return `tel:${phone.replace(/[\s()-]/g, "")}`; }
