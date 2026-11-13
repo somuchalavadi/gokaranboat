@@ -9,7 +9,7 @@ export type Experience = {
 };
 
 export const experiences: readonly Experience[] = [
-  { name: "Boat Adventures", group: "Boat Adventures", slug: "boat-adventures", image: "boat", description: "Explore Gokarna by water with premium tours, standard tours, exclusive fishing trips, river trips and customised experiences." },
+  { name: "Boat Adventures", group: "Boat Adventures", slug: "boat-adventures", image: "boat", description: "Explore Gokarna by water with Premium, Standard, Exclusive, River Trips and Customised Events." },
   { name: "Kayaking", group: "Water Activities", slug: "kayaking", description: "Ask about kayaking on selected Gokarna boat experiences and River Trips." },
   { name: "Snorkelling", group: "Water Activities", slug: "snorkelling", description: "Included in the Premium Package for time in the water around Gokarna." },
   { name: "Swimming", group: "Water Activities", slug: "swimming", description: "Swimming is included in the Premium Package experience." },
