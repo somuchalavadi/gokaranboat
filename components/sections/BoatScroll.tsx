@@ -7,16 +7,16 @@ import { useRef } from "react";
 import { whatsappEnquiry } from "@/lib/site";
 
 const angles = [
-  { src: "/images/boat/boatfrontquarter.webp", alt: "Front-quarter design render of The Rudra Gokarna boat", title: "Two decks, one coastline", body: "A covered main cabin with wide windows sits below an open, railed upper deck, so the coast can be watched from inside or in the open air.", side: "right" },
-  { src: "/images/boat/boatside.webp", alt: "Side design render of The Rudra Gokarna boat", title: "Easy to spot from the shore", body: "A navy hull with gold lines carries the boat’s name along the side, above a continuous run of cabin windows.", side: "left" },
-  { src: "/images/boat/boatrearside.webp", alt: "Rear-side design render of The Rudra Gokarna boat", title: "Rear deck and stairway", body: "An open rear deck leads to a stairway up to the upper deck. The trident emblem sits on the hull beside the name.", side: "right" },
-  { src: "/images/boat/boatfront.webp", alt: "Front design render of The Rudra Gokarna boat showing forward windows", title: "Bow and forward windows", body: "Head-on, the boat shows a pointed navy bow with a gold stripe, forward-facing windows and the railed upper deck above.", side: "left" },
+  { src: "/images/boat/boatfrontquarter.webp", alt: "Front-quarter design render of The Rudra Gokarna boat", title: "A closer look at the boat", body: "A front-quarter view of The Rudra Gokarna, shown in the supplied design artwork.", side: "right" },
+  { src: "/images/boat/boatside.webp", alt: "Side design render of The Rudra Gokarna boat", title: "Easy to spot from shore", body: "The side profile shows the boat name and navy, white and gold exterior artwork.", side: "left" },
+  { src: "/images/boat/boatrearside.webp", alt: "Rear-side design render of The Rudra Gokarna boat", title: "Around the rear", body: "A rear-side view of the supplied boat design, ready for your next enquiry.", side: "right" },
+  { src: "/images/boat/boatfront.webp", alt: "Front design render of The Rudra Gokarna boat", title: "From the bow", body: "The front view completes the supplied set of design angles for The Rudra Gokarna.", side: "left" },
 ] as const;
 
 function BoatAngle({ angle, index, progress }: { angle: (typeof angles)[number]; index: number; progress: MotionValue<number> }) {
   const start = index / angles.length;
   const end = (index + 1) / angles.length;
-  const opacity = useTransform(progress, [Math.max(0, start - .08), start, end - .08, end], [0, 1, 1, 0]);
+  const opacity = useTransform(progress, [index === 0 ? 0 : Math.max(0, start - .08), index === 0 ? .001 : start, end - .08, end], [index === 0 ? 1 : 0, 1, 1, 0]);
   const shift = useTransform(progress, [start, end], [index % 2 ? 5 : -5, index % 2 ? -5 : 5]);
   const rotate = useTransform(progress, [start, end], [index % 2 ? 20 : -20, index % 2 ? -20 : 20]);
   const transform = useTransform([shift, rotate], ([x, r]) => `translate3d(${x}vw,0,0) rotateY(${r}deg)`);
