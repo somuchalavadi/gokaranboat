@@ -6,8 +6,8 @@ export const confirmed = {
   lifeJacketsProvided: false,
   safetyBriefing: false,
   googleMapsListingUrl: null as string | null,
-  heroVideoSrc: null as string | null,
+  heroVideoSrc: "/videos/rudra-boat-03.mp4" as string | null,
   socialLinks: {} as Record<string, string>,
 };
 
-// TODO(owner): confirm prices, season/monsoon dates, safety details, Google listing, video and social URLs.
+// TODO(owner): confirm prices, season/monsoon dates, safety details, Google listing and social URLs.

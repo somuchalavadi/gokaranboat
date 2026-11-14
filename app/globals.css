@@ -197,6 +197,14 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
 .gallery-item img { transition: transform .6s var(--ease); }
 .gallery-item:hover img { transform: scale(1.04); }
 .gallery-item::after { position: absolute; right: 10px; bottom: 10px; border-radius: 999px; padding: 6px 9px; background: rgba(29,42,51,.72); color: var(--white); content: "View"; font-size: 10px; }
+.video-section { padding: var(--section) 0; background: var(--slate); color: var(--white); }
+.video-section .section-heading h2, .video-section .section-heading .eyebrow, .video-section .section-copy { color: var(--white); }
+.video-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
+.video-card { min-width: 0; margin: 0; overflow: hidden; border: 1px solid rgba(255,255,255,.18); border-radius: var(--radius); background: rgba(11,31,68,.4); }
+.video-card-feature { grid-column: span 2; grid-row: span 2; }
+.video-card video { display: block; width: 100%; aspect-ratio: 16 / 10; background: var(--navy); object-fit: cover; }
+.video-card-feature video { aspect-ratio: 16 / 11; }
+.video-card figcaption { padding: 12px 14px 14px; color: rgba(255,255,255,.75); font-size: 12px; line-height: 1.4; }
 
 /* Contact and footer */
 .contact-section { padding: var(--section) 0; background: var(--slate); color: var(--white); }
@@ -324,6 +332,8 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
   .boat-scroll-image { width: 94vw; height: 46vh; }
   .boat-scroll-card, .boat-scroll-card.left, .boat-scroll-card.right { top: auto; right: 20px; bottom: 22px; left: 20px; width: auto; transform: none; }
   .gallery-preview, .gallery-full { grid-template-columns: 1fr; }
+  .video-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .video-card-feature { grid-column: span 2; grid-row: auto; }
   .gallery-head .section-heading { margin-bottom: 0; }
   .booking-form { padding: 22px 18px; }
   .form-grid { grid-template-columns: 1fr; }
@@ -336,6 +346,8 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
   .booking-bar .button { width: 100%; grid-column: span 2; }
   .lightbox-backdrop { padding: 10px; }
   .lightbox-image { min-height: 52vh; }
+  .video-grid { grid-template-columns: 1fr; }
+  .video-card-feature { grid-column: auto; }
 }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
