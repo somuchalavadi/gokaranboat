@@ -35,5 +35,5 @@ export function BoatScroll() {
   const ref = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end end"] });
   const progress = useSpring(scrollYProgress, { stiffness: 90, damping: 24, mass: .25 });
-  return <section ref={ref} className="boat-scroll" aria-label="The Rudra Gokarna boat from four angles"><div className="boat-scroll-stage"><div className="boat-scroll-label"><span>The Rudra Gokarna</span><small>Design render</small></div><div className="boat-scroll-visual">{angles.map((angle, index) => <BoatAngle key={angle.src} angle={angle} index={index} progress={progress} />)}</div>{angles.map((angle, index) => <BoatCard key={angle.title} angle={angle} index={index} progress={progress} />)}</div></section>;
+  return <section ref={ref} className="boat-scroll" aria-label="The Rudra Gokarna boat from four angles"><div className="boat-scroll-stage"><div className="boat-scroll-label"><h2>The Rudra Gokarna</h2><small>Design render</small></div><div className="boat-scroll-visual">{angles.map((angle, index) => <BoatAngle key={angle.src} angle={angle} index={index} progress={progress} />)}</div>{angles.map((angle, index) => <BoatCard key={angle.title} angle={angle} index={index} progress={progress} />)}</div></section>;
 }

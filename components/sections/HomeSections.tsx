@@ -1,12 +1,11 @@
 import Link from "next/link";
-import { ArrowRight, Compass, Droplets, Fish, MapPin, Waves } from "lucide-react";
+import { ArrowRight, MapPin } from "lucide-react";
 import { Media } from "@/components/ui/Media";
 import { GalleryWall } from "@/components/sections/GalleryWall";
 import { ExperienceGrid } from "@/components/sections/ExperienceGrid";
 import { BoatScroll } from "@/components/sections/BoatScroll";
 import { PackagePlanner } from "@/components/sections/PackagePlanner";
-import { PackagesSection } from "@/components/sections/PackagesSection";
-import { PlacesSection } from "@/components/sections/PlacesSection";
+import { CustomEventsSection, GoodToKnowSection, PackageComparisonSection, PackagesFaqSection, PackagesSection } from "@/components/sections/PackagesSection";
 import { ContactSection } from "@/components/sections/ContactSection";
 import { VideoGallery } from "@/components/sections/VideoGallery";
 import { SectionHeading } from "@/components/ui/SectionHeading";
@@ -22,8 +21,6 @@ export function Intro() { return <section className="intro-section"><div classNa
 
 export function ExperiencesSection() { return <section className="experiences-section"><div className="container"><SectionHeading eyebrow="Experiences" title="Choose your way to explore" copy="A few ways to spend time on the water, with each activity shown honestly by package." light /><ExperienceGrid limit={6} /><div className="section-more"><Link href="/adventures" className="text-link">See all adventures <ArrowRight size={16} /></Link></div></div></section>; }
 
-export function ActivityStrip() { const items = [{ name: "Kayaking", icon: Waves }, { name: "Snorkelling", icon: Droplets }, { name: "Swimming", icon: Waves }, { name: "Dolphin watching", icon: Fish }, { name: "Sightseeing", icon: Compass }]; return <section className="activity-strip"><div className="container"><div className="activity-strip-head"><p className="eyebrow">More ways to explore</p><Link href="/adventures" className="text-link">See all adventures <ArrowRight size={15} /></Link></div><div className="activity-row">{items.map(({ name, icon: Icon }) => <Link href="/adventures" key={name}><Icon size={20} /><span>{name}</span><ArrowRight size={14} /></Link>)}</div></div></section>; }
-
 export function GalleryPreview() { return <section className="gallery-section"><div className="container"><div className="gallery-head"><SectionHeading eyebrow="Gallery" title="Photographs of The Rudra Gokarna" copy="Photographs of the Rudra Gokarna on the Gokarna coast." /><Link href="/gallery" className="text-link">View gallery <ArrowRight size={16} /></Link></div><GalleryWall preview /></div></section>; }
 
-export function HomeContent() { return <><Hero /><Intro /><ExperiencesSection /><BoatScroll /><PackagesSection /><PlacesSection /><PackagePlanner /><ActivityStrip /><GalleryPreview /><VideoGallery /><ContactSection /></>; }
+export function HomeContent() { return <><Hero /><Intro /><ExperiencesSection /><BoatScroll /><PackagesSection /><PackageComparisonSection /><PackagePlanner /><GalleryPreview /><VideoGallery /><CustomEventsSection /><GoodToKnowSection /><PackagesFaqSection /><ContactSection /></>; }

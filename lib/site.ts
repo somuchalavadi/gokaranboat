@@ -20,7 +20,7 @@ export function whatsappEnquiry(subject: string) {
 export function bookingWhatsapp() {
   return whatsappUrl("I would like to book a Gokarna boat experience.");
 }
-export function packageWhatsapp(name: string, duration: string, guests: number) {
-  return whatsappUrl(`Hello, I would like to enquire about ${name} (${duration}) for ${guests} guest(s). Please share the price and available dates.`);
+export function packageWhatsapp(name: string, duration: string, guests: number | null) {
+  return whatsappUrl(`Hello, I would like to enquire about ${name} (${duration}).${guests ? ` Guests: ${guests}.` : ""} Please share the price and available dates.`);
 }
 export function phoneHref(phone: string) { return `tel:${phone.replace(/[\s()-]/g, "")}`; }
