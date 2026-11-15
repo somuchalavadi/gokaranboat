@@ -272,29 +272,18 @@ export const hero = {
   subtitle: "Coastline, caves, mangroves and open sea, seen from the water.",
   chips: ["Gokarna Beach pick-up", "2–4 hour trips", "Custom trips"],
   message: "Hi, I'd like to know about your boat trips in Gokarna.",
-  // Pre-sized AVIF/WebP files from scripts/optimize-assets.mjs: `${base}-${width}.{avif,webp}` (4:3) and a
-  // 3:4 crop centred on the boat for phones, `${portraitBase}-${width}.{avif,webp}`.
+  // Pre-sized AVIF/WebP poster variants: landscape files for desktop and a 3:4 crop centred on the boat for phones.
   poster: {
-    base: "/images/hero/hero",
+    base: "/images/hero/hero-blue",
     widths: [828, 1600],
-    portraitBase: "/images/hero/hero-portrait",
+    portraitBase: "/images/hero/hero-blue-portrait",
     portraitWidths: [828, 1242],
     width: 1600,
-    height: 1200,
-    alt: "The Rudra Gokarna on calm water off the Gokarna coast, with hills in the haze behind",
+    height: 900,
+    alt: "The Rudra Gokarna boat on bright blue water beside a tropical coastline",
   },
-  // A 9-second loop cut from clip 01 (the only landscape clip). The source is 720p, so the larger loop is 720p, not 1080p.
-  // hd is used at ≥1280px viewports, sd below that. Phones, reduced motion and Save-Data get the poster only.
-  video: {
-    hd: [
-      { src: "/videos/hero-loop-720.webm", type: "video/webm" },
-      { src: "/videos/hero-loop-720.mp4", type: "video/mp4" },
-    ],
-    sd: [
-      { src: "/videos/hero-loop-540.webm", type: "video/webm" },
-      { src: "/videos/hero-loop-540.mp4", type: "video/mp4" },
-    ],
-  } as { hd: VideoSource[]; sd: VideoSource[] } | null,
+  // The approved hero is a still image; no background video is rendered.
+  video: null as { hd: VideoSource[]; sd: VideoSource[] } | null,
 };
 
 export type VideoSource = { src: string; type: "video/webm" | "video/mp4" };
