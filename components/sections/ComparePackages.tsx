@@ -20,7 +20,14 @@ export function ComparePackages({ detailsHref }: { detailsHref?: string }) {
             {inlineOpen ? "Hide comparison" : "Compare all packages"}
           </Button>
         ) : (
-          <Button variant="secondary" aria-haspopup="dialog" onClick={() => setSheetOpen(true)}>
+          <Button
+            variant="secondary"
+            aria-haspopup="dialog"
+            onClick={(event) => {
+              event.currentTarget.focus();
+              setSheetOpen(true);
+            }}
+          >
             Compare all packages
           </Button>
         )}

@@ -76,8 +76,15 @@ function audit() {
     }
   }
 
+  // Heading outline: exactly one H1 and no repeated heading text (hidden tab panels included).
+  const headingTexts = Array.from(document.querySelectorAll("h1, h2, h3")).map((h) => h.textContent.trim().toLowerCase());
+  const duplicateHeadings = [...new Set(headingTexts.filter((text, index) => headingTexts.indexOf(text) !== index))];
+  const bookTop = document.getElementById("book")?.getBoundingClientRect().top;
+
   return {
     height: document.documentElement.scrollHeight,
+    bookTop: bookTop === undefined ? null : Math.round(bookTop + scrollY),
+    duplicateHeadings,
     overflow,
     wide,
     smallTargets,
@@ -111,11 +118,11 @@ for (const path of paths) {
     await page.screenshot({ path: `${outDir}/${name}`, fullPage: true });
     await context.close();
     console.log(
-      `${path.padEnd(12)} ${result.viewport.padEnd(10)} height ${String(result.height).padStart(6)} (${result.screens} screens)  overflow ${result.overflow}px  small targets ${result.smallTargets.length}  tiny text ${result.tinyText.length}  overlaps ${result.overlaps.length}  h1 ${result.h1}`,
+      `${path.padEnd(12)} ${result.viewport.padEnd(10)} height ${String(result.height).padStart(6)} (${result.screens} screens)  overflow ${result.overflow}px  small targets ${result.smallTargets.length}  tiny text ${result.tinyText.length}  overlaps ${result.overlaps.length}  h1 ${result.h1}  duplicate headings ${result.duplicateHeadings.length}`,
     );
   }
 }
 await browser.close();
 await writeFile("artifacts/qa/screens.json", JSON.stringify(results, null, 2));
-const problems = results.filter((r) => r.overflow > 0 || r.wide.length || r.smallTargets.length || r.tinyText.length || r.overlaps.length || r.h1 !== 1);
-for (const r of problems) console.log("\n", r.path, r.viewport, JSON.stringify({ wide: r.wide, smallTargets: r.smallTargets, tinyText: r.tinyText, overlaps: r.overlaps, h1: r.h1 }, null, 1));
+const problems = results.filter((r) => r.overflow > 0 || r.wide.length || r.smallTargets.length || r.tinyText.length || r.overlaps.length || r.h1 !== 1 || r.duplicateHeadings.length);
+for (const r of problems) console.log("\n", r.path, r.viewport, JSON.stringify({ wide: r.wide, smallTargets: r.smallTargets, tinyText: r.tinyText, overlaps: r.overlaps, h1: r.h1, duplicateHeadings: r.duplicateHeadings }, null, 1));

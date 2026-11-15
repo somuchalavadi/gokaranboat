@@ -146,6 +146,13 @@ for (const l of homeMobile) console.log(`  • ${l.text.replace(/\s+/g, " ").sli
   check("Focus stays inside the open menu", await page.evaluate(() => Boolean(document.activeElement?.closest("dialog[open]"))));
   await page.keyboard.press("Escape");
   check("Esc closes the menu and focus returns to the menu button", !(await menu.isVisible()) && (await page.evaluate(() => document.activeElement?.getAttribute("aria-label"))) === "Open menu");
+  await menuButton.click();
+  await menu.getByRole("link", { name: "Book", exact: true }).click();
+  await page.waitForTimeout(1200);
+  const bookTop = await page.evaluate(() => document.getElementById("book").getBoundingClientRect().top);
+  check("A menu link closes the menu and scrolls to its section", !(await menu.isVisible()) && bookTop >= 0 && bookTop < 120, `#book top ${Math.round(bookTop)}px`);
+  await page.evaluate(() => window.scrollTo({ top: 0, behavior: "instant" }));
+  await page.waitForTimeout(300);
 
   await page.getByRole("button", { name: "Compare all packages" }).click();
   const sheet = page.getByRole("dialog", { name: "Compare all packages" });

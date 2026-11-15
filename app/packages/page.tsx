@@ -24,9 +24,9 @@ export default function PackagesPage() {
       </PageHeader>
       <Section id="all-packages" tone="sand" title="Every package in full">
         <ul data-reveal className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {packages.map((item) => (
+          {packages.map((item, index) => (
             <li key={item.id}>
-              <PackageCard item={item} showAll sizes="(max-width: 639px) 100vw, (max-width: 1023px) 50vw, 280px" />
+              <PackageCard item={item} showAll priority={index === 0} sizes="(max-width: 639px) 100vw, (max-width: 1023px) 50vw, 280px" />
             </li>
           ))}
         </ul>

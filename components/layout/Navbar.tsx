@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import { Img } from "@/components/ui/Img";
 import Link from "next/link";
 import { Menu } from "lucide-react";
 import { usePathname } from "next/navigation";
@@ -25,21 +25,21 @@ export function Navbar() {
       className={`fixed inset-x-0 top-0 z-50 h-16 border-x-0! border-t-0! transition-colors duration-200 ${overHero ? "glass-dark text-white" : "glass-light border-b-line! text-ink"}`}
     >
       <div className="mx-auto flex h-full max-w-[1248px] items-center gap-3 px-4 sm:px-6">
-        <Link href="/" className="inline-flex h-11 shrink-0 items-center rounded-md">
-          <Image src={business.logo.src} alt={business.logo.alt} width={95} height={40} loading="eager" className="h-10 w-auto" />
+        <Link href="/" prefetch={false} className="inline-flex h-11 shrink-0 items-center rounded-md">
+          <Img src={business.logo.src} alt={business.logo.alt} width={95} height={40} loading="eager" className="h-10 w-auto" />
         </Link>
 
         <nav aria-label="Main" className="mx-auto hidden lg:block">
           <ul className="flex items-center gap-1">
             {nav.map((item) => (
               <li key={item.id}>
-                <Link
+                <a
                   href={`/#${item.id}`}
                   aria-current={current === item.id ? "true" : undefined}
                   className={`inline-flex h-11 min-w-11 items-center justify-center rounded-full px-3 text-[15px] font-medium underline-offset-[10px] transition-colors xl:px-4 ${current === item.id ? "underline decoration-gold decoration-2" : "hover:underline hover:decoration-current/40"}`}
                 >
                   {item.label}
-                </Link>
+                </a>
               </li>
             ))}
           </ul>
@@ -51,7 +51,10 @@ export function Navbar() {
         </Button>
         <button
           type="button"
-          onClick={() => setMenuOpen(true)}
+          onClick={(event) => {
+            event.currentTarget.focus();
+            setMenuOpen(true);
+          }}
           aria-label="Open menu"
           aria-expanded={menuOpen}
           aria-controls="mobile-menu"

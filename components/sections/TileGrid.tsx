@@ -1,17 +1,18 @@
-import Image from "next/image";
+import { Img } from "@/components/ui/Img";
 import { packagesFor, type Tile } from "@/data/site";
 
 // Text-first cards for the "Things to do" page: everything the home tiles keep behind a sheet, in plain view.
-export function TileGrid({ items, tone }: { items: readonly Tile[]; tone: "navy" | "sand" }) {
+// `priorityFirst` loads the first image eagerly at high priority (it's above the fold on phones).
+export function TileGrid({ items, tone, priorityFirst = false }: { items: readonly Tile[]; tone: "navy" | "sand"; priorityFirst?: boolean }) {
   return (
     <ul data-reveal className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-      {items.map((item) => {
+      {items.map((item, index) => {
         const included = packagesFor(item.highlightIds);
         return (
           <li key={item.id}>
             <article className={`h-full overflow-hidden rounded-card ${tone === "navy" ? "bg-navy-700 text-white" : "bg-white text-ink ring-1 ring-line"}`}>
               <div className="relative aspect-[16/10]">
-                <Image src={item.image.src} alt={item.image.alt} fill sizes="(max-width: 639px) 100vw, (max-width: 1023px) 50vw, 384px" className="object-cover" />
+                <Img src={item.image.src} alt={item.image.alt} fill sizes="(max-width: 639px) 100vw, (max-width: 1023px) 50vw, 384px" className="object-cover" {...(priorityFirst && index === 0 ? { loading: "eager", fetchPriority: "high" } : {})} />
               </div>
               <div className="p-5">
                 <h3 className="text-h3">{item.title}</h3>

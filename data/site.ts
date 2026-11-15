@@ -45,6 +45,9 @@ export const pending = {
   bioluminescenceTiming: null as string | null, // TODO(owner): when bioluminescence trips run.
   crewAbout: null as string | null, // TODO(owner): a short crew/about paragraph.
   vectorLogo: null as string | null, // TODO(owner): an SVG/vector version of the logo.
+  boatRenders: null as string | null, // TODO(owner): higher-resolution boat renders (the current ones are 328–1008px wide).
+  tripPhotos: null as string | null, // TODO(owner): real photos of the activities and places, to replace the illustrative stock images.
+  heroClip: null as string | null, // TODO(owner): a 1080p (or larger) landscape clip, so the hero loop can be 1080p (all current clips are 720p).
 };
 
 export const seo = {
@@ -269,10 +272,13 @@ export const hero = {
   subtitle: "Coastline, caves, mangroves and open sea, seen from the water.",
   chips: ["Gokarna Beach pick-up", "2–4 hour trips", "Custom trips"],
   message: "Hi, I'd like to know about your boat trips in Gokarna.",
-  // Pre-sized AVIF/WebP files from scripts/optimize-assets.mjs: `${base}-${width}.{avif,webp}`.
+  // Pre-sized AVIF/WebP files from scripts/optimize-assets.mjs: `${base}-${width}.{avif,webp}` (4:3) and a
+  // 3:4 crop centred on the boat for phones, `${portraitBase}-${width}.{avif,webp}`.
   poster: {
     base: "/images/hero/hero",
     widths: [828, 1600],
+    portraitBase: "/images/hero/hero-portrait",
+    portraitWidths: [828, 1242],
     width: 1600,
     height: 1200,
     alt: "The Rudra Gokarna on calm water off the Gokarna coast, with hills in the haze behind",

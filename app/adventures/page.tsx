@@ -20,7 +20,7 @@ export default function AdventuresPage() {
         <Button href="/#book">Plan & book</Button>
       </PageHeader>
       <Section id="activities" tone="sand" title="Activities" intro={<p className="text-base">{experiencesIntro.stockNote}</p>}>
-        <TileGrid items={activities} tone="sand" />
+        <TileGrid items={activities} tone="sand" priorityFirst />
       </Section>
       <Section id="places" tone="navy" title="Places">
         <TileGrid items={places} tone="navy" />

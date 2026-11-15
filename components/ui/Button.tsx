@@ -41,7 +41,9 @@ export function Button(props: LinkProps | NativeButtonProps) {
         </a>
       );
     }
-    if (/^(tel|mailto):/.test(href)) {
+    // Phone/mail links, and same-page anchors ("/#book"), which need no client router: the browser scrolls
+    // natively on the home page and loads it normally from other pages.
+    if (/^(tel|mailto):|#/.test(href)) {
       return (
         <a href={href} className={cls} {...anchor}>
           {children}

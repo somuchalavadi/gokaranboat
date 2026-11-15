@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { Phone } from "lucide-react";
 import { contact, nav } from "@/data/site";
 import { telLink } from "@/lib/whatsapp";
@@ -18,9 +17,9 @@ export function MobileMenu({ open, onClose }: { open: boolean; onClose: () => vo
             <ul className="flex flex-col gap-1">
               {nav.map((item) => (
                 <li key={item.id}>
-                  <Link href={`/#${item.id}`} onClick={onClose} className="flex h-12 items-center font-display text-h3">
+                  <a href={`/#${item.id}`} onClick={onClose} className="flex h-12 items-center font-display text-h3">
                     {item.label}
-                  </Link>
+                  </a>
                 </li>
               ))}
             </ul>

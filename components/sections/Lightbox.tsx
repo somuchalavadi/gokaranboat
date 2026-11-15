@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import { Img } from "@/components/ui/Img";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useEffect, useRef } from "react";
 import type { GalleryItem } from "@/data/site";
@@ -50,7 +50,7 @@ export function Lightbox({ items, index, onIndexChange }: { items: readonly Gall
           <figure className="flex min-h-0 flex-1 flex-col">
             <div className="relative min-h-0 flex-1">
               {item.kind === "image" ? (
-                <Image key={item.src} src={item.src} alt={item.alt} fill sizes="100vw" className="object-contain" />
+                <Img key={item.src} src={item.src} alt={item.alt} fill sizes="100vw" className="object-contain" />
               ) : (
                 <video
                   key={item.src}

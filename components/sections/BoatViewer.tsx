@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import { Img } from "@/components/ui/Img";
 import { useState } from "react";
 import { boat } from "@/data/site";
 
@@ -14,7 +14,7 @@ export function BoatViewer() {
       <figure>
         <div className="relative aspect-[16/10] overflow-hidden rounded-card bg-white ring-1 ring-line lg:aspect-[2/1]">
           {boat.views.map((view, viewIndex) => (
-            <Image
+            <Img
               key={view.id}
               src={view.src}
               alt={viewIndex === index ? view.alt : ""}
@@ -40,7 +40,7 @@ export function BoatViewer() {
             className={`flex flex-col items-center gap-1 rounded-input bg-white p-2 transition-shadow ${viewIndex === index ? "ring-2 ring-navy-900" : "ring-1 ring-line hover:ring-ink/50"}`}
           >
             <span className="relative block aspect-[3/2] w-full">
-              <Image src={view.src} alt="" fill sizes="(max-width: 1023px) 22vw, 150px" className="object-contain" />
+              <Img src={view.src} alt="" fill sizes="(max-width: 1023px) 22vw, 150px" className="object-contain" />
             </span>
             <span className="text-sm leading-tight font-medium">{view.label}</span>
           </button>

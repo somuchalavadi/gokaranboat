@@ -1,8 +1,5 @@
-"use client";
-
-import Image from "next/image";
-import { Check, Clock } from "lucide-react";
-import { useState } from "react";
+import { Img } from "@/components/ui/Img";
+import { Check, ChevronDown, Clock } from "lucide-react";
 import { highlights, type HighlightId, type TripPackage } from "@/data/site";
 import { buildWhatsAppLink } from "@/lib/whatsapp";
 import { Button } from "@/components/ui/Button";
@@ -23,12 +20,12 @@ export function priceLine(price: number | null) {
 // Image widths: carousel cards are min(85vw, 360px) on phones and 44vw on tablets; 4 columns (~280px) from 1024px.
 const carouselSizes = "(max-width: 423px) 85vw, (max-width: 767px) 360px, (max-width: 1023px) 44vw, 280px";
 
-// `showAll` lists every highlight with no toggle (used on the /packages page).
-export function PackageCard({ item, showAll = false, sizes = carouselSizes }: { item: TripPackage; showAll?: boolean; sizes?: string }) {
-  const [expanded, setExpanded] = useState(false);
+// A server component: the "+N more" toggle is a native <details>, so the cards ship no JavaScript.
+// `showAll` lists every highlight with no toggle (used on the /packages page). `priority` marks the one card image
+// that is above the fold (the first card on /packages), so it loads eagerly at high priority instead of lazily.
+export function PackageCard({ item, showAll = false, sizes = carouselSizes, priority = false }: { item: TripPackage; showAll?: boolean; sizes?: string; priority?: boolean }) {
   const top = showAll ? item.highlights : item.highlights.slice(0, 3);
   const rest = showAll ? [] : item.highlights.slice(3);
-  const moreId = `${item.id}-more`;
 
   return (
     <article
@@ -36,7 +33,7 @@ export function PackageCard({ item, showAll = false, sizes = carouselSizes }: { 
       className={`flex h-full scroll-mt-24 flex-col overflow-hidden rounded-card bg-white text-ink shadow-[0_12px_32px_-18px_rgb(15_23_42/0.35)] transition-transform duration-250 ease-out hover:-translate-y-1 ${item.featured ? "ring-2 ring-gold" : "ring-1 ring-line"}`}
     >
       <div className="relative aspect-[16/10] bg-navy-700">
-        <Image src={item.image.src} alt={item.image.alt} fill sizes={sizes} className="object-cover" />
+        <Img src={item.image.src} alt={item.image.alt} fill sizes={sizes} className="object-cover" {...(priority ? { loading: "eager", fetchPriority: "high" } : {})} />
         <span className="glass-dark absolute top-3 left-3 inline-flex h-8 items-center gap-1.5 rounded-full px-3 text-sm font-semibold text-white">
           <Clock aria-hidden="true" className="size-4!" />
           {item.durationHours} hrs
@@ -53,23 +50,19 @@ export function PackageCard({ item, showAll = false, sizes = carouselSizes }: { 
           ))}
         </ul>
         {rest.length > 0 && (
-          <>
-            <ul id={moreId} hidden={!expanded} className="mt-1.5 grid gap-1.5">
+          <details className="group">
+            <summary className="mt-1 inline-flex h-11 cursor-pointer list-none items-center gap-1 text-sm font-semibold underline decoration-ink/40 underline-offset-4 hover:decoration-ink [&::-webkit-details-marker]:hidden">
+              <span className="group-open:hidden">+{rest.length} more</span>
+              <span className="hidden group-open:inline">Show fewer</span>
+              <span className="sr-only"> highlights in the {item.name}</span>
+              <ChevronDown aria-hidden="true" className="size-4! transition-transform group-open:rotate-180" />
+            </summary>
+            <ul className="mt-1 grid gap-1.5">
               {rest.map((id) => (
                 <HighlightItem key={id} id={id} />
               ))}
             </ul>
-            <button
-              type="button"
-              aria-expanded={expanded}
-              aria-controls={moreId}
-              onClick={() => setExpanded((open) => !open)}
-              className="mt-1 inline-flex h-11 items-center self-start text-sm font-semibold underline decoration-ink/40 underline-offset-4 hover:decoration-ink"
-            >
-              {expanded ? "Show fewer" : `+${rest.length} more`}
-              <span className="sr-only"> in the {item.name}</span>
-            </button>
-          </>
+          </details>
         )}
         <div className="mt-auto pt-4">
           <p className="text-sm text-muted">{priceLine(item.price)}</p>

@@ -1,4 +1,3 @@
-import { Check } from "lucide-react";
 import { highlights, packages } from "@/data/site";
 
 const rows = Array.from(new Set(packages.flatMap((item) => item.highlights)));
@@ -32,7 +31,9 @@ export function CompareTable() {
                 <td key={item.id} className="p-4 text-center">
                   {item.highlights.includes(row) ? (
                     <>
-                      <Check aria-hidden="true" className="mx-auto text-navy-900" />
+                      <span aria-hidden="true" className="font-semibold text-navy-900">
+                        ✓
+                      </span>
                       <span className="sr-only">Included</span>
                     </>
                   ) : (

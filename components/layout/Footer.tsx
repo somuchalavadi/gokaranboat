@@ -1,4 +1,4 @@
-import Image from "next/image";
+import { Img } from "@/components/ui/Img";
 import Link from "next/link";
 import { MapPin, MessageCircle, Phone } from "lucide-react";
 import { business, contact, footer, nav } from "@/data/site";
@@ -13,8 +13,8 @@ export function Footer() {
     <footer id="site-footer" className="bg-navy-900 text-white">
       <Container className="grid gap-10 py-16 md:grid-cols-[1fr_1.2fr_1.3fr]">
         <div>
-          <Link href="/" className="inline-block rounded-md">
-            <Image src={business.logo.src} alt={business.logo.alt} width={190} height={80} className="h-20 w-auto" />
+          <Link href="/" prefetch={false} className="inline-block rounded-md">
+            <Img src={business.logo.src} alt={business.logo.alt} width={190} height={80} className="h-20 w-auto" />
           </Link>
           <p className="mt-4 max-w-xs text-mist">{business.tagline}</p>
           {business.socials && (
@@ -37,9 +37,9 @@ export function Footer() {
           <ul className="mt-3 grid grid-cols-2 gap-x-6">
             {nav.map((item) => (
               <li key={item.id}>
-                <Link href={`/#${item.id}`} className={linkClass}>
+                <a href={`/#${item.id}`} className={linkClass}>
                   {item.label}
-                </Link>
+                </a>
               </li>
             ))}
             <li>

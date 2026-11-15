@@ -1,4 +1,4 @@
-import Image from "next/image";
+import { Img } from "@/components/ui/Img";
 import { MapPin, Phone } from "lucide-react";
 import { booking, contact } from "@/data/site";
 import { telLink } from "@/lib/whatsapp";
@@ -17,7 +17,7 @@ export function Book() {
         <div data-reveal className="relative lg:col-span-7 lg:p-6">
           {/* Desktop only: a photo behind the glass card, so the blur has something to show. */}
           <div aria-hidden="true" className="absolute inset-0 hidden overflow-hidden rounded-card lg:block">
-            <Image src={booking.photo.src} alt="" fill sizes="680px" className="object-cover" />
+            <Img src={booking.photo.src} alt="" fill sizes="680px" className="object-cover" />
           </div>
           <div className="glass-light relative rounded-card p-5 shadow-[0_24px_48px_-24px_rgb(15_23_42/0.45)] ring-1 ring-line sm:p-8">
             <BookingForm />

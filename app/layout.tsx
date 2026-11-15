@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Fraunces, Inter } from "next/font/google";
+import { Suspense } from "react";
 import "./globals.css";
 import { business, seo } from "@/data/site";
 import { jsonLdScript, localBusinessJsonLd } from "@/lib/seo";
@@ -10,7 +11,8 @@ import { MobileBar } from "@/components/layout/MobileBar";
 import { RevealObserver } from "@/components/ui/Reveal";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter", display: "swap" });
-const fraunces = Fraunces({ subsets: ["latin"], variable: "--font-fraunces", display: "swap" });
+// Headings only ever use 600, so a single static weight is lighter than the variable font.
+const fraunces = Fraunces({ subsets: ["latin"], weight: "600", variable: "--font-fraunces", display: "swap" });
 
 // Defaults; each page sets its own title, description, canonical and social cards via pageMetadata().
 export const metadata: Metadata = {
@@ -35,8 +37,10 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <Navbar />
         <main id="main">{children}</main>
         <Footer />
-        <MobileBar />
-        <RevealObserver />
+        <Suspense>
+          <MobileBar />
+          <RevealObserver />
+        </Suspense>
         <script type="application/ld+json" dangerouslySetInnerHTML={jsonLdScript(localBusinessJsonLd())} />
       </body>
     </html>

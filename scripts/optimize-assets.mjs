@@ -25,6 +25,9 @@ const GALLERY_CLIPS = [
   { id: "05", posterAt: 1.5 },
 ];
 
+// Horizontal centre of the boat in rudra-hero.jpeg (0–1), used for the phone crop of the hero poster.
+const HERO_FOCUS_X = 0.57;
+
 // Crop anchors for portrait stock photos where the automatic (saliency) crop misses the subject.
 const STOCK_CROP = { "river-trips.webp": "north" };
 
@@ -52,12 +55,14 @@ async function bytes(file) {
 const startQuality = { avif: 62, webp: 82, jpeg: 84 };
 const minQuality = { avif: 30, webp: 40, jpeg: 50 };
 
-// Encodes at falling quality until the file fits its byte budget.
-async function imageWithin(input, output, { resize, format, limit }) {
+// Encodes at falling quality until the file fits its byte budget. `extract` crops before resizing.
+async function imageWithin(input, output, { extract, resize, format, limit }) {
   let buffer;
   let quality = startQuality[format];
   for (; quality >= minQuality[format]; quality -= 4) {
-    let pipeline = sharp(input).rotate().resize({ withoutEnlargement: true, ...resize });
+    let pipeline = sharp(input).rotate();
+    if (extract) pipeline = sharp(await pipeline.extract(extract).toBuffer());
+    pipeline = pipeline.resize({ withoutEnlargement: true, ...resize });
     if (format === "avif") pipeline = pipeline.avif({ quality, effort: 6 });
     else if (format === "webp") pipeline = pipeline.webp({ quality, effort: 6 });
     else pipeline = pipeline.jpeg({ quality, mozjpeg: true, progressive: true });
@@ -95,9 +100,25 @@ const vp9 = (crf) => ["-c:v", "libvpx-vp9", "-crf", String(crf), "-b:v", "0", "-
 
 async function images() {
   await mkdir("public/images/hero", { recursive: true });
+  const heroSource = "assets-src/images/rudra-hero.jpeg";
   for (const width of [828, 1600]) {
     for (const format of ["avif", "webp"]) {
-      await imageWithin("assets-src/images/rudra-hero.jpeg", `public/images/hero/hero-${width}.${format}`, { resize: { width }, format, limit: LIMITS.heroPoster });
+      await imageWithin(heroSource, `public/images/hero/hero-${width}.${format}`, { resize: { width }, format, limit: LIMITS.heroPoster });
+    }
+  }
+  // Phones show the hero in a tall box, so they get a 3:4 crop centred on the boat instead of a landscape
+  // image rendered at twice the screen width: fewer bytes for the LCP image, and sharper.
+  const { width: sourceWidth, height: sourceHeight } = await sharp(heroSource).metadata();
+  const cropWidth = Math.round(sourceHeight * 0.75);
+  const left = Math.min(Math.max(Math.round(sourceWidth * HERO_FOCUS_X - cropWidth / 2), 0), sourceWidth - cropWidth);
+  for (const width of [828, 1242]) {
+    for (const format of ["avif", "webp"]) {
+      await imageWithin(heroSource, `public/images/hero/hero-portrait-${width}.${format}`, {
+        extract: { left, top: 0, width: cropWidth, height: sourceHeight },
+        resize: { width },
+        format,
+        limit: LIMITS.heroPoster,
+      });
     }
   }
   for (const name of ["rudra-coast", "rudra-boat-showcase"]) {
@@ -184,19 +205,23 @@ async function galleryClips() {
 }
 
 // ---- Run --------------------------------------------------------------------------------------
+// `--only=images` or `--only=videos` rebuilds one group (videos take a few minutes).
 
-await mkdir("public/videos", { recursive: true });
-// Clear previous outputs so a removed source never leaves a stale file behind.
-await rm("public/images/hero", { recursive: true, force: true });
-await rm("public/videos", { recursive: true, force: true });
-await mkdir("public/videos", { recursive: true });
+const only = process.argv.find((arg) => arg.startsWith("--only="))?.split("=")[1];
 
-await images();
-const hero = await heroLoop();
-const clips = await galleryClips();
-
-console.log(`\nHero loop: ${hero.hd}p and ${hero.sd}p from ${HERO_SOURCE}`);
-console.log("Gallery clips:", clips.map((clip) => `${clip.id} ${clip.width}×${clip.height} ${clip.seconds}s`).join(", "));
+if (!only || only === "images") {
+  // Clear previous outputs so a removed source never leaves a stale file behind.
+  await rm("public/images/hero", { recursive: true, force: true });
+  await images();
+}
+if (!only || only === "videos") {
+  await rm("public/videos", { recursive: true, force: true });
+  await mkdir("public/videos", { recursive: true });
+  const hero = await heroLoop();
+  const clips = await galleryClips();
+  console.log(`\nHero loop: ${hero.hd}p and ${hero.sd}p from ${HERO_SOURCE}`);
+  console.log("Gallery clips:", clips.map((clip) => `${clip.id} ${clip.width}×${clip.height} ${clip.seconds}s`).join(", "));
+}
 console.log("\nfile".padEnd(48), "size".padStart(10), "limit".padStart(10), " ");
 for (const row of report) {
   console.log(row.file.padEnd(48), `${(row.bytes / KB).toFixed(0)} KB`.padStart(10), `${(row.limit / KB).toFixed(0)} KB`.padStart(10), row.ok ? " ok" : " OVER", row.note);

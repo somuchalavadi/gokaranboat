@@ -1,16 +1,18 @@
 import { getImageProps } from "next/image";
+import { preload } from "react-dom";
 import { hero } from "@/data/site";
 import { buildWhatsAppLink } from "@/lib/whatsapp";
 import { Button } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
 import { HeroVideo } from "@/components/sections/HeroVideo";
 
-// The 4:3 poster is cropped to cover its box. On phones the box is ~0.68 wide-to-tall, so the image renders
-// about twice the viewport width; on portrait tablets about 1.8×; on landscape screens it fills the width.
-const posterSizes = "(max-width: 767px) 200vw, (orientation: portrait) 180vw, 100vw";
+// Phones (< 768px) get the 3:4 crop, which fills the tall hero box at about 100vw. Elsewhere the 4:3 image covers
+// its box: about 1.8× the viewport width on portrait tablets, the full width on landscape screens.
+const phone = "(max-width: 767px)";
+const posterSizes = "(orientation: portrait) 180vw, 100vw";
 
-function srcSet(format: "avif" | "webp") {
-  return hero.poster.widths.map((width) => `${hero.poster.base}-${width}.${format} ${width}w`).join(", ");
+function srcSet(base: string, widths: readonly number[], format: "avif" | "webp") {
+  return widths.map((width) => `${base}-${width}.${format} ${width}w`).join(", ");
 }
 
 export function Hero() {
@@ -23,16 +25,23 @@ export function Hero() {
     unoptimized: true,
     loading: "eager",
     fetchPriority: "high",
-    className: "object-cover object-[58%_50%]",
+    className: "object-cover object-center md:object-[58%_50%]",
   });
+  const { base, widths, portraitBase, portraitWidths } = hero.poster;
+  // Start the LCP image from <head>, before the parser reaches it (what next/image's `preload` does).
+  // AVIF only: every browser this site supports (see browserslist) decodes it.
+  preload(`${portraitBase}-${portraitWidths[0]}.avif`, { as: "image", type: "image/avif", fetchPriority: "high", media: phone, imageSrcSet: srcSet(portraitBase, portraitWidths, "avif"), imageSizes: "100vw" });
+  preload(`${base}-${widths[widths.length - 1]}.avif`, { as: "image", type: "image/avif", fetchPriority: "high", media: "(min-width: 768px)", imageSrcSet: srcSet(base, widths, "avif"), imageSizes: posterSizes });
 
   return (
     <section data-hero aria-labelledby="hero-title" className="relative isolate flex min-h-svh flex-col justify-end overflow-hidden bg-navy-900 text-white">
       {/* Phones show the photo in the top two-thirds so the boat stays clear of the text. */}
       <div className="absolute inset-x-0 top-0 h-[68%] md:h-full">
         <picture>
-          <source type="image/avif" srcSet={srcSet("avif")} sizes={posterSizes} />
-          <source type="image/webp" srcSet={srcSet("webp")} sizes={posterSizes} />
+          <source media={phone} type="image/avif" srcSet={srcSet(portraitBase, portraitWidths, "avif")} sizes="100vw" />
+          <source media={phone} type="image/webp" srcSet={srcSet(portraitBase, portraitWidths, "webp")} sizes="100vw" />
+          <source type="image/avif" srcSet={srcSet(base, widths, "avif")} sizes={posterSizes} />
+          <source type="image/webp" srcSet={srcSet(base, widths, "webp")} sizes={posterSizes} />
           <img {...poster} alt={hero.poster.alt} />
         </picture>
         <HeroVideo video={hero.video} />
