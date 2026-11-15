@@ -20,8 +20,11 @@ export function priceLine(price: number | null) {
   return price === null ? "Price on enquiry" : `From ₹${price.toLocaleString("en-IN")}`;
 }
 
+// Image widths: carousel cards are min(85vw, 360px) on phones and 44vw on tablets; 4 columns (~280px) from 1024px.
+const carouselSizes = "(max-width: 423px) 85vw, (max-width: 767px) 360px, (max-width: 1023px) 44vw, 280px";
+
 // `showAll` lists every highlight with no toggle (used on the /packages page).
-export function PackageCard({ item, showAll = false }: { item: TripPackage; showAll?: boolean }) {
+export function PackageCard({ item, showAll = false, sizes = carouselSizes }: { item: TripPackage; showAll?: boolean; sizes?: string }) {
   const [expanded, setExpanded] = useState(false);
   const top = showAll ? item.highlights : item.highlights.slice(0, 3);
   const rest = showAll ? [] : item.highlights.slice(3);
@@ -32,7 +35,7 @@ export function PackageCard({ item, showAll = false }: { item: TripPackage; show
       className={`flex h-full flex-col overflow-hidden rounded-card bg-white text-ink shadow-[0_12px_32px_-18px_rgb(15_23_42/0.35)] transition-transform duration-250 ease-out hover:-translate-y-1 ${item.featured ? "ring-2 ring-gold" : "ring-1 ring-line"}`}
     >
       <div className="relative aspect-[16/10] bg-navy-700">
-        <Image src={item.image.src} alt={item.image.alt} fill sizes="(max-width: 767px) 85vw, (max-width: 1023px) 45vw, 280px" className="object-cover" />
+        <Image src={item.image.src} alt={item.image.alt} fill sizes={sizes} className="object-cover" />
         <span className="glass-dark absolute top-3 left-3 inline-flex h-8 items-center gap-1.5 rounded-full px-3 text-sm font-semibold text-white">
           <Clock aria-hidden="true" className="size-4!" />
           {item.durationHours} hrs

@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { Play } from "lucide-react";
 import { useState } from "react";
-import { gallery } from "@/data/site";
+import { gallery, galleryIntro } from "@/data/site";
 import { Button } from "@/components/ui/Button";
 import { Section } from "@/components/ui/Section";
 import { Lightbox } from "@/components/sections/Lightbox";
@@ -17,8 +17,8 @@ export function Gallery() {
     <Section
       id="gallery"
       tone="navy"
-      title="Gallery"
-      intro={<p>Photos and short clips of The Rudra Gokarna.</p>}
+      title={galleryIntro.title}
+      intro={<p>{galleryIntro.intro}</p>}
       action={
         <Button variant="secondary" tone="dark" aria-haspopup="dialog" onClick={() => setIndex(0)}>
           View all

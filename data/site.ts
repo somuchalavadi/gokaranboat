@@ -115,7 +115,7 @@ export const packages: readonly TripPackage[] = [
     durationHours: 2,
     featured: false,
     badge: null,
-    image: { src: "/images/stock/standard.webp", width: 1600, height: 2133, alt: "Rocky shoreline and open sea seen from above" },
+    image: { src: "/images/stock/standard.webp", width: 1600, height: 1200, alt: "Rocky shoreline and open sea seen from above" },
     highlights: ["sightseeing", "mystery-cave", "dolphins"],
     price: null, // TODO(owner): "From" price in ₹ per person.
     maxGuests: null, // TODO(owner): maximum guests for this trip.
@@ -128,7 +128,7 @@ export const packages: readonly TripPackage[] = [
     durationHours: 4,
     featured: false,
     badge: null,
-    image: { src: "/images/stock/exclusive.webp", width: 1539, height: 2736, alt: "Dark shoreline at night with points of blue light glowing in the water" },
+    image: { src: "/images/stock/exclusive.webp", width: 1539, height: 1200, alt: "Dark shoreline at night with points of blue light glowing in the water" },
     highlights: ["fishing-trips", "bioluminescence"],
     price: null, // TODO(owner): "From" price in ₹ per person.
     maxGuests: null, // TODO(owner): maximum guests for this trip.
@@ -141,7 +141,7 @@ export const packages: readonly TripPackage[] = [
     durationHours: 2,
     featured: false,
     badge: null,
-    image: { src: "/images/stock/river-trips.webp", width: 1600, height: 2846, alt: "Dense mangrove forest with a narrow channel of water through the trees" },
+    image: { src: "/images/stock/river-trips.webp", width: 1600, height: 1200, alt: "Mangrove trees and their roots rising from dark mud" },
     highlights: ["mangrove-views", "mangrove-kayaking"],
     price: null, // TODO(owner): "From" price in ₹ per person.
     maxGuests: null, // TODO(owner): maximum guests for this trip.
@@ -164,7 +164,7 @@ export const activities: readonly Tile[] = [
     title: "Kayaking",
     description: "Kayak on the Premium trip, or paddle through the mangroves on a River Trip.",
     note: null,
-    image: { src: "/images/stock/kayaking.webp", width: 1600, height: 2400, alt: "A person paddling a red kayak across calm grey-blue sea" },
+    image: { src: "/images/stock/kayaking.webp", width: 1600, height: 1200, alt: "A person paddling a red kayak across calm grey-blue sea" },
     highlightIds: ["kayaking", "mangrove-kayaking"],
   },
   {
@@ -180,7 +180,7 @@ export const activities: readonly Tile[] = [
     title: "Swimming",
     description: "A swim is part of the Premium trip.",
     note: null,
-    image: { src: "/images/stock/swimming.webp", width: 1600, height: 1280, alt: "People swimming and wading in shallow water near a beach" },
+    image: { src: "/images/stock/swimming.webp", width: 1600, height: 1200, alt: "People swimming among small waves close to shore" },
     highlightIds: ["swimming"],
   },
   {
@@ -196,7 +196,7 @@ export const activities: readonly Tile[] = [
     title: "Sightseeing",
     description: "Sightseeing along the coast, from the water.",
     note: null,
-    image: { src: "/images/stock/sightseeing.webp", width: 1600, height: 2353, alt: "Aerial view of a wooded headland beside a curved sandy beach" },
+    image: { src: "/images/stock/sightseeing.webp", width: 1600, height: 1200, alt: "Aerial view of a wooded headland beside a curved sandy beach" },
     highlightIds: ["sightseeing"],
   },
 ];
@@ -223,7 +223,7 @@ export const places: readonly Tile[] = [
     title: "Fishing harbour",
     description: "Take in the working fishing harbour.",
     note: null,
-    image: { src: "/images/stock/fishing-harbour.webp", width: 1600, height: 2400, alt: "A brightly painted fishing boat on a sandy beach with the sea behind" },
+    image: { src: "/images/stock/fishing-harbour.webp", width: 1600, height: 1200, alt: "A brightly painted fishing boat on a sandy beach with the sea behind" },
     highlightIds: ["fishing-harbour"],
   },
   {
@@ -247,7 +247,7 @@ export const places: readonly Tile[] = [
     title: "Gokarna coastline",
     description: "The Gokarna shore, seen from the water.",
     note: null,
-    image: { src: "/images/rudra-coast.jpeg", width: 3024, height: 4032, alt: "The Rudra Gokarna on calm water, seen from a rocky Gokarna shore between trees" },
+    image: { src: "/images/rudra-coast.jpeg", width: 1200, height: 1600, alt: "The Rudra Gokarna on calm water, seen from a rocky Gokarna shore between trees" },
     highlightIds: ["sightseeing"],
   },
 ];
@@ -269,11 +269,25 @@ export const hero = {
   subtitle: "Coastline, caves, mangroves and open sea, seen from the water.",
   chips: ["Gokarna Beach pick-up", "2–4 hour trips", "Custom trips"],
   message: "Hi, I'd like to know about your boat trips in Gokarna.",
-  poster: { src: "/images/rudra-hero.jpeg", width: 4032, height: 3024, alt: "The Rudra Gokarna on calm water off the Gokarna coast, with hills in the haze behind" },
-  // hd is used at ≥1280px viewports, sd below that. Mobile, reduced motion and Save-Data get the poster only.
+  // Pre-sized AVIF/WebP files from scripts/optimize-assets.mjs: `${base}-${width}.{avif,webp}`.
+  poster: {
+    base: "/images/hero/hero",
+    widths: [828, 1600],
+    width: 1600,
+    height: 1200,
+    alt: "The Rudra Gokarna on calm water off the Gokarna coast, with hills in the haze behind",
+  },
+  // A 9-second loop cut from clip 01 (the only landscape clip). The source is 720p, so the larger loop is 720p, not 1080p.
+  // hd is used at ≥1280px viewports, sd below that. Phones, reduced motion and Save-Data get the poster only.
   video: {
-    hd: [{ src: "/videos/rudra-boat-03.mp4", type: "video/mp4" }],
-    sd: [{ src: "/videos/rudra-boat-03.mp4", type: "video/mp4" }],
+    hd: [
+      { src: "/videos/hero-loop-720.webm", type: "video/webm" },
+      { src: "/videos/hero-loop-720.mp4", type: "video/mp4" },
+    ],
+    sd: [
+      { src: "/videos/hero-loop-540.webm", type: "video/webm" },
+      { src: "/videos/hero-loop-540.mp4", type: "video/mp4" },
+    ],
   } as { hd: VideoSource[]; sd: VideoSource[] } | null,
 };
 
@@ -308,14 +322,21 @@ export type GalleryItem =
   | { kind: "image"; id: string; src: string; width: number; height: number; alt: string; caption: string }
   | { kind: "video"; id: string; src: string; poster: string; width: number; height: number; alt: string; caption: string };
 
+export const galleryIntro = {
+  title: "Gallery",
+  intro: "Photos and short clips from Rudra Gokarna Adventures.",
+};
+
+// Owner-supplied media only (no stock). Clip 01 is the hero loop and clip 02 is a byte-identical copy of it,
+// so neither appears here. Videos show their poster in the grid and load only inside the lightbox.
 export const gallery: readonly GalleryItem[] = [
-  { kind: "image", id: "hero", src: "/images/rudra-hero.jpeg", width: 4032, height: 3024, alt: "The Rudra Gokarna on calm water with guests on deck and hills in the haze behind", caption: "On calm water off Gokarna" },
-  { kind: "image", id: "coast", src: "/images/rudra-coast.jpeg", width: 3024, height: 4032, alt: "The Rudra Gokarna on calm water, seen from a rocky shore between trees", caption: "Seen from the shore" },
+  { kind: "image", id: "hero", src: "/images/hero/hero-1600.webp", width: 1600, height: 1200, alt: "The Rudra Gokarna on calm water with guests on deck and hills in the haze behind", caption: "On calm water off Gokarna" },
+  { kind: "video", id: "clip-04", src: "/videos/rudra-boat-04.mp4", poster: "/videos/posters/rudra-boat-04.webp", width: 720, height: 1280, alt: "Guests climbing over rocks to a beach, with a boat and a kayak waiting offshore", caption: "Back to the boat" },
+  { kind: "image", id: "coast", src: "/images/rudra-coast.jpeg", width: 1200, height: 1600, alt: "The Rudra Gokarna on calm water, seen from a rocky shore between trees", caption: "Seen from the shore" },
+  { kind: "video", id: "clip-03", src: "/videos/rudra-boat-03.mp4", poster: "/videos/posters/rudra-boat-03.webp", width: 720, height: 1280, alt: "Guests walking single file through a narrow, dark cave passage", caption: "Through the cave" },
   // TODO(owner): confirm whether this image is a photograph or a render, then update the caption and alt text.
   { kind: "image", id: "showcase", src: "/images/rudra-boat-showcase.jpeg", width: 1600, height: 901, alt: "The Rudra Gokarna on bright blue water in front of palm trees", caption: "The Rudra Gokarna" },
-  { kind: "video", id: "clip-01", src: "/videos/rudra-boat-01.mp4", poster: "/images/rudra-hero.jpeg", width: 1920, height: 1080, alt: "Video clip of The Rudra Gokarna on the water", caption: "Clip 01" },
-  { kind: "video", id: "clip-04", src: "/videos/rudra-boat-04.mp4", poster: "/images/rudra-hero.jpeg", width: 1920, height: 1080, alt: "Video clip of The Rudra Gokarna on the water", caption: "Clip 04" },
-  { kind: "video", id: "clip-05", src: "/videos/rudra-boat-05.mp4", poster: "/images/rudra-hero.jpeg", width: 1920, height: 1080, alt: "Video clip of The Rudra Gokarna on the water", caption: "Clip 05" },
+  { kind: "video", id: "clip-05", src: "/videos/rudra-boat-05.mp4", poster: "/videos/posters/rudra-boat-05.webp", width: 720, height: 1280, alt: "A guest holding a small crab while wading in shallow water", caption: "In the shallows" },
 ];
 
 export const booking = {
@@ -323,7 +344,7 @@ export const booking = {
   intro: "Choose a trip, a date and your group. We'll open WhatsApp with your details filled in.",
   customDurations: [2, 3, 4] as const,
   guests: { min: 1, max: 20 },
-  photo: { src: "/images/rudra-coast.jpeg", width: 3024, height: 4032, alt: "" },
+  photo: { src: "/images/rudra-coast.jpeg", width: 1200, height: 1600, alt: "" },
 };
 
 export const events = {
@@ -332,6 +353,12 @@ export const events = {
   pills: ["Couples", "Family", "New Year", "Other occasions"],
   cta: "Plan an occasion",
   message: "Hi, I'd like to plan a customised trip for a special occasion.",
+};
+
+export const faqIntro = {
+  title: "Before you book",
+  goodToKnowTitle: "Good to know",
+  questionsTitle: "Common questions",
 };
 
 export const goodToKnow: readonly { icon: "weather" | "wildlife" | "health" | "dates"; text: string }[] = [

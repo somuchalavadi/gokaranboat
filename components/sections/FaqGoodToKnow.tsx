@@ -1,5 +1,5 @@
 import { Binoculars, CalendarDays, CloudSun, HeartPulse } from "lucide-react";
-import { faq, goodToKnow } from "@/data/site";
+import { faq, faqIntro, goodToKnow } from "@/data/site";
 import { Accordion } from "@/components/ui/Accordion";
 import { Section } from "@/components/ui/Section";
 
@@ -7,10 +7,10 @@ const icons = { weather: CloudSun, wildlife: Binoculars, health: HeartPulse, dat
 
 export function FaqGoodToKnow() {
   return (
-    <Section id="faq" tone="sand" title="Before you book">
+    <Section id="faq" tone="sand" title={faqIntro.title}>
       <div className="grid gap-10 lg:grid-cols-2 lg:gap-16">
         <div data-reveal>
-          <h3 className="text-h3">Good to know</h3>
+          <h3 className="text-h3">{faqIntro.goodToKnowTitle}</h3>
           <ul className="mt-4 grid gap-2">
             {goodToKnow.map((item) => {
               const Icon = icons[item.icon];
@@ -26,7 +26,7 @@ export function FaqGoodToKnow() {
           </ul>
         </div>
         <div data-reveal>
-          <h3 className="text-h3">Common questions</h3>
+          <h3 className="text-h3">{faqIntro.questionsTitle}</h3>
           <Accordion name="faq" items={faq} className="mt-4" />
         </div>
       </div>

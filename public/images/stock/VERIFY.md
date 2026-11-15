@@ -18,6 +18,8 @@ The primary Pexels URL supplied for every slot downloaded successfully and was u
 | premium.webp | An aerial coastal landscape with a rocky shoreline, shallow water and a wooded hill. |
 | standard.webp | A rocky shoreline and open sea viewed from above. |
 | exclusive.webp | Dark water with bright blue glowing points along the shoreline at night. |
-| river-trips.webp | Dense mangrove forest with a narrow boat channel through the trees. |
+| river-trips.webp | Mangrove trees and their roots rising from dark mud (no open water channel is visible). |
 
 The dolphin card and mystery cave place tile are labelled “Representative image” because those photographs are not from Gokarna.
+
+The site serves 4:3 crops of the portrait originals (river-trips, standard, exclusive, kayaking, sightseeing, fishing-harbour, swimming) so cards and tiles do not download pixels that are cropped away. Originals are kept in `assets-src/images/stock/`; crops are made by `scripts/optimize-assets.mjs`.

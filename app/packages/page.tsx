@@ -26,7 +26,7 @@ export default function PackagesPage() {
         <ul data-reveal className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {packages.map((item) => (
             <li key={item.id}>
-              <PackageCard item={item} showAll />
+              <PackageCard item={item} showAll sizes="(max-width: 639px) 100vw, (max-width: 1023px) 50vw, 280px" />
             </li>
           ))}
         </ul>
