@@ -1,15 +1,66 @@
 "use client";
-import Link from "next/link";
+
 import Image from "next/image";
-import { Menu, X } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
+import { Menu } from "lucide-react";
 import { usePathname } from "next/navigation";
-import { bookingWhatsapp } from "@/lib/site";
-const links = [["Home", "/"], ["Adventures", "/adventures"], ["Packages", "/packages"], ["Places", "/#places"], ["Gallery", "/gallery"], ["About", "/about"], ["Contact", "/contact"]];
+import { useState } from "react";
+import { business, nav } from "@/data/site";
+import { useActiveSection, useAnyInView } from "@/lib/hooks";
+import { Button } from "@/components/ui/Button";
+import { MobileMenu } from "@/components/layout/MobileMenu";
+
+const sectionIds = nav.map((item) => item.id);
+
 export function Navbar() {
-  const [open, setOpen] = useState(false); const [scrolled, setScrolled] = useState(false); const path = usePathname(); const toggleRef = useRef<HTMLButtonElement>(null); const menuRef = useRef<HTMLDivElement>(null);
-  useEffect(() => { const fn = () => setScrolled(window.scrollY > 24); window.addEventListener("scroll", fn); return () => window.removeEventListener("scroll", fn); }, []);
-  useEffect(() => { document.body.style.overflow = open ? "hidden" : ""; return () => { document.body.style.overflow = ""; }; }, [open]);
-  useEffect(() => { if (!open) return; menuRef.current?.querySelector<HTMLElement>("a")?.focus(); function key(e: KeyboardEvent) { if (e.key === "Escape") { setOpen(false); toggleRef.current?.focus(); } else if (e.key === "Tab") { const items = menuRef.current?.querySelectorAll<HTMLElement>("a"); if (!items?.length) return; if (e.shiftKey && document.activeElement === items[0]) { e.preventDefault(); items[items.length - 1].focus(); } else if (!e.shiftKey && document.activeElement === items[items.length - 1]) { e.preventDefault(); items[0].focus(); } } } window.addEventListener("keydown", key); return () => window.removeEventListener("keydown", key); }, [open]);
-  return <header className={`navbar ${scrolled ? "navbar-scrolled" : ""}`}><Link href="/" className="brand brand-logo" aria-label="Rudra Gokarna Adventures" onClick={() => setOpen(false)}><Image src="/brand/rudra_gokarna_main_logo_transparent.png" alt="Rudra Gokarna Adventures" width={1164} height={491} sizes="(max-width: 760px) 150px, 188px" className="brand-logo-image" /></Link><nav className="desktop-nav" aria-label="Main navigation">{links.map(([label, href]) => <Link key={href} href={href} aria-current={path === href ? "page" : undefined}>{label}</Link>)}</nav><a className="button button-light nav-book" href={bookingWhatsapp()} target="_blank" rel="noreferrer">Book on WhatsApp</a><button ref={toggleRef} className="menu-toggle" aria-label={open ? "Close menu" : "Open menu"} aria-expanded={open} aria-controls="mobile-navigation" onClick={() => setOpen(!open)}>{open ? <X /> : <Menu />}</button>{open && <div id="mobile-navigation" ref={menuRef} className="mobile-menu glass-dark"><nav aria-label="Mobile navigation">{links.map(([label, href]) => <Link key={href} href={href} aria-current={path === href ? "page" : undefined}>{label}</Link>)}<a className="button button-light" href={bookingWhatsapp()} target="_blank" rel="noreferrer">Book on WhatsApp</a></nav></div>}</header>;
+  const pathname = usePathname();
+  const [menuOpen, setMenuOpen] = useState(false);
+  // Dark glass while the navbar sits over the hero (the top band of the viewport), light glass after it.
+  const overHero = useAnyInView("[data-hero]", "0px 0px -92% 0px", true);
+  const active = useActiveSection(sectionIds);
+  const current = pathname === "/" ? active : null;
+
+  return (
+    <header
+      className={`fixed inset-x-0 top-0 z-50 h-16 border-x-0! border-t-0! transition-colors duration-200 ${overHero ? "glass-dark text-white" : "glass-light border-b-line! text-ink"}`}
+    >
+      <div className="mx-auto flex h-full max-w-[1248px] items-center gap-3 px-4 sm:px-6">
+        <Link href="/" className="shrink-0 rounded-md">
+          <Image src={business.logo.src} alt={business.logo.alt} width={95} height={40} loading="eager" className="h-10 w-auto" />
+        </Link>
+
+        <nav aria-label="Main" className="mx-auto hidden lg:block">
+          <ul className="flex items-center gap-1">
+            {nav.map((item) => (
+              <li key={item.id}>
+                <Link
+                  href={`/#${item.id}`}
+                  aria-current={current === item.id ? "true" : undefined}
+                  className={`inline-flex h-11 items-center rounded-full px-3 text-[15px] font-medium underline-offset-[10px] transition-colors xl:px-4 ${current === item.id ? "underline decoration-gold decoration-2" : "hover:underline hover:decoration-current/40"}`}
+                >
+                  {item.label}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </nav>
+
+        <Button href="/#book" className="ml-auto px-5 lg:ml-0">
+          <span className="lg:hidden">Book</span>
+          <span className="hidden lg:inline">Book now</span>
+        </Button>
+        <button
+          type="button"
+          onClick={() => setMenuOpen(true)}
+          aria-label="Open menu"
+          aria-expanded={menuOpen}
+          aria-controls="mobile-menu"
+          className="inline-flex size-12 items-center justify-center rounded-full lg:hidden"
+        >
+          <Menu aria-hidden="true" />
+        </button>
+      </div>
+      <MobileMenu open={menuOpen} onClose={() => setMenuOpen(false)} />
+    </header>
+  );
 }

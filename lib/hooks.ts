@@ -35,8 +35,9 @@ export function useActiveSection(ids: readonly string[]) {
 }
 
 // True while any element matching the selector intersects the viewport (offset by rootMargin).
-export function useAnyInView(selector: string, rootMargin = "0px") {
-  const [inView, setInView] = useState(false);
+// `initial` is the value used before the observer reports, and when nothing matches.
+export function useAnyInView(selector: string, rootMargin = "0px", initial = false) {
+  const [inView, setInView] = useState(initial);
   useEffect(() => {
     const elements = Array.from(document.querySelectorAll(selector));
     if (!elements.length) return;

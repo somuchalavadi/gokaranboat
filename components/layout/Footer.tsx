@@ -1,7 +1,100 @@
-import Link from "next/link";
 import Image from "next/image";
-import { ExternalLink } from "lucide-react";
-import { site } from "@/lib/site";
-import { PhoneActions } from "@/components/ui/PhoneActions";
+import Link from "next/link";
+import { MapPin, MessageCircle, Phone } from "lucide-react";
+import { business, contact, footer, nav } from "@/data/site";
+import { buildWhatsAppLink, telLink } from "@/lib/whatsapp";
+import { Container } from "@/components/ui/Container";
 
- export function Footer() { const socials = Object.entries(site.socials).filter(([, url]) => url); return <footer className="footer"><div className="footer-main"><div><Link href="/" className="brand brand-logo footer-logo" aria-label="Rudra Gokarna Adventures"><Image src="/brand/rudra_gokarna_main_logo_transparent.png" alt="Rudra Gokarna Adventures" width={1164} height={491} sizes="218px" className="brand-logo-image" /></Link><p>Boat adventures and coastal experiences in Gokarna, Karnataka.</p>{socials.length > 0 && <div className="social-links">{socials.map(([name, url]) => <a key={name} href={url} target="_blank" rel="noreferrer"><ExternalLink size={15} />{name}</a>)}</div>}</div><div><h2>Explore</h2><Link href="/">Home</Link><Link href="/adventures">Adventures</Link><Link href="/packages">Packages</Link><Link href="/#places">Places</Link><Link href="/gallery">Gallery</Link><Link href="/about">About</Link><Link href="/contact">Contact</Link>{/* New Year is a secondary footer/custom-event link, not a primary header route. */}<Link href="/new-year">New Year and occasions</Link></div><div><h2>Get in touch</h2>{site.phones.map((phone, index) => <PhoneActions key={phone} phone={phone} label={index === 0 ? "Call / WhatsApp" : "Call"} />)}<a className="pickup-link" href="https://www.google.com/maps/search/?api=1&query=Gokarna+Beach%2C+Gokarna%2C+Karnataka" target="_blank" rel="noreferrer">{site.pickup}</a></div></div><div className="footer-bottom"><span>© {new Date().getFullYear()} {site.name}</span></div></footer>; }
+const linkClass = "inline-flex min-h-11 items-center gap-2 hover:underline hover:underline-offset-4";
+const headingClass = "font-sans text-sm font-semibold tracking-[0.12em] text-mist uppercase";
+
+export function Footer() {
+  return (
+    <footer id="site-footer" className="bg-navy-900 text-white">
+      <Container className="grid gap-10 py-16 md:grid-cols-[1.3fr_1fr_1.3fr] lg:py-20">
+        <div>
+          <Link href="/" className="inline-block rounded-md">
+            <Image src={business.logo.src} alt={business.logo.alt} width={190} height={80} className="h-20 w-auto" />
+          </Link>
+          <p className="mt-4 max-w-xs text-mist">{business.tagline}</p>
+          {business.socials && (
+            <ul className="mt-4 flex flex-wrap gap-x-4">
+              {business.socials.map((social) => (
+                <li key={social.url}>
+                  <a href={social.url} target="_blank" rel="noopener noreferrer" className={linkClass}>
+                    {social.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+
+        <nav aria-labelledby="footer-explore">
+          <h2 id="footer-explore" className={headingClass}>
+            Explore
+          </h2>
+          <ul className="mt-3 grid grid-cols-2 gap-x-6 md:grid-cols-1">
+            {nav.map((item) => (
+              <li key={item.id}>
+                <Link href={`/#${item.id}`} className={linkClass}>
+                  {item.label}
+                </Link>
+              </li>
+            ))}
+            <li>
+              <Link href="/packages" className={linkClass}>
+                Package details
+              </Link>
+            </li>
+            <li>
+              <Link href="/adventures" className={linkClass}>
+                Things to do
+              </Link>
+            </li>
+          </ul>
+        </nav>
+
+        <div>
+          <h2 className={headingClass}>Contact</h2>
+          <ul className="mt-3 grid gap-1">
+            {contact.phones.map((phone) => (
+              <li key={phone.tel}>
+                <span className="block text-sm text-mist">{phone.label}</span>
+                <span className="flex flex-wrap gap-x-5">
+                  <a href={telLink(phone.tel)} className={linkClass}>
+                    <Phone aria-hidden="true" />
+                    {phone.display}
+                  </a>
+                  {phone.primary && (
+                    <a href={buildWhatsAppLink("Hi, I'd like to ask about a boat trip.")} target="_blank" rel="noopener noreferrer" className={linkClass}>
+                      <MessageCircle aria-hidden="true" />
+                      WhatsApp
+                    </a>
+                  )}
+                </span>
+              </li>
+            ))}
+            <li>
+              <span className="block text-sm text-mist">Pick-up point</span>
+              <a href={contact.pickup.mapsUrl} target="_blank" rel="noopener noreferrer" className={linkClass}>
+                <MapPin aria-hidden="true" />
+                {contact.pickup.label}
+              </a>
+            </li>
+            {contact.email && (
+              <li>
+                <a href={`mailto:${contact.email}`} className={linkClass}>
+                  {contact.email}
+                </a>
+              </li>
+            )}
+          </ul>
+        </div>
+      </Container>
+      <div className="border-t border-line-dark">
+        <Container className="py-6 text-sm text-mist">{footer.copyright}</Container>
+      </div>
+    </footer>
+  );
+}

@@ -23,4 +23,4 @@ export function ExperiencesSection() { return <section className="experiences-se
 
 export function GalleryPreview() { return <section className="gallery-section"><div className="container"><div className="gallery-head"><SectionHeading eyebrow="Gallery" title="Photographs of The Rudra Gokarna" copy="Photographs of the Rudra Gokarna on the Gokarna coast." /><Link href="/gallery" className="text-link">View gallery <ArrowRight size={16} /></Link></div><GalleryWall preview /></div></section>; }
 
-export function HomeContent() { return <><Hero /><Intro /><PackagesSection /><PackageComparisonSection /><BoatScroll /><ExperiencesSection /><PlacesSection /><PackagePlanner /><GalleryPreview /><VideoGallery /><CustomEventsSection /><GoodToKnowSection /><PackagesFaqSection /><ContactSection /></>; }
+export function HomeContent() { return <><Intro /><PackagesSection /><PackageComparisonSection /><BoatScroll /><ExperiencesSection /><PlacesSection /><PackagePlanner /><GalleryPreview /><VideoGallery /><CustomEventsSection /><GoodToKnowSection /><PackagesFaqSection /><ContactSection /></>; }
