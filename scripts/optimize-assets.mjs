@@ -4,7 +4,8 @@
 import sharp from "sharp";
 import ffmpegStatic from "ffmpeg-static";
 import { execFile } from "node:child_process";
-import { mkdir, readdir, rm, stat, writeFile } from "node:fs/promises";
+import { mkdir, readdir, rename, rm, stat, writeFile } from "node:fs/promises";
+import path from "node:path";
 import { promisify } from "node:util";
 
 const exec = promisify(execFile);
@@ -15,24 +16,33 @@ const report = [];
 
 // ---- What gets built --------------------------------------------------------------------------
 
-// The hero loop comes from clip 01: the only landscape clip (03–05 are portrait phone videos).
-// The gallery shows the other unique clips. Clip 02 is a byte-identical copy of 01 and is skipped.
+// Hero poster: the owner-approved image (the boat on blue water). The calm-water photo stays as a gallery photo
+// and the Open Graph card.
+const HERO_POSTER_SOURCE = "assets-src/images/rudra-boat-showcase.jpeg";
+// Horizontal centre of the subject in the hero poster (0–1), used for the 3:4 phone crop.
+const HERO_FOCUS_X = 0.55;
+
+// The approved hero is a still image, so no background loop is built. Set to true (and fill hero.video in
+// data/site.ts) to bring it back: a 9 s loop cut from clip 01, the only landscape clip.
+const HERO_VIDEO = false;
 const HERO_SOURCE = "assets-src/videos/rudra-boat-01.mp4";
 const HERO_LOOP = { start: 3.3, duration: 9, crossfade: 1 }; // seconds; ends on the boat at sea, fades back to the cove
+
+// Gallery clips. Clip 02 is a byte-identical copy of clip 01 and is skipped. While the hero has no video,
+// clip 01 isn't a duplicate of anything, so it's in the gallery.
 const GALLERY_CLIPS = [
+  { id: "01", posterAt: 11.5 },
   { id: "03", posterAt: 13 },
   { id: "04", posterAt: 10 },
   { id: "05", posterAt: 1.5 },
 ];
-
-// Horizontal centre of the boat in rudra-hero.jpeg (0–1), used for the phone crop of the hero poster.
-const HERO_FOCUS_X = 0.57;
 
 // Crop anchors for portrait stock photos where the automatic (saliency) crop misses the subject.
 const STOCK_CROP = { "river-trips.webp": "north" };
 
 const LIMITS = {
   heroPoster: 120 * KB,
+  heroPhone: 50 * KB, // the phone crop is the LCP image on phones, so it gets a tighter budget than the 120 KB cap
   photo: 250 * KB,
   stock: 400 * KB, // masters for next/image (never sent as-is), so quality matters more than bytes
   og: 200 * KB,
@@ -53,7 +63,8 @@ async function bytes(file) {
 }
 
 const startQuality = { avif: 62, webp: 82, jpeg: 84 };
-const minQuality = { avif: 30, webp: 40, jpeg: 50 };
+// WebP may go lower than AVIF: it is only the fallback for browsers without AVIF (none in browserslist).
+const minQuality = { avif: 30, webp: 30, jpeg: 50 };
 
 // Encodes at falling quality until the file fits its byte budget. `extract` crops before resizing.
 async function imageWithin(input, output, { extract, resize, format, limit }) {
@@ -69,7 +80,7 @@ async function imageWithin(input, output, { extract, resize, format, limit }) {
     buffer = await pipeline.toBuffer();
     if (buffer.length <= limit) break;
   }
-  await writeFile(output, buffer);
+  await withRetry(() => writeFile(output, buffer));
   const meta = await sharp(buffer).metadata();
   record(output, buffer.length, limit, `${meta.width}×${meta.height} q${Math.max(quality, minQuality[format])}`);
 }
@@ -83,14 +94,35 @@ async function probe(file) {
   return { duration: +h * 3600 + +m * 60 + +s, width: rotated ? +height : +width, height: rotated ? +width : +height };
 }
 
-// Tries settings from best to smallest until the output fits its byte budget.
-async function videoWithin(output, limit, attempts, argsFor, label = (attempt) => `crf ${attempt}`) {
-  let attempt;
-  for (attempt of attempts) {
-    await exec(ffmpeg, ["-hide_banner", "-loglevel", "error", "-y", ...argsFor(attempt), output], { maxBuffer: 64 * MB });
-    if ((await bytes(output)) <= limit) break;
+// Retries a file operation that Windows can briefly refuse while another process (e.g. a virus scan of a
+// just-written video) holds the file.
+async function withRetry(operation) {
+  for (let tries = 1; ; tries++) {
+    try {
+      return await operation();
+    } catch (error) {
+      if (tries >= 10) throw error;
+      await new Promise((resolve) => setTimeout(resolve, 500 * tries));
+    }
   }
-  record(output, await bytes(output), limit, label(attempt));
+}
+
+// Tries settings from best to smallest until the output fits its byte budget. Each attempt writes its own
+// temporary file, so an attempt never has to overwrite a file that's still locked from the previous one.
+async function videoWithin(output, limit, attempts, argsFor, label = (attempt) => `crf ${attempt}`) {
+  const extension = path.extname(output);
+  const written = [];
+  let chosen;
+  for (const [index, attempt] of attempts.entries()) {
+    const temp = `${output.slice(0, -extension.length)}.attempt-${index}${extension}`;
+    written.push(temp);
+    await withRetry(() => exec(ffmpeg, ["-hide_banner", "-loglevel", "error", "-y", ...argsFor(attempt), temp], { maxBuffer: 64 * MB }));
+    chosen = { attempt, temp, size: await bytes(temp) };
+    if (chosen.size <= limit) break;
+  }
+  await withRetry(() => rename(chosen.temp, output));
+  for (const file of written) if (file !== chosen.temp) await withRetry(() => rm(file, { force: true }));
+  record(output, chosen.size, limit, label(chosen.attempt));
 }
 
 const h264 = (crf) => ["-c:v", "libx264", "-preset", "slow", "-crf", String(crf), "-profile:v", "high", "-pix_fmt", "yuv420p", "-movflags", "+faststart"];
@@ -100,27 +132,33 @@ const vp9 = (crf) => ["-c:v", "libvpx-vp9", "-crf", String(crf), "-b:v", "0", "-
 
 async function images() {
   await mkdir("public/images/hero", { recursive: true });
-  const heroSource = "assets-src/images/rudra-hero.jpeg";
-  for (const width of [828, 1600]) {
+  const { width: sourceWidth, height: sourceHeight } = await sharp(HERO_POSTER_SOURCE).metadata();
+  const landscapeWidths = [828, 1600].filter((width) => width <= sourceWidth);
+  for (const width of landscapeWidths) {
     for (const format of ["avif", "webp"]) {
-      await imageWithin(heroSource, `public/images/hero/hero-${width}.${format}`, { resize: { width }, format, limit: LIMITS.heroPoster });
+      await imageWithin(HERO_POSTER_SOURCE, `public/images/hero/hero-blue-${width}.${format}`, { resize: { width }, format, limit: LIMITS.heroPoster });
     }
   }
-  // Phones show the hero in a tall box, so they get a 3:4 crop centred on the boat instead of a landscape
-  // image rendered at twice the screen width: fewer bytes for the LCP image, and sharper.
-  const { width: sourceWidth, height: sourceHeight } = await sharp(heroSource).metadata();
+  // Phones show the hero in a tall box, so they get a 3:4 crop around the subject instead of a landscape image
+  // rendered at twice the screen width. Never upscaled: if the crop is narrower than 828px it's written at its
+  // own width. Keep hero.poster.portraitWidths in data/site.ts in step with what this prints.
   const cropWidth = Math.round(sourceHeight * 0.75);
   const left = Math.min(Math.max(Math.round(sourceWidth * HERO_FOCUS_X - cropWidth / 2), 0), sourceWidth - cropWidth);
-  for (const width of [828, 1242]) {
+  const portraitWidths = [828, 1242].filter((width) => width <= cropWidth);
+  if (!portraitWidths.length) portraitWidths.push(cropWidth);
+  for (const width of portraitWidths) {
     for (const format of ["avif", "webp"]) {
-      await imageWithin(heroSource, `public/images/hero/hero-portrait-${width}.${format}`, {
+      await imageWithin(HERO_POSTER_SOURCE, `public/images/hero/hero-blue-portrait-${width}.${format}`, {
         extract: { left, top: 0, width: cropWidth, height: sourceHeight },
         resize: { width },
         format,
-        limit: LIMITS.heroPoster,
+        limit: format === "avif" ? LIMITS.heroPhone : LIMITS.heroPoster,
       });
     }
   }
+  console.log(`Hero poster widths: landscape ${landscapeWidths.join(", ")}; portrait ${portraitWidths.join(", ")}`);
+  // The calm-water photo keeps its original URL; it's a gallery photo now.
+  await imageWithin("assets-src/images/rudra-hero.jpeg", "public/images/rudra-hero.jpeg", { resize: { width: 1600, height: 1600, fit: "inside" }, format: "jpeg", limit: LIMITS.photo });
   for (const name of ["rudra-coast", "rudra-boat-showcase"]) {
     await imageWithin(`assets-src/images/${name}.jpeg`, `public/images/${name}.jpeg`, { resize: { width: 1600, height: 1600, fit: "inside" }, format: "jpeg", limit: LIMITS.photo });
   }
@@ -217,9 +255,11 @@ if (!only || only === "images") {
 if (!only || only === "videos") {
   await rm("public/videos", { recursive: true, force: true });
   await mkdir("public/videos", { recursive: true });
-  const hero = await heroLoop();
+  if (HERO_VIDEO) {
+    const hero = await heroLoop();
+    console.log(`\nHero loop: ${hero.hd}p and ${hero.sd}p from ${HERO_SOURCE}`);
+  }
   const clips = await galleryClips();
-  console.log(`\nHero loop: ${hero.hd}p and ${hero.sd}p from ${HERO_SOURCE}`);
   console.log("Gallery clips:", clips.map((clip) => `${clip.id} ${clip.width}×${clip.height} ${clip.seconds}s`).join(", "));
 }
 console.log("\nfile".padEnd(48), "size".padStart(10), "limit".padStart(10), " ");

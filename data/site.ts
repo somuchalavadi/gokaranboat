@@ -272,14 +272,17 @@ export const hero = {
   subtitle: "Coastline, caves, mangroves and open sea, seen from the water.",
   chips: ["Gokarna Beach pick-up", "2–4 hour trips", "Custom trips"],
   message: "Hi, I'd like to know about your boat trips in Gokarna.",
-  // Pre-sized AVIF/WebP poster variants: landscape files for desktop and a 3:4 crop centred on the boat for phones.
+  // Pre-sized AVIF/WebP poster variants from scripts/optimize-assets.mjs (source: rudra-boat-showcase.jpeg):
+  // landscape files for desktop and a 3:4 crop centred on the boat for phones. The source is 1600×901, so the
+  // phone crop is 676px wide at most (it isn't upscaled).
+  // TODO(owner): confirm whether this image is a photograph or a render; the alt text stays neutral until then.
   poster: {
     base: "/images/hero/hero-blue",
     widths: [828, 1600],
     portraitBase: "/images/hero/hero-blue-portrait",
-    portraitWidths: [828, 1242],
+    portraitWidths: [676],
     width: 1600,
-    height: 900,
+    height: 901,
     alt: "The Rudra Gokarna boat on bright blue water beside a tropical coastline",
   },
   // The approved hero is a still image; no background video is rendered.
@@ -322,15 +325,15 @@ export const galleryIntro = {
   intro: "Photos and short clips from Rudra Gokarna Adventures.",
 };
 
-// Owner-supplied media only (no stock). Clip 01 is the hero loop and clip 02 is a byte-identical copy of it,
-// so neither appears here. Videos show their poster in the grid and load only inside the lightbox.
+// Owner-supplied media only (no stock), and nothing that repeats the hero: the hero poster
+// (rudra-boat-showcase) isn't here, and clip 02 (a byte-identical copy of clip 01) is skipped.
+// Videos show their poster in the grid and load only inside the lightbox.
 export const gallery: readonly GalleryItem[] = [
-  { kind: "image", id: "hero", src: "/images/hero/hero-1600.webp", width: 1600, height: 1200, alt: "The Rudra Gokarna on calm water with guests on deck and hills in the haze behind", caption: "On calm water off Gokarna" },
+  { kind: "image", id: "calm", src: "/images/rudra-hero.jpeg", width: 1600, height: 1200, alt: "The Rudra Gokarna on calm water with guests on deck and hills in the haze behind", caption: "On calm water off Gokarna" },
   { kind: "video", id: "clip-04", src: "/videos/rudra-boat-04.mp4", poster: "/videos/posters/rudra-boat-04.webp", width: 720, height: 1280, alt: "Guests climbing over rocks to a beach, with a boat and a kayak waiting offshore", caption: "Back to the boat" },
   { kind: "image", id: "coast", src: "/images/rudra-coast.jpeg", width: 1200, height: 1600, alt: "The Rudra Gokarna on calm water, seen from a rocky shore between trees", caption: "Seen from the shore" },
   { kind: "video", id: "clip-03", src: "/videos/rudra-boat-03.mp4", poster: "/videos/posters/rudra-boat-03.webp", width: 720, height: 1280, alt: "Guests walking single file through a narrow, dark cave passage", caption: "Through the cave" },
-  // TODO(owner): confirm whether this image is a photograph or a render, then update the caption and alt text.
-  { kind: "image", id: "showcase", src: "/images/rudra-boat-showcase.jpeg", width: 1600, height: 901, alt: "The Rudra Gokarna on bright blue water in front of palm trees", caption: "The Rudra Gokarna" },
+  { kind: "video", id: "clip-01", src: "/videos/rudra-boat-01.mp4", poster: "/videos/posters/rudra-boat-01.webp", width: 1280, height: 720, alt: "A slow pan from a sandy cove with rocks and trees out to the boat on calm sea", caption: "From the cove" },
   { kind: "video", id: "clip-05", src: "/videos/rudra-boat-05.mp4", poster: "/videos/posters/rudra-boat-05.webp", width: 720, height: 1280, alt: "A guest holding a small crab while wading in shallow water", caption: "In the shallows" },
 ];
 
