@@ -5,13 +5,13 @@ import { business, contact, footer, nav } from "@/data/site";
 import { buildWhatsAppLink, telLink } from "@/lib/whatsapp";
 import { Container } from "@/components/ui/Container";
 
-const linkClass = "inline-flex min-h-11 items-center gap-2 hover:underline hover:underline-offset-4";
+const linkClass = "inline-flex min-h-11 min-w-11 items-center gap-2 hover:underline hover:underline-offset-4";
 const headingClass = "font-sans text-sm font-semibold tracking-[0.12em] text-mist uppercase";
 
 export function Footer() {
   return (
     <footer id="site-footer" className="bg-navy-900 text-white">
-      <Container className="grid gap-10 py-16 md:grid-cols-[1.3fr_1fr_1.3fr] lg:py-20">
+      <Container className="grid gap-10 py-16 md:grid-cols-[1fr_1.2fr_1.3fr]">
         <div>
           <Link href="/" className="inline-block rounded-md">
             <Image src={business.logo.src} alt={business.logo.alt} width={190} height={80} className="h-20 w-auto" />
@@ -34,7 +34,7 @@ export function Footer() {
           <h2 id="footer-explore" className={headingClass}>
             Explore
           </h2>
-          <ul className="mt-3 grid grid-cols-2 gap-x-6 md:grid-cols-1">
+          <ul className="mt-3 grid grid-cols-2 gap-x-6">
             {nav.map((item) => (
               <li key={item.id}>
                 <Link href={`/#${item.id}`} className={linkClass}>

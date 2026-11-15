@@ -32,11 +32,12 @@ export function Section({
   className?: string;
   children: ReactNode;
 }) {
+  // 64px on phones, 96px from 1024px (trimmed from 112px to meet the desktop page-height target).
   return (
-    <section id={id} aria-labelledby={`${id}-title`} className={`${toneClass[tone]} py-16 lg:py-28 ${className}`}>
+    <section id={id} aria-labelledby={`${id}-title`} className={`${toneClass[tone]} py-16 lg:py-24 ${className}`}>
       <Container>
         {title && (
-          <header data-reveal className="mb-8 flex flex-col gap-4 md:flex-row md:items-end md:justify-between lg:mb-12">
+          <header data-reveal className="mb-8 flex flex-col items-start gap-4 md:flex-row md:items-end md:justify-between lg:mb-10">
             <div className="max-w-2xl">
               <h2 id={`${id}-title`} className="text-h2">
                 {title}

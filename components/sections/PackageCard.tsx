@@ -20,12 +20,12 @@ export function priceLine(price: number | null) {
   return price === null ? "Price on enquiry" : `From ₹${price.toLocaleString("en-IN")}`;
 }
 
-export function PackageCard({ item, headingLevel = "h3" }: { item: TripPackage; headingLevel?: "h2" | "h3" }) {
+// `showAll` lists every highlight with no toggle (used on the /packages page).
+export function PackageCard({ item, showAll = false }: { item: TripPackage; showAll?: boolean }) {
   const [expanded, setExpanded] = useState(false);
-  const top = item.highlights.slice(0, 3);
-  const rest = item.highlights.slice(3);
+  const top = showAll ? item.highlights : item.highlights.slice(0, 3);
+  const rest = showAll ? [] : item.highlights.slice(3);
   const moreId = `${item.id}-more`;
-  const Heading = headingLevel;
 
   return (
     <article
@@ -42,7 +42,7 @@ export function PackageCard({ item, headingLevel = "h3" }: { item: TripPackage; 
         )}
       </div>
       <div className="flex flex-1 flex-col p-5">
-        <Heading className="text-h3">{item.name}</Heading>
+        <h3 className="text-h3">{item.name}</h3>
         <ul className="mt-3 grid gap-1.5">
           {top.map((id) => (
             <HighlightItem key={id} id={id} />

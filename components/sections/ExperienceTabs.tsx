@@ -32,8 +32,9 @@ function TileCard({ item, index, count, onOpen }: { item: Tile; index: number; c
       <article className="group relative h-full overflow-hidden rounded-card bg-navy-700 transition-transform duration-250 ease-out hover:-translate-y-1">
         <Image src={item.image.src} alt={item.image.alt} fill sizes={layout.sizes} className="object-cover transition-transform duration-300 group-hover:scale-[1.03]" />
         <div aria-hidden="true" className="absolute inset-x-0 bottom-0 h-3/4 bg-linear-to-t from-navy-900/95 via-navy-900/50 to-transparent" />
-        <h3 className="absolute inset-x-0 bottom-0 p-4 font-display text-lg leading-tight font-semibold text-white lg:p-5 lg:text-h3">
-          <button type="button" onClick={onOpen} aria-haspopup="dialog" className="text-left after:absolute after:inset-0 after:content-['']">
+        {/* The button fills the tile, so the whole card is the tap target. */}
+        <h3 className="absolute inset-0 font-display text-lg leading-tight font-semibold text-white lg:text-h3">
+          <button type="button" onClick={onOpen} aria-haspopup="dialog" className="flex size-full items-end rounded-card p-4 text-left lg:p-5">
             {item.title}
           </button>
         </h3>
@@ -84,7 +85,7 @@ export function ExperienceTabs() {
 
       {tabs.map((item, index) => (
         <div key={item.id} role="tabpanel" id={`panel-${item.id}`} aria-labelledby={`tab-${item.id}`} hidden={tab !== index} className="mt-6">
-          <ul className="grid grid-cols-2 gap-3 lg:grid-cols-4 lg:grid-rows-[repeat(2,220px)] lg:gap-4">
+          <ul className="grid grid-cols-2 gap-3 lg:grid-cols-4 lg:grid-rows-[repeat(2,200px)] lg:gap-4">
             {item.items.map((tile, tileIndex) => (
               <TileCard key={tile.id} item={tile} index={tileIndex} count={item.items.length} onOpen={() => setOpen(tile)} />
             ))}

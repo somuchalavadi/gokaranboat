@@ -1,3 +1,6 @@
 import type { MetadataRoute } from "next";
-import { site } from "@/lib/site";
-export default function robots(): MetadataRoute.Robots { const url = site.url || "https://therudragokarna.vercel.app"; return { rules: { userAgent: "*", allow: "/" }, sitemap: `${url}/sitemap.xml` }; }
+import { absoluteUrl, siteUrl } from "@/lib/url";
+
+export default function robots(): MetadataRoute.Robots {
+  return { rules: { userAgent: "*", allow: "/" }, sitemap: absoluteUrl("/sitemap.xml"), host: siteUrl };
+}

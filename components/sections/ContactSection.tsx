@@ -1,7 +1,0 @@
-import { MapPin } from "lucide-react";
-import { bookingWhatsapp, site } from "@/lib/site";
-import { confirmed } from "@/lib/confirm";
-import { ContactForm } from "@/components/sections/ContactForm";
-import { PhoneActions } from "@/components/ui/PhoneActions";
-
-export function ContactSection({ compact = false }: { compact?: boolean }) { return <section className="contact-section" id="contact"><div className="container"><div className="contact-grid"><div className="contact-info"><p className="eyebrow">Start planning</p><h2>Let’s plan your time in Gokarna</h2><p>Send your date and group size on WhatsApp and we’ll reply to plan your trip.</p><a className="location" href={confirmed.googleMapsListingUrl || "https://www.google.com/maps/search/?api=1&query=Gokarna+Beach%2C+Gokarna%2C+Karnataka"} target="_blank" rel="noreferrer"><MapPin size={19} /><span><small>Pick-up point</small>{site.pickup}</span></a><div className="phone-list">{site.phones.map((phone, index) => <PhoneActions key={phone} phone={phone} label={index === 0 ? "Call / WhatsApp" : "Call"} />)}</div><a className="button button-light" href={bookingWhatsapp()} target="_blank" rel="noreferrer">Book on WhatsApp</a>{confirmed.googleMapsListingUrl && <a className="text-link contact-reviews" href={confirmed.googleMapsListingUrl} target="_blank" rel="noreferrer">Read reviews on Google</a>}</div>{!compact && <ContactForm />}</div></div></section>; }

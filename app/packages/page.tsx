@@ -1,5 +1,43 @@
 import type { Metadata } from "next";
-import { CustomEventsSection, GoodToKnowSection, PackageComparisonSection, PackagesFaqSection, PackagesSection } from "@/components/sections/PackagesSection";
-import { pageMetadata } from "@/lib/metadata";
-export const metadata: Metadata = pageMetadata("Packages", "Explore Gokarna boat packages with clear durations and route inclusions. Prices are available on enquiry.", "/packages");
-export default function PackagesPage() { return <div className="inner-page"><section className="page-hero"><div className="container"><p className="eyebrow">Choose your journey</p><h1>Gokarna boat packages</h1><p>Explore each trip’s duration and inclusions, then enquire directly with us.</p></div></section><PackagesSection /><PackageComparisonSection /><CustomEventsSection /><GoodToKnowSection /><PackagesFaqSection /></div>; }
+import { packages } from "@/data/site";
+import { pageMetadata } from "@/lib/seo";
+import { Button } from "@/components/ui/Button";
+import { Section } from "@/components/ui/Section";
+import { PageHeader } from "@/components/layout/PageHeader";
+import { PackageCard } from "@/components/sections/PackageCard";
+import { CompareTable } from "@/components/sections/CompareTable";
+import { FaqGoodToKnow } from "@/components/sections/FaqGoodToKnow";
+import { Events } from "@/components/sections/Events";
+import { packagesSummary } from "@/components/sections/Packages";
+
+export const metadata: Metadata = pageMetadata({
+  title: "Gokarna Boat Packages: Premium, Standard, Exclusive & River Trips | Rudra Gokarna Adventures",
+  description: "Compare 2–4 hour boat packages from Gokarna Beach: sightseeing, kayaking, snorkelling, dolphin watching, fishing, bioluminescence and mangrove trips.",
+  path: "/packages",
+});
+
+export default function PackagesPage() {
+  return (
+    <>
+      <PageHeader crumb="Packages" title="Gokarna boat packages" intro={`${packagesSummary()} Here is everything each one includes.`}>
+        <Button href="/#book">Plan & book</Button>
+      </PageHeader>
+      <Section id="all-packages" tone="sand" title="Every package in full">
+        <ul data-reveal className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          {packages.map((item) => (
+            <li key={item.id}>
+              <PackageCard item={item} showAll />
+            </li>
+          ))}
+        </ul>
+      </Section>
+      <Section id="compare" tone="navy" title="Compare all packages" intro={<p>Every activity and stop, side by side.</p>}>
+        <div data-reveal>
+          <CompareTable />
+        </div>
+      </Section>
+      <FaqGoodToKnow />
+      <Events />
+    </>
+  );
+}

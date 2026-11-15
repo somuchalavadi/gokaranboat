@@ -32,7 +32,7 @@ export function PackageCarousel({ labels, children }: { labels: readonly string[
     <div data-reveal>
       <ul
         ref={scroller}
-        className="no-scrollbar -mx-4 flex snap-x snap-mandatory scroll-px-4 gap-4 overflow-x-auto px-4 pt-2 pb-4 sm:-mx-6 sm:scroll-px-6 sm:px-6 lg:mx-0 lg:grid lg:grid-cols-4 lg:gap-6 lg:overflow-visible lg:px-0 lg:pb-0"
+        className="no-scrollbar relative -mx-4 flex snap-x snap-mandatory scroll-px-4 gap-4 overflow-x-auto px-4 pt-2 pb-4 sm:-mx-6 sm:scroll-px-6 sm:px-6 lg:mx-0 lg:grid lg:grid-cols-4 lg:gap-6 lg:overflow-visible lg:px-0 lg:pb-0"
       >
         {items.map((item, index) => (
           <li key={labels[index]} className="w-[85vw] max-w-[360px] shrink-0 snap-start md:w-[44vw] lg:w-auto lg:max-w-none">

@@ -1,13 +1,17 @@
 import type { Metadata } from "next";
-import { HomeContent } from "@/components/sections/HomeSections";
+import { seo } from "@/data/site";
+import { pageMetadata } from "@/lib/seo";
 import { Hero } from "@/components/sections/Hero";
 import { TrustStrip } from "@/components/sections/TrustStrip";
 import { Packages } from "@/components/sections/Packages";
 import { Experiences } from "@/components/sections/Experiences";
 import { Boat } from "@/components/sections/Boat";
-import { pageMetadata } from "@/lib/metadata";
+import { Gallery } from "@/components/sections/Gallery";
+import { Book } from "@/components/sections/Book";
+import { Events } from "@/components/sections/Events";
+import { FaqGoodToKnow } from "@/components/sections/FaqGoodToKnow";
 
-export const metadata: Metadata = pageMetadata("Gokarna boat adventures", "Boat rides, water activities and coastal exploration from Gokarna Beach with Rudra Gokarna Adventures.", "/");
+export const metadata: Metadata = pageMetadata({ title: seo.title, description: seo.description, path: "/" });
 
 export default function Home() {
   return (
@@ -17,7 +21,10 @@ export default function Home() {
       <Packages />
       <Experiences />
       <Boat />
-      <HomeContent />
+      <Gallery />
+      <Book />
+      <Events />
+      <FaqGoodToKnow />
     </>
   );
 }

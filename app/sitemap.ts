@@ -1,3 +1,10 @@
 import type { MetadataRoute } from "next";
-import { site } from "@/lib/site";
-export default function sitemap(): MetadataRoute.Sitemap { const url = site.url || "https://therudragokarna.vercel.app"; return ["", "/adventures", "/packages", "/gallery", "/about", "/contact", "/new-year"].map(path => ({ url: `${url}${path}`, lastModified: new Date() })); }
+import { absoluteUrl } from "@/lib/url";
+
+export default function sitemap(): MetadataRoute.Sitemap {
+  return [
+    { url: absoluteUrl("/"), changeFrequency: "monthly", priority: 1 },
+    { url: absoluteUrl("/packages"), changeFrequency: "monthly", priority: 0.8 },
+    { url: absoluteUrl("/adventures"), changeFrequency: "monthly", priority: 0.7 },
+  ];
+}

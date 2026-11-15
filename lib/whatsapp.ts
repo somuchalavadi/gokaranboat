@@ -19,10 +19,13 @@ export type BookingDetails = {
   phone: string;
 };
 
+// "2026-11-22" → "Sun, 22 Nov 2026"
 function formatDate(iso: string) {
   const [year, month, day] = iso.split("-").map(Number);
   if (!year || !month || !day) return iso;
-  return new Date(Date.UTC(year, month - 1, day)).toLocaleDateString("en-IN", { weekday: "short", day: "numeric", month: "short", year: "numeric", timeZone: "UTC" });
+  const date = new Date(Date.UTC(year, month - 1, day));
+  const part = (options: Intl.DateTimeFormatOptions) => date.toLocaleDateString("en-IN", { ...options, timeZone: "UTC" });
+  return `${part({ weekday: "short" })}, ${day} ${part({ month: "short" })} ${year}`;
 }
 
 export function buildBookingMessage(details: BookingDetails) {

@@ -22,11 +22,12 @@ function audit() {
     const style = getComputedStyle(el);
     if (style.visibility === "hidden" || style.display === "none" || Number(style.opacity) === 0) return false;
     const rect = el.getBoundingClientRect();
+    if (el.closest("details:not([open])") && !el.closest("summary")) return false;
     return rect.width > 0 && rect.height > 0 && !el.closest("[hidden], dialog:not([open]), [aria-hidden='true']");
   };
   const label = (el) => `${el.tagName.toLowerCase()}${el.id ? `#${el.id}` : ""} "${(el.getAttribute("aria-label") || el.textContent || "").trim().slice(0, 40)}"`;
   const insideScroller = (el) => {
-    for (let node = el.parentElement; node; node = node.parentElement) {
+    for (let node = el.parentElement; node && node !== document.body; node = node.parentElement) {
       const overflowX = getComputedStyle(node).overflowX;
       if (overflowX === "auto" || overflowX === "scroll" || overflowX === "hidden" || overflowX === "clip") return true;
     }
@@ -47,6 +48,8 @@ function audit() {
       return rect.width < 44 || rect.height < 44;
     })
     .filter((el) => !(el.tagName === "A" && getComputedStyle(el).display === "inline" && el.closest("p")))
+    // Visually hidden radios/checkboxes: the visible label is the target.
+    .filter((el) => !(el.classList.contains("sr-only") && el.closest("label") && el.closest("label").getBoundingClientRect().height >= 44))
     .map((el) => `${label(el)} ${Math.round(el.getBoundingClientRect().width)}×${Math.round(el.getBoundingClientRect().height)}`);
 
   const textEls = Array.from(document.querySelectorAll("main *, footer *, header *")).filter(

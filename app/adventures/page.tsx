@@ -1,16 +1,31 @@
 import type { Metadata } from "next";
-import { ExperienceGrid } from "@/components/sections/ExperienceGrid";
-import { SectionHeading } from "@/components/ui/SectionHeading";
-import { experiences } from "@/lib/experiences";
-import { pageMetadata } from "@/lib/metadata";
-export const metadata: Metadata = pageMetadata("Adventures", "Explore boat adventures, water activities, sightseeing and special experiences in Gokarna.", "/adventures");
-const categories = [
-  "Boat trips",
-  "Water activities",
-  "Sightseeing",
-  "Fishing and special experiences",
-  "River and mangrove trips",
-  "Customised events",
-] as const;
+import { activities, experiencesIntro, places } from "@/data/site";
+import { pageMetadata } from "@/lib/seo";
+import { Button } from "@/components/ui/Button";
+import { Section } from "@/components/ui/Section";
+import { PageHeader } from "@/components/layout/PageHeader";
+import { TileGrid } from "@/components/sections/TileGrid";
+import { Events } from "@/components/sections/Events";
 
-export default function AdventuresPage() { return <div className="inner-page"><section className="page-hero"><div className="container"><p className="eyebrow">Explore Gokarna</p><h1>Adventures on the water and along the coast</h1><p>Choose an experience and enquire directly about your trip.</p></div></section><section className="section adventure-categories"><div className="container"><SectionHeading title="Choose your experience" copy="Activities are available as part of selected packages or by enquiry." />{categories.map((category, index) => { const items = experiences.filter((experience) => experience.group === category); return <section className="adventure-category" key={category}><SectionHeading title={category} /><ExperienceGrid items={items} featureFirst={index === 0} /></section>; })}</div></section></div>; }
+export const metadata: Metadata = pageMetadata({
+  title: "Things to Do in Gokarna by Boat: Kayaking, Snorkelling & Caves | Rudra Gokarna Adventures",
+  description: "Kayaking, snorkelling, swimming, dolphin watching, the lighthouse, a mystery cave, the fishing harbour and mangroves, and which Gokarna boat trips include each.",
+  path: "/adventures",
+});
+
+export default function AdventuresPage() {
+  return (
+    <>
+      <PageHeader crumb="Things to do" title="Things to do on the water" intro="Every activity and place on our Gokarna trips, and which packages include each one.">
+        <Button href="/#book">Plan & book</Button>
+      </PageHeader>
+      <Section id="activities" tone="sand" title="Activities" intro={<p className="text-base">{experiencesIntro.stockNote}</p>}>
+        <TileGrid items={activities} tone="sand" />
+      </Section>
+      <Section id="places" tone="navy" title="Places">
+        <TileGrid items={places} tone="navy" />
+      </Section>
+      <Events />
+    </>
+  );
+}

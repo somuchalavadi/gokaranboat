@@ -6,7 +6,7 @@ const rows = Array.from(new Set(packages.flatMap((item) => item.highlights)));
 // Scrolls horizontally inside its own wrapper; the activity column stays put.
 export function CompareTable() {
   return (
-    <div role="region" aria-label="Package comparison" tabIndex={0} className="overflow-x-auto rounded-card bg-white text-ink ring-1 ring-line">
+    <div role="region" aria-label="Package comparison" tabIndex={0} className="relative overflow-x-auto rounded-card bg-white text-ink ring-1 ring-line">
       <table className="w-full min-w-[560px] border-collapse text-left">
         <caption className="sr-only">What each package includes</caption>
         <thead>

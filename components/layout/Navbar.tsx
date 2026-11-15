@@ -25,7 +25,7 @@ export function Navbar() {
       className={`fixed inset-x-0 top-0 z-50 h-16 border-x-0! border-t-0! transition-colors duration-200 ${overHero ? "glass-dark text-white" : "glass-light border-b-line! text-ink"}`}
     >
       <div className="mx-auto flex h-full max-w-[1248px] items-center gap-3 px-4 sm:px-6">
-        <Link href="/" className="shrink-0 rounded-md">
+        <Link href="/" className="inline-flex h-11 shrink-0 items-center rounded-md">
           <Image src={business.logo.src} alt={business.logo.alt} width={95} height={40} loading="eager" className="h-10 w-auto" />
         </Link>
 
@@ -36,7 +36,7 @@ export function Navbar() {
                 <Link
                   href={`/#${item.id}`}
                   aria-current={current === item.id ? "true" : undefined}
-                  className={`inline-flex h-11 items-center rounded-full px-3 text-[15px] font-medium underline-offset-[10px] transition-colors xl:px-4 ${current === item.id ? "underline decoration-gold decoration-2" : "hover:underline hover:decoration-current/40"}`}
+                  className={`inline-flex h-11 min-w-11 items-center justify-center rounded-full px-3 text-[15px] font-medium underline-offset-[10px] transition-colors xl:px-4 ${current === item.id ? "underline decoration-gold decoration-2" : "hover:underline hover:decoration-current/40"}`}
                 >
                   {item.label}
                 </Link>

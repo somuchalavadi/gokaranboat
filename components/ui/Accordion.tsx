@@ -1,7 +1,18 @@
-"use client";
-
 import { ChevronDown } from "lucide-react";
-import { useState } from "react";
-import { faqItems } from "@/lib/faq";
 
-export function Accordion({ limit }: { limit?: number }) { const [open, setOpen] = useState<number | null>(null); return <div className="accordion">{faqItems.slice(0, limit).map((item, index) => { const answerId = `faq-answer-${index}`; return <div className="accordion-item" key={item.question}><button type="button" aria-expanded={open === index} aria-controls={answerId} onClick={() => setOpen(open === index ? null : index)}><span>{item.question}</span><ChevronDown size={18} /></button><p id={answerId} hidden={open !== index}>{item.answer}</p></div>; })}</div>; }
+// Native <details> with a shared name: one open at a time, keyboard support built in, answers stay in the HTML.
+export function Accordion({ name, items, className = "" }: { name: string; items: readonly { question: string; answer: string }[]; className?: string }) {
+  return (
+    <div className={`divide-y divide-line rounded-card bg-white ring-1 ring-line ${className}`}>
+      {items.map((item) => (
+        <details key={item.question} name={name} className="group px-5">
+          <summary className="flex min-h-14 cursor-pointer list-none items-center justify-between gap-4 py-3 font-semibold [&::-webkit-details-marker]:hidden">
+            {item.question}
+            <ChevronDown aria-hidden="true" className="transition-transform duration-200 group-open:rotate-180" />
+          </summary>
+          <p className="pb-5 text-muted">{item.answer}</p>
+        </details>
+      ))}
+    </div>
+  );
+}

@@ -12,7 +12,7 @@ export function BoatViewer() {
   return (
     <div data-reveal>
       <figure>
-        <div className="relative aspect-[16/10] overflow-hidden rounded-card bg-white ring-1 ring-line">
+        <div className="relative aspect-[16/10] overflow-hidden rounded-card bg-white ring-1 ring-line lg:aspect-[2/1]">
           {boat.views.map((view, viewIndex) => (
             <Image
               key={view.id}
