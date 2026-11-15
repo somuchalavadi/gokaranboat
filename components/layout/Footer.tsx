@@ -93,7 +93,20 @@ export function Footer() {
         </div>
       </Container>
       <div className="border-t border-line-dark">
-        <Container className="py-6 text-sm text-mist">{footer.copyright}</Container>
+        <Container className="flex flex-col gap-2 py-6 text-sm text-mist md:flex-row md:items-center md:justify-between">
+          <span>{footer.copyright}</span>
+          <span>
+            {footer.credit.label}{" "}
+            <a
+              href={footer.credit.url}
+              target="_blank"
+              rel="noopener"
+              className="inline-flex min-h-11 items-center px-2 text-sm text-mist hover:underline hover:underline-offset-4"
+            >
+              {footer.credit.name}
+            </a>
+          </span>
+        </Container>
       </div>
     </footer>
   );

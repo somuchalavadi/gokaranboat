@@ -390,4 +390,9 @@ export const faq: readonly { question: string; answer: string }[] = [
 
 export const footer = {
   copyright: `© ${new Date().getFullYear()} ${business.name}`,
+  credit: {
+    label: "Designed & developed by",
+    name: "Dishan Web Wings",
+    url: "https://dishanwebwing.com/",
+  },
 };
