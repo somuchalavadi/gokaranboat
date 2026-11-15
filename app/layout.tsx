@@ -1,8 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import { Fraunces, Inter } from "next/font/google";
 import "./globals.css";
-import { business, contact, seo } from "@/data/site";
-import { jsonLdScript } from "@/lib/seo";
+import { business, seo } from "@/data/site";
+import { jsonLdScript, localBusinessJsonLd } from "@/lib/seo";
 import { siteUrl } from "@/lib/url";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
@@ -12,10 +12,13 @@ import { RevealObserver } from "@/components/ui/Reveal";
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter", display: "swap" });
 const fraunces = Fraunces({ subsets: ["latin"], variable: "--font-fraunces", display: "swap" });
 
+// Defaults; each page sets its own title, description, canonical and social cards via pageMetadata().
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: seo.title,
   description: seo.description,
+  applicationName: business.name,
+  formatDetection: { telephone: false, address: false, email: false },
 };
 
 export const viewport: Viewport = {
@@ -23,14 +26,6 @@ export const viewport: Viewport = {
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "LocalBusiness",
-    name: business.name,
-    url: siteUrl,
-    telephone: contact.phones.map((phone) => phone.tel),
-    address: contact.pickup.label,
-  };
   return (
     <html lang="en-IN" className={`${inter.variable} ${fraunces.variable}`}>
       <body>
@@ -42,7 +37,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <Footer />
         <MobileBar />
         <RevealObserver />
-        <script type="application/ld+json" dangerouslySetInnerHTML={jsonLdScript(jsonLd)} />
+        <script type="application/ld+json" dangerouslySetInnerHTML={jsonLdScript(localBusinessJsonLd())} />
       </body>
     </html>
   );

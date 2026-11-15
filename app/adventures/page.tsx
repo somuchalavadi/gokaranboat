@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { activities, experiencesIntro, places } from "@/data/site";
-import { pageMetadata } from "@/lib/seo";
+import { breadcrumbJsonLd, jsonLdScript, pageMetadata, thingsToDoJsonLd } from "@/lib/seo";
 import { Button } from "@/components/ui/Button";
 import { Section } from "@/components/ui/Section";
 import { PageHeader } from "@/components/layout/PageHeader";
@@ -8,8 +8,8 @@ import { TileGrid } from "@/components/sections/TileGrid";
 import { Events } from "@/components/sections/Events";
 
 export const metadata: Metadata = pageMetadata({
-  title: "Things to Do in Gokarna by Boat: Kayaking, Snorkelling & Caves | Rudra Gokarna Adventures",
-  description: "Kayaking, snorkelling, swimming, dolphin watching, the lighthouse, a mystery cave, the fishing harbour and mangroves, and which Gokarna boat trips include each.",
+  title: "Things to Do in Gokarna by Boat | Rudra Gokarna Adventures",
+  description: "Kayaking, snorkelling, dolphin watching, the lighthouse, a mystery cave, the fishing harbour and mangroves, and which Gokarna boat trips include each.",
   path: "/adventures",
 });
 
@@ -26,6 +26,8 @@ export default function AdventuresPage() {
         <TileGrid items={places} tone="navy" />
       </Section>
       <Events />
+      <script type="application/ld+json" dangerouslySetInnerHTML={jsonLdScript(thingsToDoJsonLd())} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={jsonLdScript(breadcrumbJsonLd("Things to do", "/adventures"))} />
     </>
   );
 }

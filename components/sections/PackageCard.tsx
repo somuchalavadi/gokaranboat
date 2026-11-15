@@ -32,7 +32,8 @@ export function PackageCard({ item, showAll = false, sizes = carouselSizes }: { 
 
   return (
     <article
-      className={`flex h-full flex-col overflow-hidden rounded-card bg-white text-ink shadow-[0_12px_32px_-18px_rgb(15_23_42/0.35)] transition-transform duration-250 ease-out hover:-translate-y-1 ${item.featured ? "ring-2 ring-gold" : "ring-1 ring-line"}`}
+      id={item.id}
+      className={`flex h-full scroll-mt-24 flex-col overflow-hidden rounded-card bg-white text-ink shadow-[0_12px_32px_-18px_rgb(15_23_42/0.35)] transition-transform duration-250 ease-out hover:-translate-y-1 ${item.featured ? "ring-2 ring-gold" : "ring-1 ring-line"}`}
     >
       <div className="relative aspect-[16/10] bg-navy-700">
         <Image src={item.image.src} alt={item.image.alt} fill sizes={sizes} className="object-cover" />

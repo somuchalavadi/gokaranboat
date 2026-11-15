@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { packages } from "@/data/site";
-import { pageMetadata } from "@/lib/seo";
+import { breadcrumbJsonLd, jsonLdScript, pageMetadata, touristTripsJsonLd } from "@/lib/seo";
 import { Button } from "@/components/ui/Button";
 import { Section } from "@/components/ui/Section";
 import { PageHeader } from "@/components/layout/PageHeader";
@@ -11,7 +11,7 @@ import { Events } from "@/components/sections/Events";
 import { packagesSummary } from "@/components/sections/Packages";
 
 export const metadata: Metadata = pageMetadata({
-  title: "Gokarna Boat Packages: Premium, Standard, Exclusive & River Trips | Rudra Gokarna Adventures",
+  title: "Gokarna Boat Trip Packages | Rudra Gokarna Adventures",
   description: "Compare 2–4 hour boat packages from Gokarna Beach: sightseeing, kayaking, snorkelling, dolphin watching, fishing, bioluminescence and mangrove trips.",
   path: "/packages",
 });
@@ -38,6 +38,8 @@ export default function PackagesPage() {
       </Section>
       <FaqGoodToKnow />
       <Events />
+      <script type="application/ld+json" dangerouslySetInnerHTML={jsonLdScript(touristTripsJsonLd())} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={jsonLdScript(breadcrumbJsonLd("Packages", "/packages"))} />
     </>
   );
 }
