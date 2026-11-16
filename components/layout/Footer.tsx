@@ -77,7 +77,7 @@ export function Footer() {
             ))}
             <li>
               <span className="block text-sm text-mist">Pick-up point</span>
-              <a href={contact.pickup.mapsUrl} target="_blank" rel="noopener noreferrer" className={linkClass}>
+              <a href={contact.pickup.mapsUrl} target="_blank" rel="noopener" className={linkClass}>
                 <MapPin aria-hidden="true" />
                 {contact.pickup.label}
               </a>

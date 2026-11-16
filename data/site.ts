@@ -18,14 +18,12 @@ export const business = {
 };
 
 export const contact = {
-  whatsappNumber: "919591556869",
-  phones: [
-    { display: "+91 95915 56869", tel: "+919591556869", label: "Call / WhatsApp", primary: true },
-    { display: "+91 70223 44675", tel: "+917022344675", label: "Alternate", primary: false },
-  ],
+  // One number for both calls and WhatsApp.
+  whatsappNumber: "917019745857",
+  phones: [{ display: "+91 70197 45857", tel: "+917019745857", label: "Call / WhatsApp", primary: true }],
   pickup: {
     label: "Gokarna Beach, Gokarna, Karnataka",
-    mapsUrl: "https://www.google.com/maps/search/?api=1&query=Gokarna+Beach%2C+Gokarna%2C+Karnataka",
+    mapsUrl: "https://maps.app.goo.gl/s4jSzvA6cUZmsFzZ6",
     street: "Gokarna Beach",
     locality: "Gokarna",
     region: "Karnataka",
@@ -259,8 +257,9 @@ export function packagesFor(highlightIds: readonly HighlightId[]) {
   return packages.filter((item) => item.highlights.some((id) => highlightIds.includes(id)));
 }
 
-export const trust: readonly { id: string; label: string | null; icon: "pin" | "star" | "safety" | "crew" }[] = [
-  { id: "pickup", label: "Pick-up from Gokarna Beach", icon: "pin" },
+// `href` turns an item into a link (opens in a new tab).
+export const trust: readonly { id: string; label: string | null; icon: "pin" | "star" | "safety" | "crew"; href?: string }[] = [
+  { id: "pickup", label: "Pick-up from Gokarna Beach", icon: "pin", href: contact.pickup.mapsUrl },
   { id: "rating", label: null, icon: "star" }, // TODO(owner): e.g. "4.8 on Google · 120 reviews", once confirmed.
   { id: "safety", label: null, icon: "safety" }, // TODO(owner): e.g. "Life jackets for every guest", once confirmed.
   { id: "crew", label: null, icon: "crew" }, // TODO(owner): e.g. "Local crew", once confirmed.

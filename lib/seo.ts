@@ -37,7 +37,7 @@ export function localBusinessJsonLd() {
     url: absoluteUrl("/"),
     image: [absoluteUrl(seo.ogImage.src), absoluteUrl(`${hero.poster.base}-${hero.poster.width}.webp`)],
     logo: absoluteUrl(business.emblem),
-    telephone: contact.phones.map((phone) => phone.tel),
+    telephone: contact.phones.length === 1 ? contact.phones[0].tel : contact.phones.map((phone) => phone.tel),
     email: contact.email,
     address: compact({
       "@type": "PostalAddress",

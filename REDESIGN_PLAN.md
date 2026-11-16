@@ -142,7 +142,7 @@ type HighlightId = "sightseeing" | "lighthouse" | "kayaking" | "snorkelling" | "
 
 business   { name, tagline, description, url, logo, image, priceRange: null, rating: null, reviewCount: null,
              hours: null, geo: null, socials: null }                                   // TODO(owner) each
-contact    { whatsapp: "919591556869", phones: [{ display, tel, label: "Call / WhatsApp", primary }, { …, "Alternate" }],
+contact    { whatsapp: "917019745857", phones: [{ display, tel, label: "Call / WhatsApp", primary }],  // one number since the contact update
              pickup: { label: "Gokarna Beach, Gokarna, Karnataka", mapsUrl }, replyTime: null, email: null }
 highlights Record<HighlightId, string>        // single source of labels; the comparison table is built from these
 packages   [{ id, name, shortName, durationHours, featured, image, imageAlt, highlights: HighlightId[],

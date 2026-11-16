@@ -22,7 +22,7 @@ Branch `redesign`, seven phases (plus your hero change in `c3666da`; the Phase 7
 | One primary CTA per section | One gold button per section; the rest are secondary or text links | ✅ |
 | axe: zero serious/critical | **0 issues at any impact** across 15 scans (pages + open menu, sheets, lightbox, form errors) | ✅ |
 | Build, lint, type-check | `next build` 0 warnings, `eslint --max-warnings=0` clean, `tsc --noEmit` clean | ✅ |
-| WhatsApp links and booking form | 38/38 checks: all wa.me links use 919591556869 with a message; form output verified for package and custom trips | ✅ |
+| WhatsApp links and booking form | 39/39 checks: all 38 wa.me links use 917019745857 with a message, all 16 tel: links are +917019745857, all 10 pick-up links use the Maps short link in a new tab; booking-form output verified for package and custom trips | ✅ |
 
 **About mobile Performance and simulated LCP.** Lighthouse's default mobile run doesn't throttle the page; it *simulates* Slow 4G from a fast local trace. It counts every script that starts running before the first paint as render-blocking. On `localhost` the ~130 KB of Next.js/React JavaScript downloads before the first paint, so the simulation adds roughly a second to LCP. On a real network the HTML, CSS and hero image paint first: with real 4G throttling LCP is under 1 s on all three pages. Scores on this Windows laptop also swing from run to run (one home run scored 75 on an unchanged build), so treat single runs with caution. Running PageSpeed Insights against the deployed site (HTTP/2, real network) is the most representative check.
 
@@ -49,6 +49,12 @@ Real-4G measurements (3 runs each, median): home LCP 0.87 s (FCP 0.82 s), `/pack
 | 15 | Guests shown as "—" on packages and in the planner | Stepper starts at 2 (1–20). The package "guests" line is hidden while `maxGuests` is null. |
 | 16 | Stock images with "Representative…" alt under a heading claiming photos of the boat; clip 03 duplicates the hero | Alt text describes each scene (checked against the actual crops; river-trips alt corrected). A visible note says activity and place photos are illustrative. The gallery holds owner media only and nothing repeats the hero: two photos plus clips 01, 03, 04 and 05, each with a caption describing what it shows. Clip 02 (a byte-identical copy of clip 01) is dropped. |
 | 17 | `<title>` "Gokarna boat adventures"; no `twitter:image:alt`; minimal LocalBusiness JSON-LD | Title "Gokarna Boat Trips, Kayaking & Dolphin Tours \| Rudra Gokarna Adventures", 154-character description, OG/Twitter with a real 1200×630 image and `og:image:alt` / `twitter:image:alt`. JSON-LD: LocalBusiness (PostalAddress, both phones, image, logo, map; price range, hours, geo, sameAs and postcode added automatically once filled in), an ItemList of TouristTrip, FAQPage, breadcrumbs. `sitemap.xml` and `robots.txt`; canonical from `NEXT_PUBLIC_SITE_URL`. |
+
+## Updates after the redesign
+
+- **Developer credit (`fd0b874`):** the footer's bottom bar shows "Designed & developed by Dishan Web Wings", linked to the agency site in a new tab. The text lives in `data/site.ts` under `footer.credit`.
+- **Contact details:** the business now has **one number for calls and WhatsApp, +91 70197 45857**. Both previous numbers, and the "Alternate" row they needed, are gone from the site, the JSON-LD and the QA script. With one number, the Book section shows it without repeating its "Call or WhatsApp" heading. LocalBusiness `telephone` is the single string `+917019745857`.
+- **Pick-up map:** every pick-up link (footer, Book section, and the trust strip's "Pick-up from Gokarna Beach", which is now a link) goes to the Google Maps pin `https://maps.app.goo.gl/s4jSzvA6cUZmsFzZ6` in a new tab with `rel="noopener"`. The same URL is the LocalBusiness `hasMap`.
 
 ## Decisions and deviations from the brief
 

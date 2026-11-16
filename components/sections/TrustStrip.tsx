@@ -11,13 +11,24 @@ export function TrustStrip() {
   return (
     <div className="border-t border-line-dark bg-navy-900 text-white">
       <Container>
-        <ul className="flex flex-wrap items-center justify-center gap-x-8 gap-y-2 py-4 text-sm text-mist">
+        <ul className="flex flex-wrap items-center justify-center gap-x-8 gap-y-1 py-2 text-sm text-mist">
           {items.map((item) => {
             const Icon = icons[item.icon];
-            return (
-              <li key={item.id} className="inline-flex items-center gap-2">
+            const content = (
+              <>
                 <Icon aria-hidden="true" className="text-white" />
                 {item.label}
+              </>
+            );
+            return (
+              <li key={item.id} className="inline-flex min-h-11 items-center gap-2">
+                {item.href ? (
+                  <a href={item.href} target="_blank" rel="noopener" className="inline-flex min-h-11 items-center gap-2 rounded-sm hover:underline hover:underline-offset-4">
+                    {content}
+                  </a>
+                ) : (
+                  content
+                )}
               </li>
             );
           })}

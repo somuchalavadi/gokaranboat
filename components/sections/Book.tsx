@@ -29,7 +29,7 @@ export function Book() {
             <div>
               <dt className={termClass}>Pick-up point</dt>
               <dd className="mt-1">
-                <a href={contact.pickup.mapsUrl} target="_blank" rel="noopener noreferrer" className={linkClass}>
+                <a href={contact.pickup.mapsUrl} target="_blank" rel="noopener" className={linkClass}>
                   <MapPin aria-hidden="true" />
                   {contact.pickup.label}
                 </a>
@@ -45,7 +45,8 @@ export function Book() {
                         <Phone aria-hidden="true" />
                         {phone.display}
                       </a>
-                      <span className="text-sm text-muted">{phone.label}</span>
+                      {/* With a single number the label would only repeat the "Call or WhatsApp" heading. */}
+                      {contact.phones.length > 1 && <span className="text-sm text-muted">{phone.label}</span>}
                     </li>
                   ))}
                 </ul>

@@ -1,12 +1,14 @@
-// Checks every WhatsApp and phone link, drives the booking form end to end, and exercises the
+// Checks every WhatsApp, phone and pick-up map link, drives the booking form end to end, and exercises the
 // menu, compare sheet, tabs, tile sheet and lightbox (keyboard + focus return).
 // Usage: with the site running on QA_URL (default http://localhost:3100): `node scripts/qa/links.mjs`.
 import { chromium } from "playwright";
 import { mkdir, writeFile } from "node:fs/promises";
 
 const base = process.env.QA_URL ?? "http://localhost:3100";
-const number = "919591556869";
-const phones = new Set(["tel:+919591556869", "tel:+917022344675"]);
+// The one business number, used for both calls and WhatsApp.
+const number = "917019745857";
+const phones = new Set(["tel:+917019745857"]);
+const mapsUrl = "https://maps.app.goo.gl/s4jSzvA6cUZmsFzZ6";
 const results = { links: [], checks: [], bookingMessages: [], consoleErrors: [] };
 let failed = 0;
 
@@ -35,6 +37,10 @@ for (const path of ["/", "/packages", "/adventures"]) {
         const ok = phones.has(link.href);
         results.links.push({ path, width, kind: "tel", text: link.text, href: link.href, ok });
         if (!ok) check(`Phone link on ${path} @${width}`, false, link.href);
+      } else if (/google\.[a-z.]+\/maps|maps\.app\.goo\.gl|goo\.gl\/maps/.test(link.href)) {
+        const ok = link.href === mapsUrl && link.target === "_blank" && link.rel.split(/\s+/).includes("noopener");
+        results.links.push({ path, width, kind: "maps", text: link.text, href: link.href, ok });
+        if (!ok) check(`Map link on ${path} @${width}: "${link.text}"`, false, `${link.href} target=${link.target} rel=${link.rel}`);
       }
     }
     await page.close();
@@ -42,8 +48,10 @@ for (const path of ["/", "/packages", "/adventures"]) {
 }
 const wa = results.links.filter((l) => l.kind === "whatsapp");
 const tel = results.links.filter((l) => l.kind === "tel");
-check("All WhatsApp links use 919591556869, open in a new tab and carry a message", wa.every((l) => l.ok), `${wa.length} links`);
-check("All phone links are one of the two business numbers", tel.every((l) => l.ok), `${tel.length} links`);
+const maps = results.links.filter((l) => l.kind === "maps");
+check(`All WhatsApp links use ${number}, open in a new tab and carry a message`, wa.length > 0 && wa.every((l) => l.ok), `${wa.length} links`);
+check(`All phone links are tel:+${number}`, tel.length > 0 && tel.every((l) => l.ok), `${tel.length} links`);
+check("All pick-up links use the Google Maps short link, in a new tab with rel=noopener", maps.length > 0 && maps.every((l) => l.ok), `${maps.length} links`);
 const homeMobile = wa.filter((l) => l.path === "/" && l.width === 375);
 console.log(`\nWhatsApp CTAs on home @375: ${homeMobile.length}`);
 for (const l of homeMobile) console.log(`  • ${l.text.replace(/\s+/g, " ").slice(0, 50).padEnd(50)} → "${l.message}"`);
@@ -94,7 +102,7 @@ for (const l of homeMobile) console.log(`  • ${l.text.replace(/\s+/g, " ").sli
   const opened = await page.evaluate(() => window.__opened);
   const message = opened[0] ? new URL(opened[0]).searchParams.get("text") : "";
   results.bookingMessages.push(message);
-  check("Submit opens wa.me/919591556869 with the details", opened.length === 1 && opened[0].startsWith(`https://wa.me/${number}?text=`));
+  check(`Submit opens wa.me/${number} with the details`, opened.length === 1 && opened[0].startsWith(`https://wa.me/${number}?text=`));
   check(
     "Custom message lists trip, places, length, date, guests, name and phone",
     ["Trip: Custom trip", "Places: Lighthouse, Mangroves", "Length: 4 hours", "Guests: 4", "Name: Test Guest", "Phone: +91 98765 43210"].every((line) => message.includes(line)) && /Date: \w{3}, \d{1,2} \w{3,4} \d{4}\n/.test(message),
