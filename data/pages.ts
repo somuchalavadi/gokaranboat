@@ -5,6 +5,7 @@ import { carry, joinList, keyFacts, type KeyFact, type PageFaq } from "@/data/se
 
 export type PageSummary = { answerSummary: string; keyFacts: readonly KeyFact[]; updatedAt: string; faqs?: readonly PageFaq[] };
 
+const count = ["no", "one", "two", "three", "four", "five", "six"][packages.length] ?? String(packages.length);
 const allIds = packages.map((item) => item.id);
 const hours = packages.map((item) => item.durationHours);
 const span = `${Math.min(...hours)} to ${Math.max(...hours)} hours`;
@@ -32,7 +33,7 @@ export const pageSummaries = {
     updatedAt: "2026-11-17",
   },
   packages: {
-    answerSummary: `We run ${packages.length} boat trip packages from Gokarna Beach, each ${span} long: Premium for the widest mix of activities, Standard for a shorter trip with sightseeing, the mystery cave and dolphin watching, Exclusive for fishing and bioluminescence, and River Trips for the mangroves. Prices are shared when you enquire.`,
+    answerSummary: `We run ${count} boat trip packages from Gokarna Beach, each ${span} long: Premium for the widest mix of activities, Standard for a shorter trip with sightseeing, the mystery cave and dolphin watching, Exclusive for fishing and bioluminescence, and River Trips for the mangroves. Prices are shared when you enquire.`,
     keyFacts: [fact("Price"), fact("Duration"), fact("Departure times"), fact("Pick-up point"), fact("Minimum age"), fact("Season"), custom, booking],
     updatedAt: "2026-11-17",
   },

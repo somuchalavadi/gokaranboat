@@ -48,6 +48,8 @@ const date = "2026-11-17";
 const hours = packages.map((item) => item.durationHours);
 const span = `${Math.min(...hours)} to ${Math.max(...hours)} hours`;
 const priced = packages.filter((item): item is typeof item & { price: number } => item.price !== null);
+const orList = (items: readonly string[]) => joinList(items).replace(/ and ([^,]+)$/, " or $1");
+const theNames = (items: readonly { name: string }[]) => joinList(items.map((item) => `the ${item.name}`));
 const rupees = (value: number) => `₹${value.toLocaleString("en-IN")}`;
 const landing = (slug: SeoPageSlug): GuideLink => ({ href: `/${slug}`, label: linkLabel(slug) });
 const pickupFact: KeyFact = { label: "Pick-up point", value: contact.pickup.label, href: contact.pickup.mapsUrl };
@@ -76,7 +78,7 @@ const hub: Guide = {
     {
       id: "choose",
       heading: "Which boat trip should you choose?",
-      paragraphs: [`We run ${packages.length} trips from Gokarna Beach. Each one is built around different things to do, so start with what your group wants from the day.`],
+      paragraphs: [`We run ${["no", "one", "two", "three", "four", "five", "six"][packages.length] ?? packages.length} trips from Gokarna Beach. Each one is built around different things to do, so start with what your group wants from the day.`],
       list: packages.map((item) => `${item.name} (${item.durationHours} hours): ${item.description} Best for: ${item.bestFor.charAt(0).toLowerCase()}${item.bestFor.slice(1)}`),
       links: [{ href: "/packages", label: "Compare every package" }],
     },
@@ -94,7 +96,7 @@ const hub: Guide = {
       id: "timing",
       heading: "How long are the trips, and when do they run?",
       paragraphs: [
-        `${joinList(packages.map((item) => `${item.name} ${item.durationHours} hours`))}. Custom trips can be ${joinList(booking.customDurations.map(String))} hours.`,
+        `${joinList(packages.map((item) => `${item.name} ${item.durationHours} hours`))}. Custom trips can be ${orList(booking.customDurations.map(String))} hours.`,
         pending.season ? `Season: ${pending.season}` : null,
         "Ask us which dates and departure times are running when you enquire.",
       ],
@@ -114,7 +116,7 @@ const hub: Guide = {
       paragraphs: [
         "Trips depend on sea and weather conditions. Tell us about children, non-swimmers or any health needs when you enquire, and follow the crew's instructions on board.",
       ],
-      list: goodToKnow.map((item) => item.text),
+      list: goodToKnow.map((item) => item.text).filter((text) => !text.startsWith("Trips depend on sea")),
     },
     {
       id: "bring",
@@ -126,7 +128,7 @@ const hub: Guide = {
       id: "dolphins",
       heading: "Dolphin watching",
       paragraphs: [
-        `Dolphin watching is part of the ${joinList(dolphinPackages.map((item) => item.name))}. Dolphins are wild, so sightings can't be promised, but a calm sea makes them much easier to spot.`,
+        `Dolphin watching is part of ${theNames(dolphinPackages)}. Dolphins are wild, so sightings can't be promised, but a calm sea makes them much easier to spot.`,
       ],
       links: [
         { href: guidePath("best-time-for-dolphin-watching-gokarna"), label: "Best time for dolphin watching in Gokarna" },
@@ -145,7 +147,7 @@ const hub: Guide = {
   ],
   faqs: [
     { question: "Do I need to book a Gokarna boat trip in advance?", answer: "Enquiring ahead is the easiest way to get the trip and date you want. Send your date and group size on WhatsApp and we'll confirm availability and the price." },
-    { question: "Can we plan a private or custom trip?", answer: `Yes. Custom trips can be ${joinList(booking.customDurations.map(String))} hours and are planned around couples, families, New Year and other occasions.` },
+    { question: "Can we plan a private or custom trip?", answer: `Yes. Custom trips can be ${orList(booking.customDurations.map(String))} hours and are planned around couples, families, New Year and other occasions.` },
     { question: "Are dolphin sightings guaranteed?", answer: "No. Dolphins are wild animals and nobody can promise a sighting, but a calm sea makes them easier to spot." },
   ],
   image: about.image,
@@ -230,7 +232,7 @@ const bestTime: Guide = {
   title: "Best Time for Dolphin Watching in Gokarna",
   description: "When dolphin watching from Gokarna works best: calm seas, the monsoon, time of day, and tips for spotting dolphins from the boat.",
   primaryKeyword: "best time for dolphin watching Gokarna",
-  answerSummary: `The best time for dolphin watching in Gokarna is a calm, clear day outside the monsoon, when fins and splashes are easiest to see. Sightings are never guaranteed. Dolphin watching is part of our ${joinList(dolphinPackages.map((item) => item.name))}, both leaving from Gokarna Beach.`,
+  answerSummary: `The best time for dolphin watching in Gokarna is a calm, clear day outside the monsoon, when fins and splashes are easiest to see. Sightings are never guaranteed. Dolphin watching is part of ${theNames(dolphinPackages)}, both leaving from Gokarna Beach.`,
   keyFacts: [
     { label: "Trips with dolphin watching", value: joinList(dolphinPackages.map((item) => `${item.name} (${item.durationHours} hours)`)) },
     { label: "Season", value: pending.season },
