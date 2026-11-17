@@ -128,7 +128,7 @@ const hub: Guide = {
       id: "dolphins",
       heading: "Dolphin watching",
       paragraphs: [
-        `Dolphin watching is part of ${theNames(dolphinPackages)}. Dolphins are wild, so sightings can't be promised, but a calm sea makes them much easier to spot.`,
+        `Dolphin watching is part of ${theNames(dolphinPackages)}. Dolphins are wild, so sightings depend on conditions and can't be promised, but a calm sea makes them much easier to spot.`,
       ],
       links: [
         { href: guidePath("best-time-for-dolphin-watching-gokarna"), label: "Best time for dolphin watching in Gokarna" },
@@ -148,7 +148,7 @@ const hub: Guide = {
   faqs: [
     { question: "Do I need to book a Gokarna boat trip in advance?", answer: "Enquiring ahead is the easiest way to get the trip and date you want. Send your date and group size on WhatsApp and we'll confirm availability and the price." },
     { question: "Can we plan a private or custom trip?", answer: `Yes. Custom trips can be ${orList(booking.customDurations.map(String))} hours and are planned around couples, families, New Year and other occasions.` },
-    { question: "Are dolphin sightings guaranteed?", answer: "No. Dolphins are wild animals and nobody can promise a sighting, but a calm sea makes them easier to spot." },
+    { question: "Are dolphin sightings guaranteed?", answer: "No. Dolphins are wild animals, so sightings depend on conditions and nobody can promise one, but a calm sea makes them easier to spot." },
   ],
   image: about.image,
   datePublished: date,
@@ -166,7 +166,7 @@ const reach: Guide = {
   title: "How to Reach the Gokarna Beach Boat Pick-up",
   description: "Where our Gokarna boat trips start, how to find the pick-up point on Gokarna Beach, what to bring and what to do if you're running late.",
   primaryKeyword: "Gokarna Beach boat pick-up",
-  answerSummary: `Our boat trips start from ${contact.pickup.label}. Open the pick-up pin on Google Maps for directions from where you're staying, and send us your date on WhatsApp so we can confirm the meeting time for your trip.`,
+  answerSummary: `Our boat trips start from ${contact.pickup.label}. Open the pick-up pin on Google Maps for directions from where you're staying, and ask us on WhatsApp what time to arrive for your trip.`,
   keyFacts: [
     pickupFact,
     { label: "Arrive", value: contact.pickupTime },
@@ -188,7 +188,7 @@ const reach: Guide = {
       id: "getting-to-gokarna",
       heading: "Getting to Gokarna",
       paragraphs: [
-        "Gokarna is a temple town on the coast of the Uttara Kannada district in Karnataka. Gokarna Road station on the Konkan Railway serves the town, and buses and taxis run in from nearby towns along the coast.",
+        "Gokarna is a temple town on the coast of the Uttara Kannada district in Karnataka. The nearest station is Gokarna Road, about 8–10 km from town (auto/taxi ~15–20 min). Ankola and Kumta are better-connected alternatives.",
         directions.railwayStation,
         directions.busStand,
       ],
@@ -197,14 +197,14 @@ const reach: Guide = {
       id: "arriving",
       heading: "Arriving for your trip",
       paragraphs: [
-        contact.pickupTime ? `Please arrive ${contact.pickupTime}.` : "We confirm the meeting time for your trip on WhatsApp. Leave a little extra time to find the spot on the beach, especially on your first visit.",
+        contact.pickupTime ? `Please arrive ${contact.pickupTime}.` : "Ask us on WhatsApp what time to arrive for your trip. Leave a little extra time to find the spot on the beach, especially on your first visit.",
         directions.parking,
       ],
     },
     {
       id: "bring",
       heading: "What to bring",
-      paragraphs: ["Pack light: you'll carry everything onto the boat."],
+      paragraphs: ["Pack light, and keep your phone in something waterproof."],
       list: carry,
     },
     {
@@ -215,7 +215,7 @@ const reach: Guide = {
   ],
   faqs: [
     { question: "Where does the Gokarna boat trip start?", answer: `From ${contact.pickup.label}. The pick-up point is pinned on Google Maps.` },
-    { question: "What time should we arrive?", answer: contact.pickupTime ? `Please arrive ${contact.pickupTime}.` : "We confirm the meeting time for your trip on WhatsApp when you book." },
+    { question: "What time should we arrive?", answer: contact.pickupTime ? `Please arrive ${contact.pickupTime}.` : "Ask us on WhatsApp what time to arrive for your trip." },
     { question: "Is there parking near the pick-up?", answer: directions.parking },
   ],
   image: booking.photo,
@@ -232,11 +232,11 @@ const bestTime: Guide = {
   title: "Best Time for Dolphin Watching in Gokarna",
   description: "When dolphin watching from Gokarna works best: calm seas, the monsoon, time of day, and tips for spotting dolphins from the boat.",
   primaryKeyword: "best time for dolphin watching Gokarna",
-  answerSummary: `The best time for dolphin watching in Gokarna is a calm, clear day outside the monsoon, when fins and splashes are easiest to see. Sightings are never guaranteed. Dolphin watching is part of ${theNames(dolphinPackages)}, both leaving from Gokarna Beach.`,
+  answerSummary: `Dolphins are easiest to spot on a calm, clear day, when fins and splashes stand out. Sightings depend on sea conditions and are never guaranteed. Dolphin watching is part of ${theNames(dolphinPackages)}, both leaving from Gokarna Beach.`,
   keyFacts: [
     { label: "Trips with dolphin watching", value: joinList(dolphinPackages.map((item) => `${item.name} (${item.durationHours} hours)`)) },
     { label: "Season", value: pending.season },
-    { label: "Sightings", value: "Not guaranteed: dolphins are wild" },
+    { label: "Sightings", value: "Depend on conditions; not guaranteed" },
     pickupFact,
     bookFact,
   ],
@@ -246,14 +246,14 @@ const bestTime: Guide = {
       heading: "A calm sea matters most",
       paragraphs: [
         "Dolphins are spotted when a fin breaks the surface or a splash shows a little way off. On a flat, glassy sea those signs stand out; in choppy water with whitecaps they disappear. That makes sea state the biggest single factor in a good dolphin trip.",
-        "On many coasts the wind builds through the day, so earlier trips often meet flatter water. Ask us which departure times are running on your date.",
+        "Sea conditions change from day to day and through the day. Ask us which departure times are running on your date and what the sea is usually like then.",
       ],
     },
     {
       id: "monsoon",
       heading: "The monsoon",
       paragraphs: [
-        "The southwest monsoon brings heavy rain and rough seas to the Karnataka coast, roughly from June to September. Small-boat trips along the coast usually pause then, and conditions are poor for spotting dolphins.",
+        "Karnataka's annual monsoon fishing ban runs from June 1 to July 31, and sea conditions are usually rough through the monsoon. Ask us which dates are running.",
         pending.season ? `Our season: ${pending.season}` : null,
       ],
     },
@@ -264,7 +264,7 @@ const bestTime: Guide = {
       list: [
         "Scan the water slowly, a little way out from the boat, rather than right beside it",
         "Watch for a curved fin, a splash, or birds gathering over one spot",
-        "Keep quiet when the crew points something out, and stay seated",
+        "Keep quiet when the crew points something out, and follow their instructions",
         "Keep your camera ready but enjoy the moment: sightings can be brief",
         "Polarised sunglasses cut glare off the water",
       ],
@@ -273,7 +273,7 @@ const bestTime: Guide = {
       id: "guarantee",
       heading: "Why no one can promise a sighting",
       paragraphs: [
-        "Dolphins are wild animals that move with the fish they feed on, so where and when they surface changes from day to day. Both trips that include dolphin watching also include sightseeing along the coast and the mystery cave, so there is plenty to see either way.",
+        "Dolphins are wild animals that move with the fish they feed on, so where and when they surface depends on conditions and changes from day to day. Both trips that include dolphin watching also include sightseeing along the coast and the mystery cave, so there is plenty to see either way.",
       ],
       links: sightings.length ? [{ href: guidePath("dolphin-sighting-log"), label: "See our monthly dolphin sighting log" }] : [],
     },
@@ -285,9 +285,9 @@ const bestTime: Guide = {
     },
   ],
   faqs: [
-    { question: "What is the best month for dolphin watching in Gokarna?", answer: pending.season ? `Trips run ${pending.season}. Within that, pick a calm day: sea state matters more than the month.` : "Any month outside the monsoon, on a calm day. Ask us which dates are running: sea state matters more than the month." },
-    { question: "Is morning or afternoon better for dolphins?", answer: "Calm water matters most. On many coasts the wind builds through the day, so earlier trips often meet flatter water." },
-    { question: "Can I see dolphins during the monsoon?", answer: "The monsoon brings rough seas to the Karnataka coast, roughly June to September, and boat trips usually pause then." },
+    { question: "What is the best month for dolphin watching in Gokarna?", answer: pending.season ? `Trips run ${pending.season}. Within that, pick a calm day: sea state matters more than the month.` : "Sea conditions matter more than the month: calm, clear days make dolphins easier to spot, and sightings always depend on conditions. Ask us which dates are running." },
+    { question: "Is morning or afternoon better for dolphins?", answer: "Calm water matters more than the hour. Sea conditions change from day to day, so ask us which departure times are running and what the sea is usually like then." },
+    { question: "Can I see dolphins during the monsoon?", answer: "Karnataka's annual monsoon fishing ban runs from June 1 to July 31, and sea conditions are usually rough through the monsoon. Ask us which dates are running." },
   ],
   image: dolphinImage,
   datePublished: date,

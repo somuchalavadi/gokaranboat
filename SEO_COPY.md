@@ -1,23 +1,30 @@
-# SEO copy for approval
+# SEO copy (approved)
 
-All new and changed visitor-facing copy from the SEO and answer-engine work (Phases 1–6), exported from the built site exactly as it renders (`node scripts/copy-export.mjs`). Nothing here is live yet: it ships at the final push, after your approval.
+All new and changed visitor-facing copy from the SEO and answer-engine work, exported from the built site exactly as it renders (`node scripts/copy-export.mjs`). **Approved by the owner on 18 November 2026, with the edits below.** Copy lives in `data/site.ts`, `data/pages.ts`, `data/seo-pages.ts` and `data/guides.ts`.
 
-**How to reply:** "Approve all", or list changes by page and heading (for example, "/kayaking-in-gokarna → Route: change …"). Copy lives in `data/site.ts`, `data/pages.ts`, `data/seo-pages.ts` and `data/guides.ts`; I'll make the edits there.
+## 1. Edits made at approval
 
-## 1. Please check these general statements
+**General statements (owner's wording and rules):**
 
-These aren't about your business, but they are facts. They're written from general knowledge, so please confirm or correct them:
+| Page | Was | Now |
+| --- | --- | --- |
+| How to reach the pick-up | "Gokarna Road station on the Konkan Railway serves the town, and buses and taxis run in from nearby towns along the coast." | "The nearest station is Gokarna Road, about 8–10 km from town (auto/taxi ~15–20 min). Ankola and Kumta are better-connected alternatives." |
+| Best time for dolphin watching (section and FAQ) | "The southwest monsoon brings … rough seas … roughly from June to September. Small-boat trips along the coast usually pause then." | "Karnataka's annual monsoon fishing ban runs from June 1 to July 31, and sea conditions are usually rough through the monsoon. Ask us which dates are running." Our own months appear only once `season` is filled in. |
+| Mangrove river trip | "Water levels … rise and fall with the tide, so the timing of the trip can depend on it." | "River trip timings depend on conditions on the day." |
+| Best time for dolphin watching (section and FAQ) | "On many coasts the wind builds through the day, so earlier trips often meet flatter water." | Rewritten as an ask-us line: "Sea conditions change from day to day and through the day. Ask us which departure times are running on your date and what the sea is usually like then." |
+| Best time for dolphin watching | Spotting tip "… and stay seated" | "… and follow their instructions" (no unconfirmed crew rule) |
+| How to reach the pick-up (summary, section and FAQ) | "We confirm the meeting time for your trip on WhatsApp." | Ask-us line: "Ask us on WhatsApp what time to arrive for your trip." |
+| Bioluminescence | Kept: the plankton explanation and "dark, moonless nights" are widely documented. | Unchanged, and the page still says it depends on conditions and isn't guaranteed. |
+| Every landing page and guide | Kept: the "What to carry" list is general advice with no business facts. | Unchanged. |
 
-| Page | Statement |
-| --- | --- |
-| How to reach the pick-up | "Gokarna is a temple town on the coast of the Uttara Kannada district in Karnataka. Gokarna Road station on the Konkan Railway serves the town, and buses and taxis run in from nearby towns along the coast." |
-| Best time for dolphin watching | "The southwest monsoon brings heavy rain and rough seas to the Karnataka coast, roughly from June to September. Small-boat trips along the coast usually pause then." Is that true for you? When is your season? |
-| Best time for dolphin watching | "On many coasts the wind builds through the day, so earlier trips often meet flatter water." Is this true off Gokarna? |
-| Best time for dolphin watching | Spotting tips include "stay seated" when dolphins are pointed out. Is that your crew's rule? |
-| Mangrove river trip | "Water levels in mangrove channels rise and fall with the tide, so the timing of the trip can depend on it." Does your River Trip timing depend on the tide? |
-| Bioluminescence | It explains bioluminescence as light from tiny plankton when the water is disturbed, best on dark, moonless nights. This is general science, but please confirm it matches what guests see on your trip. |
-| Every landing page and guide | The "What to carry" list (sun protection, water, light clothes, a dry bag for phones, motion-sickness medicine; for wet trips, swimwear, a towel and a change of clothes). Add anything you provide or require. |
-| How to reach the pick-up | "We confirm the meeting time for your trip on WhatsApp." Is that how you work? |
+**Global rules applied (no unconfirmed business facts, no unprovable superlatives, no guarantees):**
+
+- The Premium badge "Most popular" (from the original site) became **"Most activities"**. It's provable: Premium includes 9 of the 13 highlights.
+- "… is unforgettable" (bioluminescence) is removed.
+- "Pack light: you'll carry everything onto the boat" became "Pack light, and keep your phone in something waterproof."
+- Every dolphin and bioluminescence line now says sightings **depend on conditions**. This covers the dolphin page summary, description and FAQ; the guides' summaries, key facts and FAQs; the "Good to know" list; the dolphin activity tile; and the bioluminescence description.
+- "The best time for dolphin watching in Gokarna is a calm, clear day outside the monsoon" became "Dolphins are easiest to spot on a calm, clear day … Sightings depend on sea conditions and are never guaranteed."
+- Kept, because they aren't claims about the business: "Best for:" (who a trip suits), "Best time to go" / "best views" (sea conditions), and "the fullest coastal trip" / "covers the most" (provable from the package lists).
 
 ## 2. Lines hidden until you answer
 
@@ -30,6 +37,7 @@ The pages are written so these lines appear automatically once you fill them in 
 - **Equipment:** snorkelling gear and life jackets, fishing tackle and bait.
 - **Fishing:** at sea or near shore, by day or at night.
 - **Bioluminescence:** which months and what time of night.
+- **River Trips:** whether the tide affects timings (until then the page says timings depend on conditions on the day).
 - **Business details** (structured data only): founding year, slogan, social and Google Business Profile links, opening hours, the exact pick-up coordinates, and the postal code.
 - **Built once data exists:** a "Gokarna boat trip prices" guide (once any price is set) and a monthly "Dolphin sighting log" (once `data/sightings.ts` has a month).
 
@@ -114,7 +122,7 @@ Price on enquiry
 ##### Good to know
 
 - Trips depend on sea and weather conditions.
-- Wildlife sightings aren't guaranteed.
+- Wildlife sightings depend on conditions and aren't guaranteed.
 - Tell us about children, non-swimmers or health needs when you enquire.
 - Ask us which dates are running.
 COMMON QUESTIONS
@@ -249,11 +257,11 @@ Premium Package (3 hours) and Standard Package (2 hours).
 ## /dolphin-watching-gokarna
 
 - **Title (51/60):** Dolphin Watching in Gokarna by Boat | Rudra Gokarna
-- **Description (136/155):** Watch for dolphins on a boat trip from Gokarna Beach. Part of our 3-hour Premium and 2-hour Standard trips. Sightings aren't guaranteed.
+- **Description (139/155):** Watch for dolphins on a boat trip from Gokarna Beach, part of our 3-hour Premium and 2-hour Standard trips. Sightings depend on conditions.
 
 ### Dolphin watching in Gokarna
 
-Rudra Gokarna Adventures runs boat trips from Gokarna Beach that include time out at sea watching for dolphins. Dolphin watching is part of the 3-hour Premium Package and the 2-hour Standard Package. Dolphins are wild, so sightings aren't guaranteed. Prices are shared when you enquire on WhatsApp or by phone.
+Rudra Gokarna Adventures runs boat trips from Gokarna Beach that include time out at sea watching for dolphins. Dolphin watching is part of the 3-hour Premium Package and the 2-hour Standard Package. Dolphins are wild, so sightings depend on conditions and aren't guaranteed. Prices are shared when you enquire on WhatsApp or by phone.
 
 Last updated: 17 November 2026
 
@@ -269,7 +277,7 @@ Last updated: 17 November 2026
 
 The boat leaves Gokarna Beach and heads along the coast, and part of the trip is spent out at sea watching the water for dolphins. On the Standard Package that sits alongside sightseeing and mystery cave exploration. The Premium Package adds lighthouse, kayaking, snorkelling, swimming, fishing harbour trip and sea-river joining point.
 
-Dolphins are wild animals, so whether and where they surface changes from day to day. Nobody can promise a sighting. What helps is a calm sea and patient eyes: watch for a fin breaking the surface or a splash a little way off, and keep your camera ready rather than glued to your eye.
+Dolphins are wild animals, so whether and where they surface depends on conditions and changes from day to day. Nobody can promise a sighting. What helps is a calm sea and patient eyes: watch for a fin breaking the surface or a splash a little way off, and keep your camera ready rather than glued to your eye.
 
 #### How long it takes
 
@@ -304,13 +312,13 @@ Trips depend on sea and weather conditions. Tell us about children, non-swimmers
 
 #### Best time to go
 
-A calm, clear sea makes it easier to notice fins and splashes, and choppy water makes it harder. Sightings can happen at any time of day, though, and are never guaranteed.
+A calm, clear sea makes it easier to notice fins and splashes, and choppy water makes it harder. Sightings always depend on conditions and are never guaranteed.
 
 #### Questions about dolphin watching in Gokarna
 
 ##### Will we definitely see dolphins in Gokarna?
 
-No. Dolphins are wild, so sightings aren't guaranteed, but every Premium and Standard trip includes time watching for them out at sea.
+No. Dolphins are wild, so sightings depend on conditions and aren't guaranteed, but every Premium and Standard trip includes time watching for them out at sea.
 
 ##### Which boat trips include dolphin watching?
 
@@ -415,7 +423,7 @@ Tell us if anyone in your group can't swim when you enquire, and we'll advise wh
 
 - **Mangrove river trips near Gokarna:** A 2-hour River Trip from Gokarna Beach into the mangroves, with mangrove views and kayaking between the trees.
 - **Snorkelling in Gokarna:** Snorkel in Gokarna on the 3-hour Premium boat trip from Gokarna Beach, with swimming, kayaking, dolphin watching and the mystery cave.
-- **Dolphin watching in Gokarna:** Watch for dolphins on a boat trip from Gokarna Beach. Part of our 3-hour Premium and 2-hour Standard trips. Sightings aren't guaranteed.
+- **Dolphin watching in Gokarna:** Watch for dolphins on a boat trip from Gokarna Beach, part of our 3-hour Premium and 2-hour Standard trips. Sightings depend on conditions.
 
 ---
 
@@ -496,7 +504,7 @@ Prices are shared when you enquire on WhatsApp or by phone. Send your date and g
 #### Related trips
 
 - **Kayaking in Gokarna:** Kayak in Gokarna on a boat trip from Gokarna Beach: at sea on the 3-hour Premium trip, or through the mangroves on a 2-hour River Trip.
-- **Dolphin watching in Gokarna:** Watch for dolphins on a boat trip from Gokarna Beach. Part of our 3-hour Premium and 2-hour Standard trips. Sightings aren't guaranteed.
+- **Dolphin watching in Gokarna:** Watch for dolphins on a boat trip from Gokarna Beach, part of our 3-hour Premium and 2-hour Standard trips. Sightings depend on conditions.
 - **Private boat trips in Gokarna:** Plan a private boat trip from Gokarna Beach: choose the places and 2, 3 or 4 hours. For couples, families, New Year and other occasions.
 
 ---
@@ -560,7 +568,7 @@ Trips depend on sea and weather conditions. Tell us about children, non-swimmers
 
 #### Best time to go
 
-Water levels in mangrove channels rise and fall with the tide, so the timing of the trip can depend on it. Ask us which times suit the day you have in mind.
+River trip timings depend on conditions on the day. Ask us which times suit the day you have in mind.
 
 #### Questions about mangrove river trip near Gokarna
 
@@ -579,7 +587,7 @@ Tell us your children's ages when you enquire, and we'll advise which trip suits
 #### Related trips
 
 - **Kayaking in Gokarna:** Kayak in Gokarna on a boat trip from Gokarna Beach: at sea on the 3-hour Premium trip, or through the mangroves on a 2-hour River Trip.
-- **Dolphin watching in Gokarna:** Watch for dolphins on a boat trip from Gokarna Beach. Part of our 3-hour Premium and 2-hour Standard trips. Sightings aren't guaranteed.
+- **Dolphin watching in Gokarna:** Watch for dolphins on a boat trip from Gokarna Beach, part of our 3-hour Premium and 2-hour Standard trips. Sightings depend on conditions.
 - **Fishing trips in Gokarna:** Go fishing on the 4-hour Exclusive boat trip from Gokarna Beach, which also includes a bioluminescence trip. Prices on enquiry.
 
 ---
@@ -659,7 +667,7 @@ Tell us your experience when you enquire, and we'll advise whether the trip suit
 
 #### Related trips
 
-- **Bioluminescence trips in Gokarna:** See glowing water on a bioluminescence trip, part of the 4-hour Exclusive boat trip from Gokarna Beach. Ask us about timing and conditions.
+- **Bioluminescence trips in Gokarna:** Look for glowing water on a bioluminescence trip, part of the 4-hour Exclusive boat trip from Gokarna Beach. It depends on natural conditions.
 - **Private boat trips in Gokarna:** Plan a private boat trip from Gokarna Beach: choose the places and 2, 3 or 4 hours. For couples, families, New Year and other occasions.
 - **Mangrove river trips near Gokarna:** A 2-hour River Trip from Gokarna Beach into the mangroves, with mangrove views and kayaking between the trees.
 
@@ -668,7 +676,7 @@ Tell us your experience when you enquire, and we'll advise whether the trip suit
 ## /bioluminescence-gokarna
 
 - **Title (53/60):** Bioluminescence in Gokarna: Boat Trip | Rudra Gokarna
-- **Description (139/155):** See glowing water on a bioluminescence trip, part of the 4-hour Exclusive boat trip from Gokarna Beach. Ask us about timing and conditions.
+- **Description (142/155):** Look for glowing water on a bioluminescence trip, part of the 4-hour Exclusive boat trip from Gokarna Beach. It depends on natural conditions.
 
 ### Bioluminescence in Gokarna
 
@@ -688,7 +696,7 @@ Last updated: 17 November 2026
 
 Bioluminescence is light produced by living things. In the sea it usually comes from plankton so small you can't see them individually; when the water is disturbed, by a wave, an oar or a hand, they flash, and the water seems to glow blue.
 
-On the Exclusive Package a bioluminescence trip is paired with fishing over 4 hours. When the glow is there, trailing a hand in the water or watching the wake behind the boat is unforgettable.
+On the Exclusive Package a bioluminescence trip is paired with fishing over 4 hours. When the glow is there, trail a hand in the water or watch the wake behind the boat.
 
 It's a natural event, not a show. How bright it is, and whether it appears at all, depends on the season, the sea and the night, so we can't guarantee it.
 
@@ -742,7 +750,7 @@ Prices are shared when you enquire on WhatsApp or by phone. Send your date and g
 
 - **Fishing trips in Gokarna:** Go fishing on the 4-hour Exclusive boat trip from Gokarna Beach, which also includes a bioluminescence trip. Prices on enquiry.
 - **Private boat trips in Gokarna:** Plan a private boat trip from Gokarna Beach: choose the places and 2, 3 or 4 hours. For couples, families, New Year and other occasions.
-- **Dolphin watching in Gokarna:** Watch for dolphins on a boat trip from Gokarna Beach. Part of our 3-hour Premium and 2-hour Standard trips. Sightings aren't guaranteed.
+- **Dolphin watching in Gokarna:** Watch for dolphins on a boat trip from Gokarna Beach, part of our 3-hour Premium and 2-hour Standard trips. Sightings depend on conditions.
 
 ---
 
@@ -817,8 +825,8 @@ New Year celebrations are planned on request. Tell us your group size and what y
 
 #### Related trips
 
-- **Bioluminescence trips in Gokarna:** See glowing water on a bioluminescence trip, part of the 4-hour Exclusive boat trip from Gokarna Beach. Ask us about timing and conditions.
-- **Dolphin watching in Gokarna:** Watch for dolphins on a boat trip from Gokarna Beach. Part of our 3-hour Premium and 2-hour Standard trips. Sightings aren't guaranteed.
+- **Bioluminescence trips in Gokarna:** Look for glowing water on a bioluminescence trip, part of the 4-hour Exclusive boat trip from Gokarna Beach. It depends on natural conditions.
+- **Dolphin watching in Gokarna:** Watch for dolphins on a boat trip from Gokarna Beach, part of our 3-hour Premium and 2-hour Standard trips. Sightings depend on conditions.
 - **Mangrove river trips near Gokarna:** A 2-hour River Trip from Gokarna Beach into the mangroves, with mangrove views and kayaking between the trees.
 
 ---
@@ -872,7 +880,7 @@ Every trip starts from Gokarna Beach, Gokarna, Karnataka. The pick-up point is p
 
 Trips depend on sea and weather conditions. Tell us about children, non-swimmers or any health needs when you enquire, and follow the crew's instructions on board.
 
-- Wildlife sightings aren't guaranteed.
+- Wildlife sightings depend on conditions and aren't guaranteed.
 - Tell us about children, non-swimmers or health needs when you enquire.
 - Ask us which dates are running.
 
@@ -888,7 +896,7 @@ Bring what you'd want for a few hours on open water in the sun. If your trip inc
 
 #### Dolphin watching
 
-Dolphin watching is part of the Premium Package and the Standard Package. Dolphins are wild, so sightings can't be promised, but a calm sea makes them much easier to spot.
+Dolphin watching is part of the Premium Package and the Standard Package. Dolphins are wild, so sightings depend on conditions and can't be promised, but a calm sea makes them much easier to spot.
 
 - Best time for dolphin watching in Gokarna
 - Dolphin watching in Gokarna
@@ -916,7 +924,7 @@ Yes. Custom trips can be 2, 3 or 4 hours and are planned around couples, familie
 
 ##### Are dolphin sightings guaranteed?
 
-No. Dolphins are wild animals and nobody can promise a sighting, but a calm sea makes them easier to spot.
+No. Dolphins are wild animals, so sightings depend on conditions and nobody can promise one, but a calm sea makes them easier to spot.
 
 #### Guides
 
@@ -932,7 +940,7 @@ No. Dolphins are wild animals and nobody can promise a sighting, but a calm sea 
 
 ### How to reach the Gokarna Beach boat pick-up
 
-Our boat trips start from Gokarna Beach, Gokarna, Karnataka. Open the pick-up pin on Google Maps for directions from where you're staying, and send us your date on WhatsApp so we can confirm the meeting time for your trip.
+Our boat trips start from Gokarna Beach, Gokarna, Karnataka. Open the pick-up pin on Google Maps for directions from where you're staying, and ask us on WhatsApp what time to arrive for your trip.
 
 Last updated: 17 November 2026
 
@@ -949,15 +957,15 @@ Every trip leaves from Gokarna Beach, Gokarna, Karnataka. The exact spot is pinn
 
 #### Getting to Gokarna
 
-Gokarna is a temple town on the coast of the Uttara Kannada district in Karnataka. Gokarna Road station on the Konkan Railway serves the town, and buses and taxis run in from nearby towns along the coast.
+Gokarna is a temple town on the coast of the Uttara Kannada district in Karnataka. The nearest station is Gokarna Road, about 8–10 km from town (auto/taxi ~15–20 min). Ankola and Kumta are better-connected alternatives.
 
 #### Arriving for your trip
 
-We confirm the meeting time for your trip on WhatsApp. Leave a little extra time to find the spot on the beach, especially on your first visit.
+Ask us on WhatsApp what time to arrive for your trip. Leave a little extra time to find the spot on the beach, especially on your first visit.
 
 #### What to bring
 
-Pack light: you'll carry everything onto the boat.
+Pack light, and keep your phone in something waterproof.
 
 - Sun protection: a cap or hat, sunscreen and sunglasses
 - Drinking water
@@ -977,7 +985,7 @@ From Gokarna Beach, Gokarna, Karnataka. The pick-up point is pinned on Google Ma
 
 ##### What time should we arrive?
 
-We confirm the meeting time for your trip on WhatsApp when you book.
+Ask us on WhatsApp what time to arrive for your trip.
 
 #### More guides
 
@@ -993,14 +1001,14 @@ We confirm the meeting time for your trip on WhatsApp when you book.
 
 ### Best time for dolphin watching in Gokarna
 
-The best time for dolphin watching in Gokarna is a calm, clear day outside the monsoon, when fins and splashes are easiest to see. Sightings are never guaranteed. Dolphin watching is part of the Premium Package and the Standard Package, both leaving from Gokarna Beach.
+Dolphins are easiest to spot on a calm, clear day, when fins and splashes stand out. Sightings depend on sea conditions and are never guaranteed. Dolphin watching is part of the Premium Package and the Standard Package, both leaving from Gokarna Beach.
 
 Last updated: 17 November 2026
 
 #### Key facts
 
 - **Trips with dolphin watching:** Premium Package (3 hours) and Standard Package (2 hours)
-- **Sightings:** Not guaranteed: dolphins are wild
+- **Sightings:** Depend on conditions; not guaranteed
 - **Pick-up point:** Gokarna Beach, Gokarna, Karnataka
 - **How to book:** WhatsApp or call +91 70197 45857
 
@@ -1008,11 +1016,11 @@ Last updated: 17 November 2026
 
 Dolphins are spotted when a fin breaks the surface or a splash shows a little way off. On a flat, glassy sea those signs stand out; in choppy water with whitecaps they disappear. That makes sea state the biggest single factor in a good dolphin trip.
 
-On many coasts the wind builds through the day, so earlier trips often meet flatter water. Ask us which departure times are running on your date.
+Sea conditions change from day to day and through the day. Ask us which departure times are running on your date and what the sea is usually like then.
 
 #### The monsoon
 
-The southwest monsoon brings heavy rain and rough seas to the Karnataka coast, roughly from June to September. Small-boat trips along the coast usually pause then, and conditions are poor for spotting dolphins.
+Karnataka's annual monsoon fishing ban runs from June 1 to July 31, and sea conditions are usually rough through the monsoon. Ask us which dates are running.
 
 #### Tips for spotting dolphins
 
@@ -1020,13 +1028,13 @@ A few habits help everyone on board:
 
 - Scan the water slowly, a little way out from the boat, rather than right beside it
 - Watch for a curved fin, a splash, or birds gathering over one spot
-- Keep quiet when the crew points something out, and stay seated
+- Keep quiet when the crew points something out, and follow their instructions
 - Keep your camera ready but enjoy the moment: sightings can be brief
 - Polarised sunglasses cut glare off the water
 
 #### Why no one can promise a sighting
 
-Dolphins are wild animals that move with the fish they feed on, so where and when they surface changes from day to day. Both trips that include dolphin watching also include sightseeing along the coast and the mystery cave, so there is plenty to see either way.
+Dolphins are wild animals that move with the fish they feed on, so where and when they surface depends on conditions and changes from day to day. Both trips that include dolphin watching also include sightseeing along the coast and the mystery cave, so there is plenty to see either way.
 
 #### Trips that include dolphin watching
 
@@ -1041,15 +1049,15 @@ Standard Package (2 hours): A shorter trip along the coast with sightseeing, the
 
 ##### What is the best month for dolphin watching in Gokarna?
 
-Any month outside the monsoon, on a calm day. Ask us which dates are running: sea state matters more than the month.
+Sea conditions matter more than the month: calm, clear days make dolphins easier to spot, and sightings always depend on conditions. Ask us which dates are running.
 
 ##### Is morning or afternoon better for dolphins?
 
-Calm water matters most. On many coasts the wind builds through the day, so earlier trips often meet flatter water.
+Calm water matters more than the hour. Sea conditions change from day to day, so ask us which departure times are running and what the sea is usually like then.
 
 ##### Can I see dolphins during the monsoon?
 
-The monsoon brings rough seas to the Karnataka coast, roughly June to September, and boat trips usually pause then.
+Karnataka's annual monsoon fishing ban runs from June 1 to July 31, and sea conditions are usually rough through the monsoon. Ask us which dates are running.
 
 #### More guides
 
@@ -1099,12 +1107,12 @@ Pick-up point: Gokarna Beach, Gokarna, Karnataka (https://maps.app.goo.gl/s4jSzv
 
 ## Activities
 
-- [Dolphin watching in Gokarna](https://www.therudraadventure.com/dolphin-watching-gokarna): Watch for dolphins on a boat trip from Gokarna Beach. Part of our 3-hour Premium and 2-hour Standard trips. Sightings aren't guaranteed.
+- [Dolphin watching in Gokarna](https://www.therudraadventure.com/dolphin-watching-gokarna): Watch for dolphins on a boat trip from Gokarna Beach, part of our 3-hour Premium and 2-hour Standard trips. Sightings depend on conditions.
 - [Kayaking in Gokarna](https://www.therudraadventure.com/kayaking-in-gokarna): Kayak in Gokarna on a boat trip from Gokarna Beach: at sea on the 3-hour Premium trip, or through the mangroves on a 2-hour River Trip.
 - [Snorkelling in Gokarna](https://www.therudraadventure.com/snorkelling-in-gokarna): Snorkel in Gokarna on the 3-hour Premium boat trip from Gokarna Beach, with swimming, kayaking, dolphin watching and the mystery cave.
 - [Mangrove river trip near Gokarna](https://www.therudraadventure.com/mangrove-river-trip-gokarna): A 2-hour River Trip from Gokarna Beach into the mangroves, with mangrove views and kayaking between the trees.
 - [Fishing trip in Gokarna](https://www.therudraadventure.com/fishing-trip-gokarna): Go fishing on the 4-hour Exclusive boat trip from Gokarna Beach, which also includes a bioluminescence trip. Prices on enquiry.
-- [Bioluminescence in Gokarna](https://www.therudraadventure.com/bioluminescence-gokarna): See glowing water on a bioluminescence trip, part of the 4-hour Exclusive boat trip from Gokarna Beach. Ask us about timing and conditions.
+- [Bioluminescence in Gokarna](https://www.therudraadventure.com/bioluminescence-gokarna): Look for glowing water on a bioluminescence trip, part of the 4-hour Exclusive boat trip from Gokarna Beach. It depends on natural conditions.
 - [Private boat trips in Gokarna](https://www.therudraadventure.com/private-boat-gokarna): Plan a private boat trip from Gokarna Beach: choose the places and 2, 3 or 4 hours. For couples, families, New Year and other occasions.
 
 ## Guides

@@ -118,7 +118,7 @@ export const packages: readonly TripPackage[] = [
     shortName: "Premium",
     durationHours: 3,
     featured: true,
-    badge: "Most popular",
+    badge: "Most activities",
     image: { src: "/images/stock/premium.webp", width: 1600, height: 1066, alt: "Aerial view of a rocky shoreline, shallow turquoise water and a wooded hill" },
     highlights: ["sightseeing", "lighthouse", "kayaking", "snorkelling", "swimming", "dolphins", "mystery-cave", "fishing-harbour", "sea-river"],
     price: null, // TODO(owner): "From" price in ₹ per person.
@@ -220,7 +220,7 @@ export const activities: readonly Tile[] = [
     id: "dolphins",
     title: "Dolphin watching",
     description: "Watch for dolphins out at sea.",
-    note: "Sightings not guaranteed.",
+    note: "Sightings depend on conditions.",
     image: { src: "/images/stock/dolphin-watching.webp", width: 1600, height: 1082, alt: "Dolphins breaking the surface of blue ocean waves" },
     highlightIds: ["dolphins"],
   },
@@ -405,7 +405,7 @@ export const faqIntro = {
 
 export const goodToKnow: readonly { icon: "weather" | "wildlife" | "health" | "dates"; text: string }[] = [
   { icon: "weather", text: "Trips depend on sea and weather conditions." },
-  { icon: "wildlife", text: "Wildlife sightings aren't guaranteed." },
+  { icon: "wildlife", text: "Wildlife sightings depend on conditions and aren't guaranteed." },
   { icon: "health", text: "Tell us about children, non-swimmers or health needs when you enquire." },
   { icon: "dates", text: "Ask us which dates are running." },
 ];

@@ -79,9 +79,9 @@ export const seoPages: readonly SeoPage[] = [
     h1: "Dolphin watching in Gokarna",
     linkLabel: "Dolphin watching in Gokarna",
     title: "Dolphin Watching in Gokarna by Boat | Rudra Gokarna",
-    description: "Watch for dolphins on a boat trip from Gokarna Beach. Part of our 3-hour Premium and 2-hour Standard trips. Sightings aren't guaranteed.",
+    description: "Watch for dolphins on a boat trip from Gokarna Beach, part of our 3-hour Premium and 2-hour Standard trips. Sightings depend on conditions.",
     primaryKeyword: "dolphin watching Gokarna",
-    answerSummary: `Rudra Gokarna Adventures runs boat trips from Gokarna Beach that include time out at sea watching for dolphins. Dolphin watching is part of the ${nameWithHours("premium")} and the ${nameWithHours("standard")}. Dolphins are wild, so sightings aren't guaranteed. Prices are shared when you enquire on WhatsApp or by phone.`,
+    answerSummary: `Rudra Gokarna Adventures runs boat trips from Gokarna Beach that include time out at sea watching for dolphins. Dolphin watching is part of the ${nameWithHours("premium")} and the ${nameWithHours("standard")}. Dolphins are wild, so sightings depend on conditions and aren't guaranteed. Prices are shared when you enquire on WhatsApp or by phone.`,
     packageIds: ["standard", "premium"],
     highlightIds: ["dolphins"],
     keyFacts: keyFacts(["standard", "premium"], carry),
@@ -91,7 +91,7 @@ export const seoPages: readonly SeoPage[] = [
         heading: "What you'll do",
         paragraphs: [
           `The boat leaves Gokarna Beach and heads along the coast, and part of the trip is spent out at sea watching the water for dolphins. On the ${byId("standard").name} that sits alongside ${joinList(lower(byId("standard").highlights.filter((id) => id !== "dolphins")))}. The ${byId("premium").name} adds ${joinList(lower(byId("premium").highlights.filter((id) => !byId("standard").highlights.includes(id))))}.`,
-          "Dolphins are wild animals, so whether and where they surface changes from day to day. Nobody can promise a sighting. What helps is a calm sea and patient eyes: watch for a fin breaking the surface or a splash a little way off, and keep your camera ready rather than glued to your eye.",
+          "Dolphins are wild animals, so whether and where they surface depends on conditions and changes from day to day. Nobody can promise a sighting. What helps is a calm sea and patient eyes: watch for a fin breaking the surface or a splash a little way off, and keep your camera ready rather than glued to your eye.",
         ],
       },
       {
@@ -125,13 +125,13 @@ export const seoPages: readonly SeoPage[] = [
         id: "best-time",
         heading: "Best time to go",
         paragraphs: [
-          "A calm, clear sea makes it easier to notice fins and splashes, and choppy water makes it harder. Sightings can happen at any time of day, though, and are never guaranteed.",
+          "A calm, clear sea makes it easier to notice fins and splashes, and choppy water makes it harder. Sightings always depend on conditions and are never guaranteed.",
           pending.season ? `Trips run ${pending.season}.` : null,
         ],
       },
     ],
     faqs: [
-      { question: "Will we definitely see dolphins in Gokarna?", answer: "No. Dolphins are wild, so sightings aren't guaranteed, but every Premium and Standard trip includes time watching for them out at sea." },
+      { question: "Will we definitely see dolphins in Gokarna?", answer: "No. Dolphins are wild, so sightings depend on conditions and aren't guaranteed, but every Premium and Standard trip includes time watching for them out at sea." },
       { question: "Which boat trips include dolphin watching?", answer: `The ${nameWithHours("standard")} and the ${nameWithHours("premium")}. Both leave from ${contact.pickup.label}.` },
       { question: "How much is dolphin watching in Gokarna?", answer: priceAnswer },
       { question: "Is dolphin watching suitable for children?", answer: kidsAnswer },
@@ -302,7 +302,7 @@ export const seoPages: readonly SeoPage[] = [
       {
         id: "best-time",
         heading: "Best time to go",
-        paragraphs: ["Water levels in mangrove channels rise and fall with the tide, so the timing of the trip can depend on it. Ask us which times suit the day you have in mind.", pending.season ? `Trips run ${pending.season}.` : null],
+        paragraphs: ["River trip timings depend on conditions on the day. Ask us which times suit the day you have in mind.", pending.season ? `Trips run ${pending.season}.` : null],
       },
     ],
     faqs: [
@@ -367,7 +367,7 @@ export const seoPages: readonly SeoPage[] = [
     h1: "Bioluminescence in Gokarna",
     linkLabel: "Bioluminescence trips in Gokarna",
     title: "Bioluminescence in Gokarna: Boat Trip | Rudra Gokarna",
-    description: "See glowing water on a bioluminescence trip, part of the 4-hour Exclusive boat trip from Gokarna Beach. Ask us about timing and conditions.",
+    description: "Look for glowing water on a bioluminescence trip, part of the 4-hour Exclusive boat trip from Gokarna Beach. It depends on natural conditions.",
     primaryKeyword: "bioluminescence Gokarna",
     answerSummary: `Rudra Gokarna Adventures includes a bioluminescence trip in the ${nameWithHours("exclusive")}, together with fishing. Bioluminescence is light made by tiny sea organisms, seen as a blue glow when the water moves. It depends on conditions and isn't guaranteed. Ask us about timing for your date when you enquire.`,
     packageIds: ["exclusive"],
@@ -379,7 +379,7 @@ export const seoPages: readonly SeoPage[] = [
         heading: "What you'll see",
         paragraphs: [
           "Bioluminescence is light produced by living things. In the sea it usually comes from plankton so small you can't see them individually; when the water is disturbed, by a wave, an oar or a hand, they flash, and the water seems to glow blue.",
-          `On the ${byId("exclusive").name} a bioluminescence trip is paired with fishing over ${byId("exclusive").durationHours} hours. When the glow is there, trailing a hand in the water or watching the wake behind the boat is unforgettable.`,
+          `On the ${byId("exclusive").name} a bioluminescence trip is paired with fishing over ${byId("exclusive").durationHours} hours. When the glow is there, trail a hand in the water or watch the wake behind the boat.`,
           "It's a natural event, not a show. How bright it is, and whether it appears at all, depends on the season, the sea and the night, so we can't guarantee it.",
         ],
       },

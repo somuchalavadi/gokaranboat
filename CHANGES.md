@@ -1,8 +1,72 @@
-# Redesign changes — Rudra Gokarna Adventures
+# Changes — Rudra Gokarna Adventures
+
+## SEO and answer-engine work (November 2026)
+
+Phases 0–8 of the SEO brief, committed one phase at a time on `main` (`9ac6c6a` … Phase 8). The plan and decisions are in `MASTER_PLAN.md`, the approved copy is in `SEO_COPY.md`, and open owner questions are in `OWNER_QUESTIONS.md`. Every number below was measured on a production build (`npm run build && npx next start -p 3100`) **with a placeholder GA4 ID set locally** (`NEXT_PUBLIC_GA_ID=G-TEST000000`), so analytics is included in the cost. No GA ID is set in Vercel.
+
+### Target vs achieved
+
+| Target | Achieved | |
+| --- | --- | --- |
+| No invented facts; unknowns `null` + `TODO(owner)`, omitted from UI and JSON-LD | All prices, timings, ages, routes, gear, season, rating and founding year are `null`; the line, key-fact row, FAQ answer or JSON-LD field is left out. The two guides that need data (prices, sighting log) aren't built until it exists. | ✅ |
+| No AggregateRating / Review for the business | None anywhere (checked on every page's JSON-LD) | ✅ |
+| All content in the initial server HTML | No `<Suspense>` streaming (0 hidden `S:` chunks); every section visible with JavaScript off on all 14 pages (`nojs.mjs`, 42/42) | ✅ |
+| Content in typed data files | `data/site.ts`, `data/pages.ts`, `data/seo-pages.ts`, `data/guides.ts`, `data/sightings.ts`; components only render | ✅ |
+| Titles ≤ 60, descriptions ≤ 155 | All 14 pages; `scripts/check-meta.mjs` runs after every build and fails the deploy on a violation | ✅ |
+| Lighthouse 95+ desktop, all 4 categories | **100 / 100 / 100 / 100** on `/`, `/packages`, `/adventures`, `/dolphin-watching-gokarna`, `/guides/gokarna-boat-trip-guide` (median of 3) | ✅ |
+| Lighthouse 95+ mobile, all 4 categories | Accessibility, Best Practices, SEO **100** everywhere. Performance median of 3: `/packages` **99**, `/adventures` **100**, `/dolphin-watching-gokarna` **100**, guide hub **100**, home **93** (92, 93, 93) | ⚠️ home |
+| CLS 0 | **0.000** on every page and preset | ✅ |
+| axe: 0 serious / critical | **37 scans** (14 pages, phone and desktop, plus booking-form states): 0 serious, 0 critical | ✅ |
+| No horizontal overflow at 360 px; tap targets ≥ 44 px | **84 page × viewport combinations** (360–1440 px): 0 overflow, 0 small targets, 0 overlaps, one H1 each | ✅ |
+| Build, lint, typecheck: 0 warnings | 0 / 0 / 0 | ✅ |
+| INP (lab) < 200 ms | Worst of the main interactions **144 ms** at 4× CPU | ✅ |
+| Security headers + CSP | HSTS, X-Frame-Options, nosniff, Referrer-Policy, Permissions-Policy, CSP on every URL (live since Phase 2); 0 CSP violations on all 14 pages with GA enabled (`csp.mjs`, 42/42) | ✅ |
+| Links | `links.mjs` 40/40: every WhatsApp/Maps link has `rel="nofollow noopener"`, booking form, dialogs, keyboard | ✅ |
+
+**Home on mobile (93):** this is the known limit from the redesign (it was 94 then). Lighthouse's default mobile run *simulates* Slow 4G from a fast localhost trace, and counts the ~130 KB of Next.js/React JavaScript as competing with the hero image. Its estimated LCP is 2.8 s, while the hero actually paints in about 0.2 s. With real 4G throttling the home LCP is **1.27 s**. Run PageSpeed Insights on the live site for a representative mobile score. GA4 isn't the cause: it no longer loads during page load (next section).
+
+### Deviations from the plan
+
+- **GA4 loading (A2):** `lazyOnload` still put gtag.js's long tasks inside Lighthouse's load window. That cost mobile Performance 4–6 points: home 91 and guide hub 92, against 97–100 after the change. gtag.js now loads on the visitor's first tap, click, key press or scroll, or after 8 seconds. The page view and clicks queue in `dataLayer` before then. Visits shorter than 8 seconds with no interaction aren't counted.
+- **OG font (A5):** the google/fonts repo only has Fraunces as a variable font, which `next/og` can't use. The static SemiBold TTF came from the Google Fonts download service instead: same font, same SIL OFL licence (`assets/fonts/OFL.txt`).
+- **Desktop nav (A7):** the guide is linked from the footer, the mobile menu, the home FAQ and the 404 page. It isn't in the desktop nav, which has no room at 1024–1279 px.
+- **Copy rules at approval:** see `SEO_COPY.md` section 1. Examples: "Most popular" became "Most activities", every dolphin and bioluminescence line says "depends on conditions", and the monsoon and tide lines were rewritten.
+
+### What was added
+
+- **7 landing pages** (`/dolphin-watching-gokarna`, `/kayaking-in-gokarna`, `/snorkelling-in-gokarna`, `/mangrove-river-trip-gokarna`, `/fishing-trip-gokarna`, `/bioluminescence-gokarna`, `/private-boat-gokarna`). Each has an answer summary, key facts, a visible FAQ, related trips, and TouristTrip + FAQPage + BreadcrumbList JSON-LD.
+- **Guides:** the hub at `/guides/gokarna-boat-trip-guide` (`/guides` redirects there), plus how to reach the pick-up and the best time for dolphin watching. Each carries Article + FAQPage + BreadcrumbList JSON-LD. The prices guide and dolphin sighting log (with Dataset JSON-LD) are built automatically once their data exists.
+- **Home, `/packages`, `/adventures`:** answer summaries, key facts and "Last updated" dates. The FAQ is now visible H3 questions (no accordion). `/adventures` gains a "which trip includes what" FAQ.
+- **Structured data:** one `LocalBusiness` + `Organization` node (`/#business`) with areaServed and knowsAbout. foundingDate, slogan, sameAs, priceRange, openingHours and geo appear once filled in.
+- **Crawlers:** `robots.txt` names OAI-SearchBot, ChatGPT-User, GPTBot, Claude-SearchBot, Claude-User, ClaudeBot, PerplexityBot, Perplexity-User, Google-Extended, Bingbot and Googlebot. The sitemap has 13 URLs with lastModified and 32 images. `/llms.txt` is generated from the data. Per-page Open Graph images are rendered at build time.
+- **IndexNow:** a key file in `public/`, `scripts/indexnow.mjs`, and `.github/workflows/indexnow.yml`, which waits 4 minutes after each push to `main` for the Vercel deploy, then submits the sitemap.
+- **GA4** (off until `NEXT_PUBLIC_GA_ID` is set) sends `whatsapp_click`, `call_click`, `maps_click` and `booking_form_submit`, with no personal data. Setting up key events and the "AI assistants" channel group is in the README.
+- **`scripts/ai-visibility-prompts.md`:** 15 prompts and a monthly log. **`scripts/copy-export.mjs`** regenerates `SEO_COPY.md`'s page copy.
+
+### Re-run the checks
+
+```bash
+NEXT_PUBLIC_GA_ID=G-TEST000000 npm run build && NEXT_PUBLIC_GA_ID=G-TEST000000 npx next start -p 3100
+QA_PATHS=/,/packages,/adventures,/dolphin-watching-gokarna,/guides/gokarna-boat-trip-guide QA_PRESETS=mobile,desktop node scripts/qa/lighthouse.mjs
+QA_PATHS=<comma-separated paths> node scripts/qa/screens.mjs   # also axe.mjs, nojs.mjs, csp.mjs
+node scripts/qa/links.mjs && node scripts/qa/inp.mjs
+```
+
+Live checks after a deploy (each should return 200 and the full page HTML):
+
+```bash
+curl -sI https://www.therudraadventure.com/ -A "Googlebot"
+curl -s https://www.therudraadventure.com/dolphin-watching-gokarna -A "OAI-SearchBot/1.0; +https://openai.com/searchbot" | grep -c "data-answer-summary"
+curl -s https://www.therudraadventure.com/robots.txt -A "PerplexityBot"
+```
+
+---
+
+## Redesign
 
 Branch `redesign`, seven phases (plus your hero change in `c3666da`; the Phase 7 work in progress was committed in `af41608`). Every number below was measured on a production build (`npm run build && npx next start`) with the scripts in `scripts/qa/`. Raw reports go to `artifacts/qa/` (git-ignored).
 
-## Results: target vs achieved
+### Results: target vs achieved
 
 | Target | Achieved | |
 | --- | --- | --- |
@@ -28,7 +92,7 @@ Branch `redesign`, seven phases (plus your hero change in `c3666da`; the Phase 7
 
 Real-4G measurements (3 runs each, median): home LCP 0.87 s (FCP 0.82 s), `/packages` LCP 1.05 s, `/adventures` LCP 0.93 s; CLS 0 throughout. This mode also applies the 4× CPU slowdown for real on this laptop (headless, software rendering), so its Total Blocking Time (354–450 ms) is harsher than the simulated run's 90–160 ms.
 
-## Audit items and how each was fixed
+### Audit items and how each was fixed
 
 | # | Audit finding | Fix |
 | --- | --- | --- |
@@ -50,14 +114,14 @@ Real-4G measurements (3 runs each, median): home LCP 0.87 s (FCP 0.82 s), `/pack
 | 16 | Stock images with "Representative…" alt under a heading claiming photos of the boat; clip 03 duplicates the hero | Alt text describes each scene (checked against the actual crops; river-trips alt corrected). A visible note says activity and place photos are illustrative. The gallery holds owner media only and nothing repeats the hero: two photos plus clips 01, 03, 04 and 05, each with a caption describing what it shows. Clip 02 (a byte-identical copy of clip 01) is dropped. |
 | 17 | `<title>` "Gokarna boat adventures"; no `twitter:image:alt`; minimal LocalBusiness JSON-LD | Title "Gokarna Boat Trips, Kayaking & Dolphin Tours \| Rudra Gokarna Adventures", 154-character description, OG/Twitter with a real 1200×630 image and `og:image:alt` / `twitter:image:alt`. JSON-LD: LocalBusiness (PostalAddress, both phones, image, logo, map; price range, hours, geo, sameAs and postcode added automatically once filled in), an ItemList of TouristTrip, FAQPage, breadcrumbs. `sitemap.xml` and `robots.txt`; canonical from `NEXT_PUBLIC_SITE_URL`. |
 
-## Updates after the redesign
+### Updates after the redesign
 
 - **Developer credit (`fd0b874`):** the footer's bottom bar shows "Designed & developed by Dishan Web Wings", linked to the agency site in a new tab. The text lives in `data/site.ts` under `footer.credit`.
 - **Contact details:** the business now has **one number for calls and WhatsApp, +91 70197 45857**. Both previous numbers, and the "Alternate" row they needed, are gone from the site, the JSON-LD and the QA script. With one number, the Book section shows it without repeating its "Call or WhatsApp" heading. LocalBusiness `telephone` is the single string `+917019745857`.
 - **Pick-up map:** every pick-up link (footer, Book section, and the trust strip's "Pick-up from Gokarna Beach", which is now a link) goes to the Google Maps pin `https://maps.app.goo.gl/s4jSzvA6cUZmsFzZ6` in a new tab with `rel="noopener"`. The same URL is the LocalBusiness `hasMap`.
 - **Custom domain:** `https://www.therudraadventure.com` is the only official address. `lib/url.ts` falls back to it, so canonical URLs, `og:url`, `og:image`, the JSON-LD `url`/`image`, `sitemap.xml` and `robots.txt` all use it. `NEXT_PUBLIC_SITE_URL` can still override it. `next.config.ts` 308-redirects the old `therudragokarna.vercel.app` host and the bare `therudraadventure.com` to the www domain, keeping the path. Preview-deployment hosts aren't redirected.
 
-## Decisions and deviations from the brief
+### Decisions and deviations from the brief
 
 - **Secondary pages (D1, as approved):** `/packages` and `/adventures` kept and restyled with their own title, description and JSON-LD, linked from the home sections. `/contact`, `/about`, `/gallery`, `/new-year` and `/guides` 308-redirect to the matching home anchor.
 - **Hero (your change in `c3666da`):** a still image (the boat on blue water), no background video. I kept that and only made it reproducible: `scripts/optimize-assets.mjs` builds the `hero-blue-*` files from `assets-src/images/rudra-boat-showcase.jpeg` within the 120 KB cap, with a 50 KB budget for the phone crop because it's the phone LCP image. The source is 1600×901, so the phone crop is its native 676px wide; the earlier 828/1242 crops were upscaled copies of it. The 1600w WebP needs quality 30 to fit (very detailed image), but it's only a fallback, since every supported browser gets the AVIF.
@@ -73,7 +137,7 @@ Real-4G measurements (3 runs each, median): home LCP 0.87 s (FCP 0.82 s), `/pack
 - **`browserslist`** is set to Tailwind v4's own browser floor (Chrome/Edge 111, Firefox 128, Safari 16.4).
 - **Logo:** stays PNG (no vector source exists, and tracing would lose quality), 40 px tall, eager, explicit size.
 
-## Remaining TODO(owner)
+### Remaining TODO(owner)
 
 All live in `data/site.ts` as `null`. The UI and JSON-LD ignore them until filled in.
 
@@ -88,7 +152,7 @@ All live in `data/site.ts` as `null`. The UI and JSON-LD ignore them until fille
 - **Hero image (D4):** confirm whether `rudra-boat-showcase.jpeg` (now the hero) is a photograph or a render. The alt text stays neutral until then.
 - **Media:** a vector logo (`vectorLogo`), higher-resolution boat renders (`boatRenders`), real trip photos to replace the illustrative stock images (`tripPhotos`), and a larger hero source (`heroClip`) if the video background ever comes back.
 
-## How to re-run the checks
+### How to re-run the checks
 
 ```bash
 npm run build && npx next start -p 3100

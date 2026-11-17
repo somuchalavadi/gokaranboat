@@ -37,7 +37,7 @@ When you change a page's copy, update its `updatedAt` date: it feeds the visible
 
 ## Analytics (GA4)
 
-GA4 loads only when `NEXT_PUBLIC_GA_ID` is set (Vercel → Project → Settings → Environment Variables, Production, e.g. `G-XXXXXXXXXX`), then redeploy. `gtag.js` loads after the page has finished loading (`lazyOnload`), so it doesn't slow the page; clicks before then are queued and still sent. The CSP allows the Google Analytics hosts only when the ID is set.
+GA4 loads only when `NEXT_PUBLIC_GA_ID` is set (Vercel → Project → Settings → Environment Variables, Production, e.g. `G-XXXXXXXXXX`), then redeploy. `gtag.js` loads on the visitor's first tap, click, key press or scroll, or after 8 seconds, whichever comes first, so it never competes with the page while it loads (with plain `lazyOnload` it cost mobile Lighthouse 4–6 points). The page view and any clicks before then are queued and sent once it loads. The CSP allows the Google Analytics hosts only when the ID is set.
 
 Events (no names, phone numbers or message text are sent):
 
