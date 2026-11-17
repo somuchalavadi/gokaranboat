@@ -83,11 +83,11 @@ export function touristTripsJsonLd() {
   };
 }
 
-export function faqJsonLd() {
+export function faqJsonLd(items: readonly { question: string; answer: string | null }[] = faq) {
   return {
     "@context": "https://schema.org",
     "@type": "FAQPage",
-    mainEntity: faq
+    mainEntity: items
       .filter((item) => item.answer !== null)
       .map((item) => ({ "@type": "Question", name: item.question, acceptedAnswer: { "@type": "Answer", text: item.answer } })),
   };

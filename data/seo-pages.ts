@@ -48,10 +48,10 @@ const hours = (id: TripPackage["id"]) => `${byId(id).durationHours}-hour`;
 const nameWithHours = (id: TripPackage["id"]) => `${hours(id)} ${byId(id).name}`;
 
 // General packing guidance (true for any boat trip). TODO(owner): confirm, and add anything you provide or require.
-const carry = ["Sun protection: a cap or hat, sunscreen and sunglasses", "Drinking water", "Light clothes you don't mind getting splashed", "A dry bag or zip pouch for your phone", "Any medicine you need, such as for motion sickness"];
+export const carry = ["Sun protection: a cap or hat, sunscreen and sunglasses", "Drinking water", "Light clothes you don't mind getting splashed", "A dry bag or zip pouch for your phone", "Any medicine you need, such as for motion sickness"];
 const carryWet = [...carry.slice(0, 3), "Swimwear, a towel and a change of clothes", ...carry.slice(3)];
 
-function keyFacts(ids: readonly TripPackage["id"][], carryList: readonly string[]): KeyFact[] {
+export function keyFacts(ids: readonly TripPackage["id"][], carryList: readonly string[]): KeyFact[] {
   const prices = ids.map((id) => byId(id).price).filter((price): price is number => price !== null);
   const ages = ids.map((id) => byId(id).minAge).filter((age): age is number => age !== null);
   const timings = ids.map((id) => byId(id).timings).filter((time): time is string => time !== null);

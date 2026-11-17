@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { packages } from "@/data/site";
+import { pageSummaries } from "@/data/pages";
 import { breadcrumbJsonLd, jsonLdScript, pageMetadata, touristTripsJsonLd } from "@/lib/seo";
 import { Button } from "@/components/ui/Button";
 import { Section } from "@/components/ui/Section";
@@ -8,7 +9,7 @@ import { PackageCard } from "@/components/sections/PackageCard";
 import { CompareTable } from "@/components/sections/CompareTable";
 import { FaqGoodToKnow } from "@/components/sections/FaqGoodToKnow";
 import { Events } from "@/components/sections/Events";
-import { packagesSummary } from "@/components/sections/Packages";
+import { KeyFacts, LastUpdated } from "@/components/seo/Blocks";
 
 export const metadata: Metadata = pageMetadata({
   title: "Gokarna Boat Trip Packages | Rudra Gokarna Adventures",
@@ -16,13 +17,18 @@ export const metadata: Metadata = pageMetadata({
   path: "/packages",
 });
 
+const summary = pageSummaries.packages;
+
 export default function PackagesPage() {
   return (
     <>
-      <PageHeader crumb="Packages" title="Gokarna boat packages" intro={`${packagesSummary()} Here is everything each one includes.`}>
+      <PageHeader crumb="Packages" title="Gokarna boat packages" intro={summary.answerSummary} meta={<LastUpdated date={summary.updatedAt} />}>
         <Button href="/#book">Plan & book</Button>
       </PageHeader>
       <Section id="all-packages" tone="sand" title="Every package in full">
+        <div data-reveal className="mb-10 max-w-3xl">
+          <KeyFacts id="packages-key-facts" facts={summary.keyFacts} />
+        </div>
         <ul data-reveal className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {packages.map((item, index) => (
             <li key={item.id}>

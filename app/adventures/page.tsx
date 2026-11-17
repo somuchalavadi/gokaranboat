@@ -1,11 +1,13 @@
 import type { Metadata } from "next";
 import { activities, experiencesIntro, places } from "@/data/site";
-import { breadcrumbJsonLd, jsonLdScript, pageMetadata, thingsToDoJsonLd } from "@/lib/seo";
+import { pageSummaries } from "@/data/pages";
+import { breadcrumbJsonLd, faqJsonLd, jsonLdScript, pageMetadata, thingsToDoJsonLd } from "@/lib/seo";
 import { Button } from "@/components/ui/Button";
 import { Section } from "@/components/ui/Section";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { TileGrid } from "@/components/sections/TileGrid";
 import { Events } from "@/components/sections/Events";
+import { FaqList, KeyFacts, LastUpdated } from "@/components/seo/Blocks";
 
 export const metadata: Metadata = pageMetadata({
   title: "Things to Do in Gokarna by Boat | Rudra Gokarna Adventures",
@@ -13,20 +15,29 @@ export const metadata: Metadata = pageMetadata({
   path: "/adventures",
 });
 
+const summary = pageSummaries.adventures;
+
 export default function AdventuresPage() {
   return (
     <>
-      <PageHeader crumb="Things to do" title="Things to do on the water" intro="Every activity and place on our Gokarna trips, and which packages include each one.">
+      <PageHeader crumb="Things to do" title="Things to do on the water" intro={summary.answerSummary} meta={<LastUpdated date={summary.updatedAt} />}>
         <Button href="/#book">Plan & book</Button>
       </PageHeader>
       <Section id="activities" tone="sand" title="Activities" intro={<p className="text-base">{experiencesIntro.stockNote}</p>}>
+        <div data-reveal className="mb-10 max-w-3xl">
+          <KeyFacts id="adventures-key-facts" facts={summary.keyFacts} />
+        </div>
         <TileGrid items={activities} tone="sand" priorityFirst />
       </Section>
       <Section id="places" tone="navy" title="Places">
         <TileGrid items={places} tone="navy" />
       </Section>
+      <Section id="questions" tone="sand">
+        <FaqList id="questions-title" title="Which trip includes what" faqs={summary.faqs} />
+      </Section>
       <Events />
       <script type="application/ld+json" dangerouslySetInnerHTML={jsonLdScript(thingsToDoJsonLd())} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={jsonLdScript(faqJsonLd(summary.faqs))} />
       <script type="application/ld+json" dangerouslySetInnerHTML={jsonLdScript(breadcrumbJsonLd("Things to do", "/adventures"))} />
     </>
   );

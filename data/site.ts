@@ -310,13 +310,12 @@ export const hero = {
 
 export type VideoSource = { src: string; type: "video/webm" | "video/mp4" };
 
-// The About section. `canonical` is the owner-approved ~60-word description, reused in JSON-LD and llms.txt.
+// The About section (its lead line is pageSummaries.home.answerSummary in data/pages.ts). `canonical` is the owner-approved ~60-word description, reused in JSON-LD and llms.txt.
 export const about = {
   title: "About Rudra Gokarna Adventures",
   paragraphs: [
-    "Rudra Gokarna Adventures brings boat rides, water activities and coastal exploration together from Gokarna Beach. Choose a listed trip or tell us what you want to see.",
     "Trips run aboard The Rudra Gokarna, a navy and white boat with gold lines, an open upper deck and a covered cabin with windows.",
-    "Packages last two to four hours, and custom trips for couples, families, New Year and other occasions are planned on request.",
+    "Choose a listed trip or tell us what you want to see. Custom trips for couples, families, New Year and other occasions are planned on request.",
   ],
   canonical:
     "Rudra Gokarna Adventures runs boat trips from Gokarna Beach in Gokarna, Karnataka, aboard The Rudra Gokarna, a navy-and-white boat with an open upper deck and a covered cabin. Trips last two to four hours and include sightseeing along the coast, dolphin watching, kayaking, snorkelling, a mystery cave, mangrove river trips, fishing and bioluminescence trips, plus custom trips for couples, families and celebrations.",
