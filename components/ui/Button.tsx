@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { isOutboundBookingLink, outboundRel } from "@/lib/whatsapp";
 import type { AnchorHTMLAttributes, ButtonHTMLAttributes, ReactNode } from "react";
 
 type Variant = "primary" | "secondary" | "text";
@@ -36,7 +37,7 @@ export function Button(props: LinkProps | NativeButtonProps) {
     const cls = buttonClass(variant, tone, className);
     if (/^https?:/.test(href)) {
       return (
-        <a href={href} target="_blank" rel="noopener noreferrer" className={cls} {...anchor}>
+        <a href={href} target="_blank" rel={isOutboundBookingLink(href) ? outboundRel : "noopener noreferrer"} className={cls} {...anchor}>
           {children}
         </a>
       );

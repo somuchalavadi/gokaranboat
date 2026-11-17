@@ -28,12 +28,13 @@ export function Gallery() {
               type="button"
               data-gallery-open={index}
               aria-haspopup="dialog"
-              aria-label={`${item.kind === "video" ? "Play video" : "View photo"}: ${item.alt}`}
               className="group relative block aspect-square w-full overflow-hidden rounded-card bg-navy-700 transition-transform duration-250 ease-out hover:-translate-y-1 lg:aspect-video"
             >
+              {/* The button's name is this prefix plus the image's alt text. */}
+              <span className="sr-only">{item.kind === "video" ? "Play video: " : "View photo: "}</span>
               <Img
                 src={item.kind === "video" ? item.poster : item.src}
-                alt=""
+                alt={item.alt}
                 fill
                 sizes="(max-width: 1023px) 50vw, 400px"
                 className="object-cover transition-transform duration-300 group-hover:scale-[1.03]"

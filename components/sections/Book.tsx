@@ -1,7 +1,7 @@
 import { Img } from "@/components/ui/Img";
 import { MapPin, Phone } from "lucide-react";
 import { booking, contact } from "@/data/site";
-import { telLink } from "@/lib/whatsapp";
+import { outboundRel, telLink } from "@/lib/whatsapp";
 import { Button } from "@/components/ui/Button";
 import { Section } from "@/components/ui/Section";
 import { BookingForm } from "@/components/sections/BookingForm";
@@ -16,8 +16,8 @@ export function Book() {
       <div className="grid gap-8 lg:grid-cols-12 lg:gap-12">
         <div data-reveal className="relative lg:col-span-7 lg:p-6">
           {/* Desktop only: a photo behind the glass card, so the blur has something to show. */}
-          <div aria-hidden="true" className="absolute inset-0 hidden overflow-hidden rounded-card lg:block">
-            <Img src={booking.photo.src} alt="" fill sizes="680px" className="object-cover" />
+          <div className="absolute inset-0 hidden overflow-hidden rounded-card lg:block">
+            <Img src={booking.photo.src} alt={booking.photo.alt} fill sizes="680px" className="object-cover" />
           </div>
           <div className="glass-light relative rounded-card p-5 shadow-[0_24px_48px_-24px_rgb(15_23_42/0.45)] ring-1 ring-line sm:p-8">
             <BookingForm />
@@ -29,7 +29,7 @@ export function Book() {
             <div>
               <dt className={termClass}>Pick-up point</dt>
               <dd className="mt-1">
-                <a href={contact.pickup.mapsUrl} target="_blank" rel="noopener" className={linkClass}>
+                <a href={contact.pickup.mapsUrl} target="_blank" rel={outboundRel} className={linkClass}>
                   <MapPin aria-hidden="true" />
                   {contact.pickup.label}
                 </a>

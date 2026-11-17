@@ -40,3 +40,9 @@ export function buildBookingMessage(details: BookingDetails) {
 export function isIndianMobile(value: string) {
   return /^(?:\+?91|0)?[6-9]\d{9}$/.test(value.replace(/[\s()-]/g, ""));
 }
+
+// Outbound booking and map links (wa.me, Google Maps) open in a new tab and aren't endorsed for crawlers.
+export const outboundRel = "nofollow noopener";
+export function isOutboundBookingLink(href: string) {
+  return /^https:\/\/(wa\.me|maps\.app\.goo\.gl)\/|^https:\/\/(www\.)?google\.[a-z.]+\/maps/.test(href);
+}

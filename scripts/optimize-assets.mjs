@@ -39,12 +39,30 @@ const GALLERY_CLIPS = [
 
 // Crop anchors for portrait stock photos where the automatic (saliency) crop misses the subject.
 const STOCK_CROP = { "river-trips.webp": "north" };
+// Stock originals the site doesn't use; they aren't published.
+const STOCK_UNUSED = new Set(["place-sightseeing.webp"]);
+
+// Brand images. The logo's largest display is the footer at 190×80 CSS px, so it's built at 2× (380px wide);
+// the emblem is the JSON-LD logo (not displayed) and stays 512px; app/icon.png is the favicon source.
+const BRAND = [
+  { input: "assets-src/brand/rudra_gokarna_main_logo_transparent.png", output: "public/brand/rudra_gokarna_main_logo_transparent.png", width: 380, limit: 60 * 1024 },
+  { input: "assets-src/brand/rudra-gokarn-adventures-emblem-512.png", output: "public/brand/rudra-gokarn-adventures-emblem-512.png", width: 512, limit: 60 * 1024 },
+  { input: "assets-src/brand/icon.png", output: "app/icon.png", width: 192, limit: 20 * 1024 },
+];
+
+// Files that used to be published but aren't referenced any more (originals stay in assets-src/).
+const UNUSED = [
+  "public/brand/rudra-gokarn-adventures-logo.png",
+  "public/brand/rudra_gokarna_favicon_no_R.png",
+  "public/images/rudra-boat-showcase.jpeg",
+  "public/images/stock/place-sightseeing.webp",
+];
 
 const LIMITS = {
   heroPoster: 120 * KB,
   heroPhone: 50 * KB, // the phone crop is the LCP image on phones, so it gets a tighter budget than the 120 KB cap
-  photo: 250 * KB,
-  stock: 400 * KB, // masters for next/image (never sent as-is), so quality matters more than bytes
+  photo: 150 * KB,
+  stock: 150 * KB,
   og: 200 * KB,
   videoPoster: 90 * KB,
   heroHd: 3 * MB,
@@ -62,27 +80,42 @@ async function bytes(file) {
   return (await stat(file)).size;
 }
 
-const startQuality = { avif: 62, webp: 82, jpeg: 84 };
+const startQuality = { avif: 62, webp: 82, jpeg: 84, png: 90 };
 // WebP may go lower than AVIF: it is only the fallback for browsers without AVIF (none in browserslist).
-const minQuality = { avif: 30, webp: 30, jpeg: 50 };
+const minQuality = { avif: 30, webp: 30, jpeg: 50, png: 40 };
 
 // Encodes at falling quality until the file fits its byte budget. `extract` crops before resizing.
-async function imageWithin(input, output, { extract, resize, format, limit }) {
+// With `shrink`, quality never drops more than 16 below the start (e.g. 72 → 56); the image gets smaller
+// instead (85%, 72%, 60% of the size), which looks better than heavy compression on busy photos.
+async function imageWithin(input, output, { extract, resize, format, limit, quality: firstQuality, shrink = false }) {
+  const start = firstQuality ?? startQuality[format];
+  const floor = shrink ? Math.max(minQuality[format], start - 16) : minQuality[format];
   let buffer;
-  let quality = startQuality[format];
-  for (; quality >= minQuality[format]; quality -= 4) {
-    let pipeline = sharp(input).rotate();
-    if (extract) pipeline = sharp(await pipeline.extract(extract).toBuffer());
-    pipeline = pipeline.resize({ withoutEnlargement: true, ...resize });
-    if (format === "avif") pipeline = pipeline.avif({ quality, effort: 6 });
-    else if (format === "webp") pipeline = pipeline.webp({ quality, effort: 6 });
-    else pipeline = pipeline.jpeg({ quality, mozjpeg: true, progressive: true });
-    buffer = await pipeline.toBuffer();
-    if (buffer.length <= limit) break;
+  let quality;
+  let fits = false;
+  for (const scale of shrink ? [1, 0.85, 0.72, 0.6] : [1]) {
+    for (quality = start; quality >= floor; quality -= 4) {
+      let pipeline = sharp(input).rotate();
+      if (extract) pipeline = sharp(await pipeline.extract(extract).toBuffer());
+      const scaled = { ...resize };
+      if (scaled.width) scaled.width = Math.round(scaled.width * scale);
+      if (scaled.height) scaled.height = Math.round(scaled.height * scale);
+      pipeline = pipeline.resize({ withoutEnlargement: true, ...scaled });
+      if (format === "avif") pipeline = pipeline.avif({ quality, effort: 6 });
+      else if (format === "webp") pipeline = pipeline.webp({ quality, effort: 6 });
+      else if (format === "png") pipeline = pipeline.png({ palette: true, quality, effort: 10, compressionLevel: 9 });
+      else pipeline = pipeline.jpeg({ quality, mozjpeg: true, progressive: true });
+      buffer = await pipeline.toBuffer();
+      if (buffer.length <= limit) {
+        fits = true;
+        break;
+      }
+    }
+    if (fits) break;
   }
   await withRetry(() => writeFile(output, buffer));
   const meta = await sharp(buffer).metadata();
-  record(output, buffer.length, limit, `${meta.width}×${meta.height} q${Math.max(quality, minQuality[format])}`);
+  record(output, buffer.length, limit, `${meta.width}×${meta.height} q${Math.max(quality, floor)}`);
 }
 
 async function probe(file) {
@@ -158,9 +191,11 @@ async function images() {
   }
   console.log(`Hero poster widths: landscape ${landscapeWidths.join(", ")}; portrait ${portraitWidths.join(", ")}`);
   // The calm-water photo keeps its original URL; it's a gallery photo now.
-  await imageWithin("assets-src/images/rudra-hero.jpeg", "public/images/rudra-hero.jpeg", { resize: { width: 1600, height: 1600, fit: "inside" }, format: "jpeg", limit: LIMITS.photo });
-  for (const name of ["rudra-coast", "rudra-boat-showcase"]) {
-    await imageWithin(`assets-src/images/${name}.jpeg`, `public/images/${name}.jpeg`, { resize: { width: 1600, height: 1600, fit: "inside" }, format: "jpeg", limit: LIMITS.photo });
+  await imageWithin("assets-src/images/rudra-hero.jpeg", "public/images/rudra-hero.jpeg", { resize: { width: 1600, height: 1600, fit: "inside" }, format: "jpeg", limit: LIMITS.photo, shrink: true });
+  await mkdir("public/brand", { recursive: true });
+  for (const item of BRAND) await imageWithin(item.input, item.output, { resize: { width: item.width }, format: "png", limit: item.limit });
+  for (const name of ["rudra-coast"]) {
+    await imageWithin(`assets-src/images/${name}.jpeg`, `public/images/${name}.jpeg`, { resize: { width: 1600, height: 1600, fit: "inside" }, format: "jpeg", limit: LIMITS.photo, shrink: true });
   }
   // Open Graph / Twitter card: a true 1200×630 crop of the hero photo.
   await imageWithin("assets-src/images/rudra-hero.jpeg", "public/images/og.jpg", { resize: { width: 1200, height: 630, fit: "cover", position: "centre" }, format: "jpeg", limit: LIMITS.og });
@@ -169,12 +204,12 @@ async function images() {
   // be downloaded at full height and mostly cropped away; crop anything taller than 4:3 to 4:3 around its subject.
   await mkdir("public/images/stock", { recursive: true });
   for (const file of await readdir("assets-src/images/stock")) {
-    if (!file.endsWith(".webp")) continue;
+    if (!file.endsWith(".webp") || STOCK_UNUSED.has(file)) continue;
     const input = `assets-src/images/stock/${file}`;
     const { width, height } = await sharp(input).metadata();
     const position = STOCK_CROP[file] ?? sharp.strategy.attention;
     const resize = height / width > 0.75 ? { width: 1600, height: 1200, fit: "cover", position } : { width: 1600, fit: "inside" };
-    await imageWithin(input, `public/images/stock/${file}`, { resize, format: "webp", limit: LIMITS.stock });
+    await imageWithin(input, `public/images/stock/${file}`, { resize, format: "webp", limit: LIMITS.stock, quality: 72, shrink: true });
   }
 }
 
@@ -247,6 +282,29 @@ async function galleryClips() {
 
 const only = process.argv.find((arg) => arg.startsWith("--only="))?.split("=")[1];
 
+// Sizes of everything published before this run, for the before/after table.
+async function sizes(dir) {
+  const result = new Map();
+  for (const entry of await readdir(dir, { withFileTypes: true }).catch(() => [])) {
+    const full = path.posix.join(dir, entry.name);
+    if (entry.isDirectory()) for (const [file, size] of await sizes(full)) result.set(file, size);
+    else result.set(full, (await stat(full)).size);
+  }
+  return result;
+}
+const before = new Map([...(await sizes("public")), ...(await sizes("app"))]);
+// Brand files that were published as-is used to be identical to their originals.
+for (const item of BRAND) if (!before.has(item.output)) before.set(item.output, (await stat(item.input)).size);
+
+if (!only || only === "images") {
+  for (const file of UNUSED) {
+    if (before.has(file)) {
+      await withRetry(() => rm(file, { force: true }));
+      report.push({ file, bytes: 0, limit: Infinity, ok: true, note: "removed (unused)" });
+    }
+  }
+}
+
 if (!only || only === "images") {
   // Clear previous outputs so a removed source never leaves a stale file behind.
   await rm("public/images/hero", { recursive: true, force: true });
@@ -262,8 +320,10 @@ if (!only || only === "videos") {
   const clips = await galleryClips();
   console.log("Gallery clips:", clips.map((clip) => `${clip.id} ${clip.width}×${clip.height} ${clip.seconds}s`).join(", "));
 }
-console.log("\nfile".padEnd(48), "size".padStart(10), "limit".padStart(10), " ");
+const kb = (bytes) => (bytes === undefined ? "new" : `${(bytes / KB).toFixed(0)} KB`);
+console.log("\nfile".padEnd(50), "before".padStart(9), "after".padStart(9), "limit".padStart(9), " ");
 for (const row of report) {
-  console.log(row.file.padEnd(48), `${(row.bytes / KB).toFixed(0)} KB`.padStart(10), `${(row.limit / KB).toFixed(0)} KB`.padStart(10), row.ok ? " ok" : " OVER", row.note);
+  const limit = row.limit === Infinity ? "" : kb(row.limit);
+  console.log(row.file.padEnd(50), kb(before.get(row.file)).padStart(9), (row.note.startsWith("removed") ? "—" : kb(row.bytes)).padStart(9), limit.padStart(9), row.ok ? " ok" : " OVER", row.note);
 }
 if (report.some((row) => !row.ok)) process.exitCode = 1;

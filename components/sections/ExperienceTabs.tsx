@@ -29,10 +29,12 @@ function TileCard({ item, index, count, onOpen }: { item: Tile; index: number; c
   const layout = tileLayout(index, count);
   return (
     <li className={layout.className}>
-      <article className="group relative h-full overflow-hidden rounded-card bg-navy-700 transition-transform duration-250 ease-out hover:-translate-y-1">
-        <Img src={item.image.src} alt={item.image.alt} fill sizes={layout.sizes} className="object-cover transition-transform duration-300 group-hover:scale-[1.03]" />
-        <div aria-hidden="true" className="absolute inset-x-0 bottom-0 h-full bg-linear-to-t from-navy-900 via-navy-900/70 to-transparent" />
-        <div className="absolute inset-x-0 bottom-0 p-3 sm:p-4 lg:p-5">
+      {/* The text block flows at the bottom of the card; the image and gradient sit behind it (negative z inside an
+          isolated card), so the button's ::after is positioned against the whole card and covers all of it. */}
+      <article className="group relative isolate flex h-full flex-col justify-end overflow-hidden rounded-card bg-navy-700 transition-transform duration-250 ease-out hover:-translate-y-1">
+        <Img src={item.image.src} alt={item.image.alt} fill sizes={layout.sizes} className="-z-10 object-cover transition-transform duration-300 group-hover:scale-[1.03]" />
+        <div aria-hidden="true" className="absolute inset-0 -z-10 bg-linear-to-t from-navy-900 via-navy-900/70 to-transparent" />
+        <div className="p-3 sm:p-4 lg:p-5">
           <h3 className="font-display text-lg leading-tight font-semibold text-white lg:text-h3">
             {/* The ::after stretches the button over the whole tile, so the card is the tap target. */}
             <button

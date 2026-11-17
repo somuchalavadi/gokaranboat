@@ -40,6 +40,8 @@ export function BoatViewer() {
             className={`flex flex-col items-center gap-1 rounded-input bg-white p-2 transition-shadow ${viewIndex === index ? "ring-2 ring-navy-900" : "ring-1 ring-line hover:ring-ink/50"}`}
           >
             <span className="relative block aspect-[3/2] w-full">
+              {/* alt="" on purpose: the button is already named by its visible label ("Side", "Front"…), and the
+                  main image above carries the descriptive alt for whichever view is selected. */}
               <Img src={view.src} alt="" fill sizes="(max-width: 1023px) 22vw, 150px" className="object-contain" />
             </span>
             <span className="text-sm leading-tight font-medium">{view.label}</span>

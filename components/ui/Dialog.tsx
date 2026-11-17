@@ -57,7 +57,10 @@ export function Dialog({
     if (!dialog) return;
     const handleClose = () => {
       onCloseRef.current();
-      opener.current?.focus({ preventScroll: true });
+      // The close event arrives asynchronously, after the browser's own focus restore; only step in if focus was
+      // actually lost, so a late event can't pull focus back after the user has moved on.
+      const active = document.activeElement;
+      if (!active || active === document.body || dialog.contains(active)) opener.current?.focus({ preventScroll: true });
     };
     dialog.addEventListener("close", handleClose);
     return () => dialog.removeEventListener("close", handleClose);

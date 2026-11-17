@@ -9,6 +9,8 @@ const base = process.env.QA_URL ?? "http://localhost:3100";
 const number = "917019745857";
 const phones = new Set(["tel:+917019745857"]);
 const mapsUrl = "https://maps.app.goo.gl/s4jSzvA6cUZmsFzZ6";
+// Outbound booking and map links must be rel="nofollow noopener".
+const relOk = (rel) => ["nofollow", "noopener"].every((token) => rel.split(/\s+/).includes(token));
 const results = { links: [], checks: [], bookingMessages: [], consoleErrors: [] };
 let failed = 0;
 
@@ -41,7 +43,7 @@ for (const path of ["/", "/packages", "/adventures"]) {
       if (link.href.startsWith("https://wa.me/")) {
         const url = new URL(link.href);
         const message = url.searchParams.get("text") ?? "";
-        const ok = url.pathname === `/${number}` && message.trim().length > 0 && link.target === "_blank" && link.rel.includes("noopener");
+        const ok = url.pathname === `/${number}` && message.trim().length > 0 && link.target === "_blank" && relOk(link.rel);
         results.links.push({ path, width, kind: "whatsapp", text: link.text, message, ok });
         if (!ok) check(`WhatsApp link on ${path} @${width}: "${link.text}"`, false, link.href);
       } else if (link.href.startsWith("tel:")) {
@@ -49,7 +51,7 @@ for (const path of ["/", "/packages", "/adventures"]) {
         results.links.push({ path, width, kind: "tel", text: link.text, href: link.href, ok });
         if (!ok) check(`Phone link on ${path} @${width}`, false, link.href);
       } else if (/google\.[a-z.]+\/maps|maps\.app\.goo\.gl|goo\.gl\/maps/.test(link.href)) {
-        const ok = link.href === mapsUrl && link.target === "_blank" && link.rel.split(/\s+/).includes("noopener");
+        const ok = link.href === mapsUrl && link.target === "_blank" && relOk(link.rel);
         results.links.push({ path, width, kind: "maps", text: link.text, href: link.href, ok });
         if (!ok) check(`Map link on ${path} @${width}: "${link.text}"`, false, `${link.href} target=${link.target} rel=${link.rel}`);
       }
@@ -60,9 +62,9 @@ for (const path of ["/", "/packages", "/adventures"]) {
 const wa = results.links.filter((l) => l.kind === "whatsapp");
 const tel = results.links.filter((l) => l.kind === "tel");
 const maps = results.links.filter((l) => l.kind === "maps");
-check(`All WhatsApp links use ${number}, open in a new tab and carry a message`, wa.length > 0 && wa.every((l) => l.ok), `${wa.length} links`);
+check(`All WhatsApp links use ${number}, open in a new tab with rel="nofollow noopener" and carry a message`, wa.length > 0 && wa.every((l) => l.ok), `${wa.length} links`);
 check(`All phone links are tel:+${number}`, tel.length > 0 && tel.every((l) => l.ok), `${tel.length} links`);
-check("All pick-up links use the Google Maps short link, in a new tab with rel=noopener", maps.length > 0 && maps.every((l) => l.ok), `${maps.length} links`);
+check('All pick-up links use the Google Maps short link, in a new tab with rel="nofollow noopener"', maps.length > 0 && maps.every((l) => l.ok), `${maps.length} links`);
 const homeMobile = wa.filter((l) => l.path === "/" && l.width === 375);
 console.log(`\nWhatsApp CTAs on home @375: ${homeMobile.length}`);
 for (const l of homeMobile) console.log(`  • ${l.text.replace(/\s+/g, " ").slice(0, 50).padEnd(50)} → "${l.message}"`);
@@ -177,13 +179,17 @@ for (const l of homeMobile) console.log(`  • ${l.text.replace(/\s+/g, " ").sli
   const sheet = page.getByRole("dialog", { name: "Compare all packages" });
   check("Compare opens as a bottom sheet on phones", (await sheet.isVisible()) && (await sheet.getByRole("table").isVisible()));
   await page.keyboard.press("Escape");
-  check("Esc closes the compare sheet", !(await sheet.isVisible()));
+  // Wait for the close (and its focus return to the Compare button) before focusing anything else.
+  check("Esc closes the compare sheet and focus returns to its button", await eventually(async () => !(await sheet.isVisible()) && (await page.evaluate(() => document.activeElement?.textContent?.trim())) === "Compare all packages"));
 
   const tab = page.getByRole("tab", { name: "Activities" });
   await tab.focus();
   await page.keyboard.press("ArrowRight");
   check("Arrow keys move between the Activities/Places tabs", await eventually(async () => (await page.getByRole("tab", { name: "Places" }).getAttribute("aria-selected")) === "true"));
   await page.keyboard.press("ArrowLeft");
+  const backToActivities = await eventually(async () => (await page.getByRole("tab", { name: "Activities" }).getAttribute("aria-selected")) === "true");
+  check("← moves back to the Activities tab", backToActivities, backToActivities ? "" : `focus was on: ${await page.evaluate(() => `${document.activeElement?.tagName} "${document.activeElement?.textContent?.trim().slice(0, 30)}"`)}`);
+  if (!backToActivities) await page.getByRole("tab", { name: "Activities" }).click();
   await page.getByRole("button", { name: "Kayaking" }).click();
   const tile = page.getByRole("dialog", { name: "Kayaking" });
   const tileText = await tile.innerText();
@@ -203,7 +209,7 @@ for (const l of homeMobile) console.log(`  • ${l.text.replace(/\s+/g, " ").sli
   await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
   await lightbox.dispatchEvent("touchstart", { touches: [{ identifier: 1, clientX: 300, clientY: 400 }] }).catch(() => {});
   await page.keyboard.press("Escape");
-  check("Esc closes the lightbox and focus returns to the opening tile", await eventually(async () => !(await lightbox.isVisible()) && /^View photo:/.test((await page.evaluate(() => document.activeElement?.getAttribute("aria-label"))) ?? "")));
+  check("Esc closes the lightbox and focus returns to the opening tile", await eventually(async () => !(await lightbox.isVisible()) && (await page.evaluate(() => document.activeElement?.getAttribute("data-gallery-open"))) === "0"));
   check("Gallery grid loads no video before the lightbox opens", await eventually(async () => (await page.locator("#gallery video").count()) === 0));
   await page.close();
 }

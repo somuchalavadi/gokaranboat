@@ -1,5 +1,6 @@
 import { LifeBuoy, MapPin, Star, Users } from "lucide-react";
 import { trust } from "@/data/site";
+import { outboundRel } from "@/lib/whatsapp";
 import { Container } from "@/components/ui/Container";
 
 const icons = { pin: MapPin, star: Star, safety: LifeBuoy, crew: Users };
@@ -23,7 +24,7 @@ export function TrustStrip() {
             return (
               <li key={item.id} className="inline-flex min-h-11 items-center gap-2">
                 {item.href ? (
-                  <a href={item.href} target="_blank" rel="noopener" className="inline-flex min-h-11 items-center gap-2 rounded-sm hover:underline hover:underline-offset-4">
+                  <a href={item.href} target="_blank" rel={outboundRel} className="inline-flex min-h-11 items-center gap-2 rounded-sm hover:underline hover:underline-offset-4">
                     {content}
                   </a>
                 ) : (

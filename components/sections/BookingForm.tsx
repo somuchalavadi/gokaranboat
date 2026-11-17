@@ -3,7 +3,7 @@
 import { Check, MessageCircle, Minus, Plus } from "lucide-react";
 import { useRef, useState, useSyncExternalStore, type FormEvent, type ReactNode } from "react";
 import { booking, packages, places, type TripPackage } from "@/data/site";
-import { buildBookingMessage, buildWhatsAppLink, isIndianMobile } from "@/lib/whatsapp";
+import { buildBookingMessage, buildWhatsAppLink, isIndianMobile, outboundRel } from "@/lib/whatsapp";
 import { Button } from "@/components/ui/Button";
 
 type Trip = TripPackage["id"] | "custom";
@@ -318,7 +318,7 @@ export function BookingForm() {
         {link && (
           <>
             Opening WhatsApp… If it didn&apos;t open,{" "}
-            <a href={link} target="_blank" rel="noopener noreferrer" className="font-semibold underline underline-offset-4">
+            <a href={link} target="_blank" rel={outboundRel} className="font-semibold underline underline-offset-4">
               open WhatsApp again
             </a>
             .

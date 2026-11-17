@@ -7,7 +7,7 @@ export const business = {
   name: "Rudra Gokarna Adventures",
   tagline: "Boat adventures and coastal experiences in Gokarna.",
   boatName: "The Rudra Gokarna",
-  logo: { src: "/brand/rudra_gokarna_main_logo_transparent.png", width: 1164, height: 491, alt: "Rudra Gokarna Adventures" },
+  logo: { src: "/brand/rudra_gokarna_main_logo_transparent.png", width: 380, height: 160, alt: "Rudra Gokarna Adventures" },
   emblem: "/brand/rudra-gokarn-adventures-emblem-512.png",
   priceRange: null as string | null, // TODO(owner): schema.org price range (e.g. "₹₹") once prices are confirmed.
   rating: null as number | null, // TODO(owner): Google rating, e.g. 4.8.
@@ -50,9 +50,8 @@ export const pending = {
 };
 
 export const seo = {
-  title: "Gokarna Boat Trips, Kayaking & Dolphin Tours | Rudra Gokarna Adventures",
-  description:
-    "Boat trips from Gokarna Beach, Karnataka: kayaking, snorkelling, dolphin watching, sea caves and mangrove river trips. 2–4 hour packages and custom trips.",
+  title: "Gokarna Boat Trips & Kayaking | Rudra Gokarna Adventures",
+  description: "Boat trips from Gokarna Beach: dolphin watching, kayaking, snorkelling, sea caves and mangrove river trips. 2–4 hour and custom trips.",
   ogImage: { src: "/images/og.jpg", width: 1200, height: 630, alt: "The Rudra Gokarna boat on calm water off the Gokarna coast" },
 };
 
@@ -121,7 +120,7 @@ export const packages: readonly TripPackage[] = [
     durationHours: 2,
     featured: false,
     badge: null,
-    image: { src: "/images/stock/standard.webp", width: 1600, height: 1200, alt: "Rocky shoreline and open sea seen from above" },
+    image: { src: "/images/stock/standard.webp", width: 960, height: 720, alt: "Rocky shoreline and open sea seen from above" },
     highlights: ["sightseeing", "mystery-cave", "dolphins"],
     price: null, // TODO(owner): "From" price in ₹ per person.
     maxGuests: null, // TODO(owner): maximum guests for this trip.
@@ -184,7 +183,7 @@ export const activities: readonly Tile[] = [
     title: "Snorkelling",
     description: "Snorkelling is part of the Premium trip.",
     note: null,
-    image: { src: "/images/stock/snorkelling.webp", width: 1600, height: 1200, alt: "A snorkeller floating in clear turquoise water, seen from above" },
+    image: { src: "/images/stock/snorkelling.webp", width: 1360, height: 1020, alt: "A snorkeller floating in clear turquoise water, seen from above" },
     highlightIds: ["snorkelling"],
   },
   {
@@ -227,7 +226,7 @@ export const places: readonly Tile[] = [
     title: "Mystery cave",
     description: "Explore a distinctive cave along the coast.",
     note: null,
-    image: { src: "/images/stock/mystery-cave.webp", width: 1600, height: 1067, alt: "A small boat approaching a narrow opening between high rocky cliffs" },
+    image: { src: "/images/stock/mystery-cave.webp", width: 960, height: 640, alt: "A small boat approaching a narrow opening between high rocky cliffs" },
     highlightIds: ["mystery-cave"],
   },
   {
@@ -251,7 +250,7 @@ export const places: readonly Tile[] = [
     title: "Mangroves",
     description: "Mangrove views, and kayaking through the mangroves.",
     note: null,
-    image: { src: "/images/stock/mangroves.webp", width: 1600, height: 899, alt: "A boat moving along a calm, green, mangrove-lined waterway" },
+    image: { src: "/images/stock/mangroves.webp", width: 1360, height: 764, alt: "A boat moving along a calm, green, mangrove-lined waterway" },
     highlightIds: ["mangrove-views", "mangrove-kayaking"],
   },
   {
@@ -259,7 +258,7 @@ export const places: readonly Tile[] = [
     title: "Gokarna coastline",
     description: "The Gokarna shore, seen from the water.",
     note: null,
-    image: { src: "/images/rudra-coast.jpeg", width: 1200, height: 1600, alt: "The Rudra Gokarna on calm water, seen from a rocky Gokarna shore between trees" },
+    image: { src: "/images/rudra-coast.jpeg", width: 864, height: 1152, alt: "The Rudra Gokarna on calm water, seen from a rocky Gokarna shore between trees" },
     highlightIds: ["sightseeing"],
   },
 ];
@@ -355,7 +354,7 @@ export const galleryIntro = {
 export const gallery: readonly GalleryItem[] = [
   { kind: "image", id: "calm", src: "/images/rudra-hero.jpeg", width: 1600, height: 1200, alt: "The Rudra Gokarna on calm water with guests on deck and hills in the haze behind", caption: "On calm water off Gokarna" },
   { kind: "video", id: "clip-04", src: "/videos/rudra-boat-04.mp4", poster: "/videos/posters/rudra-boat-04.webp", width: 720, height: 1280, alt: "Guests climbing over rocks to a beach, with a boat and a kayak waiting offshore", caption: "Back to the boat" },
-  { kind: "image", id: "coast", src: "/images/rudra-coast.jpeg", width: 1200, height: 1600, alt: "The Rudra Gokarna on calm water, seen from a rocky shore between trees", caption: "Seen from the shore" },
+  { kind: "image", id: "coast", src: "/images/rudra-coast.jpeg", width: 864, height: 1152, alt: "The Rudra Gokarna on calm water, seen from a rocky shore between trees", caption: "Seen from the shore" },
   { kind: "video", id: "clip-03", src: "/videos/rudra-boat-03.mp4", poster: "/videos/posters/rudra-boat-03.webp", width: 720, height: 1280, alt: "Guests walking single file through a narrow, dark cave passage", caption: "Through the cave" },
   { kind: "video", id: "clip-01", src: "/videos/rudra-boat-01.mp4", poster: "/videos/posters/rudra-boat-01.webp", width: 1280, height: 720, alt: "A slow pan from a sandy cove with rocks and trees out to the boat on calm sea", caption: "From the cove" },
   { kind: "video", id: "clip-05", src: "/videos/rudra-boat-05.mp4", poster: "/videos/posters/rudra-boat-05.webp", width: 720, height: 1280, alt: "A guest holding a small crab while wading in shallow water", caption: "In the shallows" },
@@ -366,7 +365,7 @@ export const booking = {
   intro: "Choose a trip, a date and your group. We'll open WhatsApp with your details filled in.",
   customDurations: [2, 3, 4] as const,
   guests: { min: 1, max: 20 },
-  photo: { src: "/images/rudra-coast.jpeg", width: 1200, height: 1600, alt: "" },
+  photo: { src: "/images/rudra-coast.jpeg", width: 864, height: 1152, alt: "The Rudra Gokarna on calm water, seen from a rocky Gokarna shore between trees" },
 };
 
 export const events = {
@@ -443,4 +442,15 @@ export const footer = {
     name: "Dishan Web Wings",
     url: "https://dishanwebwing.com/",
   },
+};
+
+// The 404 page. Phase 3 adds the activity landing pages to these links.
+export const notFound = {
+  title: "This page isn't here",
+  text: "The link may be old or mistyped. These pages will help you find a boat trip from Gokarna Beach.",
+  links: [
+    { label: "Boat trip packages", href: "/packages" },
+    { label: "Things to do on the water", href: "/adventures" },
+    { label: "Plan and book a trip", href: "/#book" },
+  ],
 };

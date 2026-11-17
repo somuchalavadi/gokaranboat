@@ -2,7 +2,7 @@ import { Img } from "@/components/ui/Img";
 import Link from "next/link";
 import { MapPin, MessageCircle, Phone } from "lucide-react";
 import { business, contact, footer, nav } from "@/data/site";
-import { buildWhatsAppLink, telLink } from "@/lib/whatsapp";
+import { buildWhatsAppLink, outboundRel, telLink } from "@/lib/whatsapp";
 import { Container } from "@/components/ui/Container";
 
 const linkClass = "inline-flex min-h-11 min-w-11 items-center gap-2 hover:underline hover:underline-offset-4";
@@ -67,7 +67,7 @@ export function Footer() {
                     {phone.display}
                   </a>
                   {phone.primary && (
-                    <a href={buildWhatsAppLink("Hi, I'd like to ask about a boat trip.")} target="_blank" rel="noopener noreferrer" className={linkClass}>
+                    <a href={buildWhatsAppLink("Hi, I'd like to ask about a boat trip.")} target="_blank" rel={outboundRel} className={linkClass}>
                       <MessageCircle aria-hidden="true" />
                       WhatsApp
                     </a>
@@ -77,7 +77,7 @@ export function Footer() {
             ))}
             <li>
               <span className="block text-sm text-mist">Pick-up point</span>
-              <a href={contact.pickup.mapsUrl} target="_blank" rel="noopener" className={linkClass}>
+              <a href={contact.pickup.mapsUrl} target="_blank" rel={outboundRel} className={linkClass}>
                 <MapPin aria-hidden="true" />
                 {contact.pickup.label}
               </a>
