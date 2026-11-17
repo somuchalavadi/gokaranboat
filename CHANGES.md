@@ -55,6 +55,7 @@ Real-4G measurements (3 runs each, median): home LCP 0.87 s (FCP 0.82 s), `/pack
 - **Developer credit (`fd0b874`):** the footer's bottom bar shows "Designed & developed by Dishan Web Wings", linked to the agency site in a new tab. The text lives in `data/site.ts` under `footer.credit`.
 - **Contact details:** the business now has **one number for calls and WhatsApp, +91 70197 45857**. Both previous numbers, and the "Alternate" row they needed, are gone from the site, the JSON-LD and the QA script. With one number, the Book section shows it without repeating its "Call or WhatsApp" heading. LocalBusiness `telephone` is the single string `+917019745857`.
 - **Pick-up map:** every pick-up link (footer, Book section, and the trust strip's "Pick-up from Gokarna Beach", which is now a link) goes to the Google Maps pin `https://maps.app.goo.gl/s4jSzvA6cUZmsFzZ6` in a new tab with `rel="noopener"`. The same URL is the LocalBusiness `hasMap`.
+- **Custom domain:** `https://www.therudraadventure.com` is the only official address. `lib/url.ts` falls back to it, so canonical URLs, `og:url`, `og:image`, the JSON-LD `url`/`image`, `sitemap.xml` and `robots.txt` all use it. `NEXT_PUBLIC_SITE_URL` can still override it. `next.config.ts` 308-redirects the old `therudragokarna.vercel.app` host and the bare `therudraadventure.com` to the www domain, keeping the path. Preview-deployment hosts aren't redirected.
 
 ## Decisions and deviations from the brief
 

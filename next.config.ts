@@ -8,9 +8,17 @@ const nextConfig: NextConfig = {
     imageSizes: [32, 48, 64, 96, 128, 256, 384],
     qualities: [75],
   },
-  // Pages that only duplicated home content now point at the matching section (308).
   async redirects() {
     return [
+      // www.therudraadventure.com is the only official address. The old Vercel address and the bare domain
+      // redirect to it (308), keeping the path. Preview-deployment hosts are left alone.
+      ...["therudragokarna.vercel.app", "therudraadventure.com"].map((host) => ({
+        source: "/:path*",
+        has: [{ type: "host" as const, value: host }],
+        destination: "https://www.therudraadventure.com/:path*",
+        permanent: true,
+      })),
+      // Pages that only duplicated home content now point at the matching section (308).
       { source: "/contact", destination: "/#book", permanent: true },
       { source: "/about", destination: "/#boat", permanent: true },
       { source: "/gallery", destination: "/#gallery", permanent: true },

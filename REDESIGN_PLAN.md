@@ -86,7 +86,7 @@ data/
   site.ts             NEW      all typed content (section 4)
 lib/
   whatsapp.ts         NEW      buildWhatsAppLink(message) + per-context message builders
-  url.ts              NEW      siteUrl() from NEXT_PUBLIC_SITE_URL, fallback https://therudragokarna.vercel.app
+  url.ts              NEW      siteUrl() from NEXT_PUBLIC_SITE_URL, fallback https://www.therudraadventure.com (the official domain)
   seo.ts              NEW      JSON-LD builders (LocalBusiness, ItemList<TouristTrip>, FAQPage)
   hooks.ts            NEW      useInView / useActiveSection (IntersectionObserver), useMediaQuery
   site.ts confirm.ts siteInfo.ts packages.ts experiences.ts places.ts faq.ts images.ts guides.ts metadata.ts   DELETE (moved into data/site.ts)

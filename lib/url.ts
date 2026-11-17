@@ -1,5 +1,6 @@
-// Set NEXT_PUBLIC_SITE_URL to move the canonical URL to a custom domain.
-const fallback = "https://therudragokarna.vercel.app";
+// The official address. Canonical URLs, Open Graph, JSON-LD, sitemap.xml and robots.txt all build on it.
+// NEXT_PUBLIC_SITE_URL overrides it (e.g. for a staging copy).
+const fallback = "https://www.therudraadventure.com";
 
 export const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL || fallback).replace(/\/+$/, "");
 
