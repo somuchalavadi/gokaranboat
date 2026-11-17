@@ -27,7 +27,7 @@ async function scan(page, label, include) {
 }
 
 const browser = await chromium.launch();
-for (const path of (process.env.QA_PATHS ?? "/,/packages,/adventures,/dolphin-watching-gokarna").split(",")) {
+for (const path of (process.env.QA_PATHS ?? "/,/packages,/adventures,/dolphin-watching-gokarna,/guides/gokarna-boat-trip-guide").split(",")) {
   for (const viewport of [
     { width: 375, height: 812 },
     { width: 1440, height: 900 },

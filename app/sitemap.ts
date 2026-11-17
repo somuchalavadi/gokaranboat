@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { seoPages } from "@/data/seo-pages";
+import { guidePath, guides } from "@/data/guides";
 import { absoluteUrl } from "@/lib/url";
 
 export default function sitemap(): MetadataRoute.Sitemap {
@@ -8,5 +9,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: absoluteUrl("/packages"), changeFrequency: "monthly", priority: 0.8 },
     { url: absoluteUrl("/adventures"), changeFrequency: "monthly", priority: 0.7 },
     ...seoPages.map((page) => ({ url: absoluteUrl(`/${page.slug}`), lastModified: page.updatedAt, changeFrequency: "monthly" as const, priority: 0.7 })),
+    ...guides.map((guide) => ({ url: absoluteUrl(guidePath(guide.slug)), lastModified: guide.updatedAt, changeFrequency: "monthly" as const, priority: 0.6 })),
   ];
 }

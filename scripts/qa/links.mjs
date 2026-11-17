@@ -6,7 +6,7 @@ import { mkdir, writeFile } from "node:fs/promises";
 
 const base = process.env.QA_URL ?? "http://localhost:3100";
 // Every page with links to check (add new routes here).
-const pages = ["/", "/packages", "/adventures", "/dolphin-watching-gokarna", "/kayaking-in-gokarna", "/snorkelling-in-gokarna", "/mangrove-river-trip-gokarna", "/fishing-trip-gokarna", "/bioluminescence-gokarna", "/private-boat-gokarna"];
+const pages = ["/", "/packages", "/adventures", "/dolphin-watching-gokarna", "/kayaking-in-gokarna", "/snorkelling-in-gokarna", "/mangrove-river-trip-gokarna", "/fishing-trip-gokarna", "/bioluminescence-gokarna", "/private-boat-gokarna", "/guides/gokarna-boat-trip-guide", "/guides/how-to-reach-gokarna-beach-boat-pickup", "/guides/best-time-for-dolphin-watching-gokarna"];
 // The one business number, used for both calls and WhatsApp.
 const number = "917019745857";
 const phones = new Set(["tel:+917019745857"]);

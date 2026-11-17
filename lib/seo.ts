@@ -111,3 +111,21 @@ export function breadcrumbJsonLd(name: string, path: string, parents: readonly {
     itemListElement: trail.map((item, index) => ({ "@type": "ListItem", position: index + 1, name: item.name, item: absoluteUrl(item.path) })),
   };
 }
+
+// Article for a guide; the publisher points at the business node by @id.
+export function articleJsonLd(guide: { h1: string; description: string; path: string; image: { src: string }; datePublished: string; updatedAt: string }) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: guide.h1,
+    description: guide.description,
+    url: absoluteUrl(guide.path),
+    mainEntityOfPage: absoluteUrl(guide.path),
+    image: absoluteUrl(guide.image.src),
+    datePublished: guide.datePublished,
+    dateModified: guide.updatedAt,
+    inLanguage: "en-IN",
+    author: { "@type": "Organization", "@id": businessId, name: business.name },
+    publisher: { "@type": "Organization", "@id": businessId, name: business.name, logo: absoluteUrl(business.emblem) },
+  };
+}

@@ -29,6 +29,13 @@ export const contact = {
     region: "Karnataka",
     country: "IN",
     postalCode: null as string | null, // TODO(owner): confirm the postal code for the pick-up address.
+    // Shown on the "How to reach" guide once confirmed; null lines are left out.
+    directions: {
+      railwayStation: null as string | null, // TODO(owner): how guests get from Gokarna Road station to the pick-up, and roughly how long it takes.
+      busStand: null as string | null, // TODO(owner): how guests get from the Gokarna bus stand to the pick-up.
+      parking: null as string | null, // TODO(owner): where guests arriving by car or bike can park.
+      landmark: null as string | null, // TODO(owner): a landmark near the pick-up spot on the beach, e.g. "beside the lifeguard tower".
+    },
   },
   replyTime: null as string | null, // TODO(owner): e.g. "We usually reply within an hour."
   pickupTime: null as string | null, // TODO(owner): when guests should arrive, e.g. "15 minutes before departure".
@@ -464,5 +471,6 @@ export const notFound = {
     { label: "Dolphin watching in Gokarna", href: "/dolphin-watching-gokarna" },
     { label: "Kayaking in Gokarna", href: "/kayaking-in-gokarna" },
     { label: "Private boat trips in Gokarna", href: "/private-boat-gokarna" },
+    { label: "Gokarna boat trip guide", href: "/guides/gokarna-boat-trip-guide" },
   ],
 };

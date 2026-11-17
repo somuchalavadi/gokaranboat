@@ -1,5 +1,7 @@
 import { Binoculars, CalendarDays, CloudSun, HeartPulse } from "lucide-react";
 import { faq, faqIntro, goodToKnow } from "@/data/site";
+import { guideHubSlug, guidePath } from "@/data/guides";
+import { Button } from "@/components/ui/Button";
 import { Section } from "@/components/ui/Section";
 
 const icons = { weather: CloudSun, wildlife: Binoculars, health: HeartPulse, dates: CalendarDays };
@@ -36,6 +38,9 @@ export function FaqGoodToKnow() {
             </div>
           ))}
         </div>
+        <Button href={guidePath(guideHubSlug)} variant="text" className="mt-6">
+          Read the full Gokarna boat trip guide
+        </Button>
       </div>
     </Section>
   );

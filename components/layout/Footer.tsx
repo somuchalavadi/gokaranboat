@@ -3,6 +3,7 @@ import Link from "next/link";
 import { MapPin, MessageCircle, Phone } from "lucide-react";
 import { business, contact, footer, nav } from "@/data/site";
 import { seoPages } from "@/data/seo-pages";
+import { guideHubSlug, guidePath } from "@/data/guides";
 import { buildWhatsAppLink, outboundRel, telLink } from "@/lib/whatsapp";
 import { Container } from "@/components/ui/Container";
 
@@ -51,6 +52,11 @@ export function Footer() {
             <li>
               <Link href="/adventures" className={linkClass}>
                 Things to do
+              </Link>
+            </li>
+            <li>
+              <Link href={guidePath(guideHubSlug)} className={linkClass}>
+                Boat trip guide
               </Link>
             </li>
           </ul>

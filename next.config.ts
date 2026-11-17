@@ -54,7 +54,7 @@ const nextConfig: NextConfig = {
       { source: "/about", destination: "/#about", permanent: true },
       { source: "/gallery", destination: "/#gallery", permanent: true },
       { source: "/new-year", destination: "/#events", permanent: true },
-      { source: "/guides", destination: "/", permanent: true },
+      { source: "/guides", destination: "/guides/gokarna-boat-trip-guide", permanent: true },
     ];
   },
 };

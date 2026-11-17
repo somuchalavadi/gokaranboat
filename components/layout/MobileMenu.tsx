@@ -2,6 +2,7 @@
 
 import { Phone } from "lucide-react";
 import { contact, nav } from "@/data/site";
+import { guideHubSlug, guidePath } from "@/data/guides";
 import { telLink } from "@/lib/whatsapp";
 import { Button } from "@/components/ui/Button";
 import { Dialog } from "@/components/ui/Dialog";
@@ -22,6 +23,11 @@ export function MobileMenu({ open, onClose }: { open: boolean; onClose: () => vo
                   </a>
                 </li>
               ))}
+              <li>
+                <a href={guidePath(guideHubSlug)} onClick={onClose} className="flex h-12 items-center font-display text-h3">
+                  Guide
+                </a>
+              </li>
             </ul>
           </nav>
           <div className="mt-auto grid gap-3">
