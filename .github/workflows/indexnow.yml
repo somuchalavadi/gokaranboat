@@ -1,0 +1,25 @@
+name: IndexNow
+
+# After each push to main, Vercel deploys production. Wait for that deploy, then tell IndexNow
+# (Bing and partners) to recrawl every URL in the sitemap.
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  submit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Wait for the Vercel production deploy
+        run: sleep 240
+      - name: Submit the sitemap to IndexNow
+        run: node scripts/indexnow.mjs

@@ -15,6 +15,11 @@ export const business = {
   openingHours: null as string[] | null, // TODO(owner): schema.org format, e.g. ["Mo-Su 07:00-18:00"].
   geo: null as { latitude: number; longitude: number } | null, // TODO(owner): exact Gokarna Beach pick-up pin.
   socials: null as { label: string; url: string }[] | null, // TODO(owner): Instagram / Google Maps listing / Facebook URLs.
+  foundingDate: null as string | null, // TODO(owner): year the business started, e.g. "2021".
+  slogan: null as string | null, // TODO(owner): an official slogan, if you use one.
+  // Used in structured data only.
+  areaServed: ["Gokarna", "Uttara Kannada, Karnataka"],
+  knowsAbout: ["Boat trips", "Dolphin watching", "Kayaking", "Snorkelling", "Mangrove river trips", "Fishing trips", "Bioluminescence trips", "Gokarna coastline"],
 };
 
 export const contact = {

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { packages } from "@/data/site";
 import { pageSummaries } from "@/data/pages";
-import { breadcrumbJsonLd, jsonLdScript, pageMetadata, touristTripsJsonLd } from "@/lib/seo";
+import { breadcrumbJsonLd, faqJsonLd, jsonLdScript, pageMetadata, touristTripsJsonLd } from "@/lib/seo";
 import { Button } from "@/components/ui/Button";
 import { Section } from "@/components/ui/Section";
 import { PageHeader } from "@/components/layout/PageHeader";
@@ -45,6 +45,7 @@ export default function PackagesPage() {
       <FaqGoodToKnow />
       <Events />
       <script type="application/ld+json" dangerouslySetInnerHTML={jsonLdScript(touristTripsJsonLd())} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={jsonLdScript(faqJsonLd())} />
       <script type="application/ld+json" dangerouslySetInnerHTML={jsonLdScript(breadcrumbJsonLd("Packages", "/packages"))} />
     </>
   );

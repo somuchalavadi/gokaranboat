@@ -2,16 +2,16 @@ import type { Metadata } from "next";
 import { about, activities, business, contact, faq, hero, highlights, packages, places, seo } from "@/data/site";
 import { absoluteUrl } from "@/lib/url";
 
-// Per-page metadata: canonical URL, Open Graph and Twitter card (with image alt) from one place.
+// Per-page metadata: canonical URL, Open Graph and Twitter card from one place.
 export function pageMetadata({ title, description, path }: { title: string; description: string; path: string }): Metadata {
   const canonical = absoluteUrl(path);
-  const image = { url: seo.ogImage.src, width: seo.ogImage.width, height: seo.ogImage.height, alt: seo.ogImage.alt };
+  // Images come from each route's opengraph-image.tsx (rendered at build time); X falls back to og:image.
   return {
     title: { absolute: title },
     description,
     alternates: { canonical },
-    openGraph: { type: "website", siteName: business.name, locale: "en_IN", title, description, url: canonical, images: [image] },
-    twitter: { card: "summary_large_image", title, description, images: [image] },
+    openGraph: { type: "website", siteName: business.name, locale: "en_IN", title, description, url: canonical },
+    twitter: { card: "summary_large_image", title, description },
   };
 }
 
@@ -30,7 +30,8 @@ const businessId = absoluteUrl("/#business");
 export function localBusinessJsonLd() {
   return compact({
     "@context": "https://schema.org",
-    "@type": "LocalBusiness",
+    // One node for the business, typed as both, so every page's publisher/provider points at the same @id.
+    "@type": ["LocalBusiness", "Organization"],
     "@id": businessId,
     name: business.name,
     description: about.canonical,
@@ -52,6 +53,10 @@ export function localBusinessJsonLd() {
     openingHours: business.openingHours,
     geo: business.geo ? { "@type": "GeoCoordinates", latitude: business.geo.latitude, longitude: business.geo.longitude } : null,
     sameAs: business.socials?.map((social) => social.url) ?? null,
+    areaServed: business.areaServed.map((name) => ({ "@type": "Place", name })),
+    knowsAbout: business.knowsAbout,
+    foundingDate: business.foundingDate,
+    slogan: business.slogan,
   });
 }
 
@@ -128,4 +133,38 @@ export function articleJsonLd(guide: { h1: string; description: string; path: st
     author: { "@type": "Organization", "@id": businessId, name: business.name },
     publisher: { "@type": "Organization", "@id": businessId, name: business.name, logo: absoluteUrl(business.emblem) },
   };
+}
+
+// TouristTrip for a landing page: the activity, the packages that include it and (once confirmed) a price.
+export function landingTripJsonLd(page: { h1: string; answerSummary: string; slug: string; heroImage: { src: string }; packageIds: readonly (typeof packages)[number]["id"][] }) {
+  const included = packages.filter((item) => page.packageIds.includes(item.id));
+  const prices = included.map((item) => item.price).filter((price): price is number => price !== null);
+  return compact({
+    "@context": "https://schema.org",
+    "@type": "TouristTrip",
+    name: page.h1,
+    description: page.answerSummary,
+    url: absoluteUrl(`/${page.slug}`),
+    image: absoluteUrl(page.heroImage.src),
+    provider: { "@id": businessId },
+    subTrip: included.map((item) => ({ "@type": "TouristTrip", name: item.name, description: tripDescription(item), url: absoluteUrl(`/packages#${item.id}`) })),
+    offers: prices.length ? { "@type": "AggregateOffer", lowPrice: Math.min(...prices), priceCurrency: "INR", url: absoluteUrl("/#book") } : null,
+  });
+}
+
+// Dataset for the dolphin sighting log (only rendered once the log has data).
+export function sightingsDatasetJsonLd(guide: { h1: string; description: string; path: string; updatedAt: string }, months: readonly { month: string }[]) {
+  return compact({
+    "@context": "https://schema.org",
+    "@type": "Dataset",
+    name: guide.h1,
+    description: guide.description,
+    url: absoluteUrl(guide.path),
+    dateModified: guide.updatedAt,
+    temporalCoverage: months.length ? `${months[0].month}/${months[months.length - 1].month}` : null,
+    spatialCoverage: { "@type": "Place", name: "Gokarna, Karnataka, India" },
+    variableMeasured: ["Trips", "Trips with dolphin sightings"],
+    creator: { "@type": "Organization", "@id": businessId, name: business.name },
+    isAccessibleForFree: true,
+  });
 }

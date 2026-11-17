@@ -4,7 +4,8 @@ import { notFound } from "next/navigation";
 import { MapPin } from "lucide-react";
 import { contact } from "@/data/site";
 import { getGuide, guideHubSlug, guidePath, guides, type GuideSection } from "@/data/guides";
-import { articleJsonLd, breadcrumbJsonLd, faqJsonLd, jsonLdScript, pageMetadata } from "@/lib/seo";
+import { sightings } from "@/data/sightings";
+import { articleJsonLd, breadcrumbJsonLd, faqJsonLd, jsonLdScript, pageMetadata, sightingsDatasetJsonLd } from "@/lib/seo";
 import { buildWhatsAppLink, isOutboundBookingLink, outboundRel } from "@/lib/whatsapp";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { Button } from "@/components/ui/Button";
@@ -163,6 +164,7 @@ export default async function GuidePage({ params }: Props) {
       </div>
 
       <script type="application/ld+json" dangerouslySetInnerHTML={jsonLdScript(articleJsonLd({ ...guide, path }))} />
+      {guide.slug === "dolphin-sighting-log" && <script type="application/ld+json" dangerouslySetInnerHTML={jsonLdScript(sightingsDatasetJsonLd({ ...guide, path }, sightings))} />}
       {hasFaq && <script type="application/ld+json" dangerouslySetInnerHTML={jsonLdScript(faqJsonLd(guide.faqs))} />}
       <script type="application/ld+json" dangerouslySetInnerHTML={jsonLdScript(breadcrumbJsonLd(guide.h1, path, parents))} />
     </>

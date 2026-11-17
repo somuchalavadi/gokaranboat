@@ -5,6 +5,7 @@ import { useRef, useState, useSyncExternalStore, type FormEvent, type ReactNode 
 import { booking, packages, places, type TripPackage } from "@/data/site";
 import { buildBookingMessage, buildWhatsAppLink, isIndianMobile, outboundRel } from "@/lib/whatsapp";
 import { Button } from "@/components/ui/Button";
+import { track } from "@/lib/analytics";
 
 type Trip = TripPackage["id"] | "custom";
 type Field = "trip" | "date" | "guests" | "name" | "phone";
@@ -99,6 +100,8 @@ export function BookingForm() {
     });
     const url = buildWhatsAppLink(message);
     setLink(url);
+    // Trip type and group size only: no name, phone or date leaves the page.
+    track("booking_form_submit", { trip: trip ?? "none", guests });
     window.open(url, "_blank", "noopener,noreferrer");
   }
 

@@ -8,6 +8,8 @@ import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { MobileBar } from "@/components/layout/MobileBar";
 import { RevealObserver } from "@/components/ui/Reveal";
+import { Analytics } from "@/components/analytics/Analytics";
+import { gaId } from "@/lib/analytics";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter", display: "swap" });
 // Headings only ever use 600, so a single static weight is lighter than the variable font.
@@ -39,6 +41,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <MobileBar />
         <RevealObserver />
         <script type="application/ld+json" dangerouslySetInnerHTML={jsonLdScript(localBusinessJsonLd())} />
+        {gaId && <Analytics />}
       </body>
     </html>
   );

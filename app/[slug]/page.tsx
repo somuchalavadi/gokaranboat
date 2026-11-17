@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { MapPin } from "lucide-react";
 import { contact } from "@/data/site";
 import { getSeoPage, linkLabel, seoPages } from "@/data/seo-pages";
-import { breadcrumbJsonLd, faqJsonLd, jsonLdScript, pageMetadata } from "@/lib/seo";
+import { breadcrumbJsonLd, faqJsonLd, jsonLdScript, landingTripJsonLd, pageMetadata } from "@/lib/seo";
 import { buildWhatsAppLink } from "@/lib/whatsapp";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { Button } from "@/components/ui/Button";
@@ -96,6 +96,7 @@ export default async function LandingPage({ params }: Props) {
         </Container>
       </div>
 
+      <script type="application/ld+json" dangerouslySetInnerHTML={jsonLdScript(landingTripJsonLd(page))} />
       <script type="application/ld+json" dangerouslySetInnerHTML={jsonLdScript(faqJsonLd(page.faqs))} />
       <script type="application/ld+json" dangerouslySetInnerHTML={jsonLdScript(breadcrumbJsonLd(page.h1, `/${page.slug}`, parents))} />
     </>

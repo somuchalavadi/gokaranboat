@@ -4,14 +4,18 @@ import type { NextConfig } from "next";
 // Next's inline bootstrap scripts need 'unsafe-inline'. Analytics hosts are added only when they're used.
 const deployment = process.env.VERCEL_ENV;
 const cspEnabled = process.env.NODE_ENV === "production" && deployment !== "preview" && deployment !== "development";
+// GA4 hosts (gtag.js, collection endpoints, regional endpoints) are allowed only when a GA4 ID is configured.
+const ga = process.env.NEXT_PUBLIC_GA_ID
+  ? { script: " https://www.googletagmanager.com", connect: " https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com", img: " https://*.google-analytics.com https://*.googletagmanager.com" }
+  : { script: "", connect: "", img: "" };
 const csp = [
   "default-src 'self'",
-  "script-src 'self' 'unsafe-inline'",
+  `script-src 'self' 'unsafe-inline'${ga.script}`,
   "style-src 'self' 'unsafe-inline'",
-  "img-src 'self' data: blob:",
+  `img-src 'self' data: blob:${ga.img}`,
   "font-src 'self'",
   "media-src 'self' blob:",
-  "connect-src 'self'",
+  `connect-src 'self'${ga.connect}`,
   "frame-ancestors 'self'",
   "base-uri 'self'",
   "form-action 'self'",
