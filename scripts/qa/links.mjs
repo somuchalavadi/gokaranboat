@@ -18,6 +18,17 @@ function check(name, ok, detail = "") {
   console.log(`${ok ? "PASS" : "FAIL"}  ${name}${detail ? `  (${detail})` : ""}`);
 }
 
+// Polls a condition for up to 3 s: UI updates after a click can land a frame or two later, especially while
+// the page is still hydrating, so a single immediate read would make the checks flaky.
+async function eventually(condition, timeout = 3000) {
+  const end = Date.now() + timeout;
+  for (;;) {
+    if (await condition()) return true;
+    if (Date.now() > end) return false;
+    await new Promise((resolve) => setTimeout(resolve, 100));
+  }
+}
+
 const browser = await chromium.launch();
 
 // 1. Every wa.me and tel: link on every page, at phone and desktop widths.
@@ -78,7 +89,7 @@ for (const l of homeMobile) console.log(`  • ${l.text.replace(/\s+/g, " ").sli
   await form.getByText("Mangroves", { exact: true }).click();
   await form.getByText("4 hrs").click();
   await form.getByRole("button", { name: "Next" }).click();
-  check("Step 2 heading receives focus", (await page.evaluate(() => document.activeElement?.id)) === "book-step-title");
+  check("Step 2 heading receives focus", await eventually(async () => (await page.evaluate(() => document.activeElement?.id)) === "book-step-title"));
   await form.getByRole("button", { name: "Next" }).click();
   check("Step 2 blocks without a date", await form.getByText("Choose a date.").isVisible());
   const min = await form.locator("#book-date").getAttribute("min");
@@ -153,7 +164,7 @@ for (const l of homeMobile) console.log(`  • ${l.text.replace(/\s+/g, " ").sli
   for (let i = 0; i < 12; i++) await page.keyboard.press("Tab");
   check("Focus stays inside the open menu", await page.evaluate(() => Boolean(document.activeElement?.closest("dialog[open]"))));
   await page.keyboard.press("Escape");
-  check("Esc closes the menu and focus returns to the menu button", !(await menu.isVisible()) && (await page.evaluate(() => document.activeElement?.getAttribute("aria-label"))) === "Open menu");
+  check("Esc closes the menu and focus returns to the menu button", await eventually(async () => !(await menu.isVisible()) && (await page.evaluate(() => document.activeElement?.getAttribute("aria-label"))) === "Open menu"));
   await menuButton.click();
   await menu.getByRole("link", { name: "Book", exact: true }).click();
   await page.waitForTimeout(1200);
@@ -171,7 +182,7 @@ for (const l of homeMobile) console.log(`  • ${l.text.replace(/\s+/g, " ").sli
   const tab = page.getByRole("tab", { name: "Activities" });
   await tab.focus();
   await page.keyboard.press("ArrowRight");
-  check("Arrow keys move between the Activities/Places tabs", (await page.getByRole("tab", { name: "Places" }).getAttribute("aria-selected")) === "true");
+  check("Arrow keys move between the Activities/Places tabs", await eventually(async () => (await page.getByRole("tab", { name: "Places" }).getAttribute("aria-selected")) === "true"));
   await page.keyboard.press("ArrowLeft");
   await page.getByRole("button", { name: "Kayaking" }).click();
   const tile = page.getByRole("dialog", { name: "Kayaking" });
@@ -181,19 +192,19 @@ for (const l of homeMobile) console.log(`  • ${l.text.replace(/\s+/g, " ").sli
 
   await page.getByRole("button", { name: /^View photo:/ }).first().click();
   const lightbox = page.getByRole("dialog", { name: "Gallery" });
-  check("Lightbox opens on the first item", (await lightbox.isVisible()) && /1 of 6/.test(await lightbox.innerText()));
+  check("Lightbox opens on the first item", await eventually(async () => (await lightbox.isVisible()) && /1 of 6/.test(await lightbox.innerText())));
   await page.keyboard.press("ArrowRight");
-  check("→ moves to the next item", /2 of 6/.test(await lightbox.innerText()));
+  check("→ moves to the next item", await eventually(async () => /2 of 6/.test(await lightbox.innerText())));
   await page.keyboard.press("ArrowLeft");
   await page.keyboard.press("ArrowLeft");
-  check("← wraps around to the last item", /6 of 6/.test(await lightbox.innerText()));
+  check("← wraps around to the last item", await eventually(async () => /6 of 6/.test(await lightbox.innerText())));
   check("Videos in the lightbox use preload=none", (await lightbox.locator("video").getAttribute("preload")) === "none");
   const box = await lightbox.boundingBox();
   await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
   await lightbox.dispatchEvent("touchstart", { touches: [{ identifier: 1, clientX: 300, clientY: 400 }] }).catch(() => {});
   await page.keyboard.press("Escape");
-  check("Esc closes the lightbox and focus returns to the opening tile", !(await lightbox.isVisible()) && /^View photo:/.test((await page.evaluate(() => document.activeElement?.getAttribute("aria-label"))) ?? ""));
-  check("Gallery grid loads no video before the lightbox opens", (await page.locator("#gallery video").count()) === 0);
+  check("Esc closes the lightbox and focus returns to the opening tile", await eventually(async () => !(await lightbox.isVisible()) && /^View photo:/.test((await page.evaluate(() => document.activeElement?.getAttribute("aria-label"))) ?? "")));
+  check("Gallery grid loads no video before the lightbox opens", await eventually(async () => (await page.locator("#gallery video").count()) === 0));
   await page.close();
 }
 {

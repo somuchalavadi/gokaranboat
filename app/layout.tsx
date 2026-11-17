@@ -1,6 +1,5 @@
 import type { Metadata, Viewport } from "next";
 import { Fraunces, Inter } from "next/font/google";
-import { Suspense } from "react";
 import "./globals.css";
 import { business, seo } from "@/data/site";
 import { jsonLdScript, localBusinessJsonLd } from "@/lib/seo";
@@ -37,10 +36,8 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <Navbar />
         <main id="main">{children}</main>
         <Footer />
-        <Suspense>
-          <MobileBar />
-          <RevealObserver />
-        </Suspense>
+        <MobileBar />
+        <RevealObserver />
         <script type="application/ld+json" dangerouslySetInnerHTML={jsonLdScript(localBusinessJsonLd())} />
       </body>
     </html>

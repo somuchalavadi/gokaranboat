@@ -31,6 +31,7 @@ export const contact = {
     postalCode: null as string | null, // TODO(owner): confirm the postal code for the pick-up address.
   },
   replyTime: null as string | null, // TODO(owner): e.g. "We usually reply within an hour."
+  pickupTime: null as string | null, // TODO(owner): when guests should arrive, e.g. "15 minutes before departure".
   email: null as string | null, // TODO(owner): business email address.
 };
 
@@ -92,6 +93,8 @@ export type TripPackage = {
   highlights: readonly HighlightId[];
   price: number | null;
   maxGuests: number | null;
+  description: string;
+  bestFor: string;
   message: string;
 };
 
@@ -107,6 +110,8 @@ export const packages: readonly TripPackage[] = [
     highlights: ["sightseeing", "lighthouse", "kayaking", "snorkelling", "swimming", "dolphins", "mystery-cave", "fishing-harbour", "sea-river"],
     price: null, // TODO(owner): "From" price in ₹ per person.
     maxGuests: null, // TODO(owner): maximum guests for this trip.
+    description: "The fullest coastal trip: sightseeing, the lighthouse, the mystery cave and the fishing harbour, with time to kayak, snorkel and swim.",
+    bestFor: "Groups who want to see and do the most in one trip.",
     message: "Hi, I'm interested in the Premium package.",
   },
   {
@@ -120,6 +125,8 @@ export const packages: readonly TripPackage[] = [
     highlights: ["sightseeing", "mystery-cave", "dolphins"],
     price: null, // TODO(owner): "From" price in ₹ per person.
     maxGuests: null, // TODO(owner): maximum guests for this trip.
+    description: "A shorter trip along the coast with sightseeing, the mystery cave and a chance to see dolphins.",
+    bestFor: "A first look at the coast in two hours.",
     message: "Hi, I'm interested in the Standard package.",
   },
   {
@@ -133,6 +140,8 @@ export const packages: readonly TripPackage[] = [
     highlights: ["fishing-trips", "bioluminescence"],
     price: null, // TODO(owner): "From" price in ₹ per person.
     maxGuests: null, // TODO(owner): maximum guests for this trip.
+    description: "A four-hour trip built around fishing and a bioluminescence trip.",
+    bestFor: "Fishing fans and anyone curious about bioluminescence.",
     message: "Hi, I'm interested in the Exclusive package.",
   },
   {
@@ -146,6 +155,8 @@ export const packages: readonly TripPackage[] = [
     highlights: ["mangrove-views", "mangrove-kayaking"],
     price: null, // TODO(owner): "From" price in ₹ per person.
     maxGuests: null, // TODO(owner): maximum guests for this trip.
+    description: "Two hours in the mangroves, with mangrove views and kayaking between the trees.",
+    bestFor: "Nature lovers and kayakers.",
     message: "Hi, I'm interested in a River Trip.",
   },
 ];
@@ -268,7 +279,7 @@ export const trust: readonly { id: string; label: string | null; icon: "pin" | "
 export const hero = {
   eyebrow: "Gokarna, Karnataka",
   title: "Gokarna, from the deck.",
-  subtitle: "Coastline, caves, mangroves and open sea, seen from the water.",
+  subtitle: "Boat trips, kayaking and dolphin watching from Gokarna Beach. Two to four hours on the water, or a custom trip planned around your group.",
   chips: ["Gokarna Beach pick-up", "2–4 hour trips", "Custom trips"],
   message: "Hi, I'd like to know about your boat trips in Gokarna.",
   // Pre-sized AVIF/WebP poster variants from scripts/optimize-assets.mjs (source: rudra-boat-showcase.jpeg):
@@ -289,6 +300,20 @@ export const hero = {
 };
 
 export type VideoSource = { src: string; type: "video/webm" | "video/mp4" };
+
+// The About section. `canonical` is the owner-approved ~60-word description, reused in JSON-LD and llms.txt.
+export const about = {
+  title: "About Rudra Gokarna Adventures",
+  paragraphs: [
+    "Rudra Gokarna Adventures brings boat rides, water activities and coastal exploration together from Gokarna Beach. Choose a listed trip or tell us what you want to see.",
+    "Trips run aboard The Rudra Gokarna, a navy and white boat with gold lines, an open upper deck and a covered cabin with windows.",
+    "Packages last two to four hours, and custom trips for couples, families, New Year and other occasions are planned on request.",
+  ],
+  canonical:
+    "Rudra Gokarna Adventures runs boat trips from Gokarna Beach in Gokarna, Karnataka, aboard The Rudra Gokarna, a navy-and-white boat with an open upper deck and a covered cabin. Trips last two to four hours and include sightseeing along the coast, dolphin watching, kayaking, snorkelling, a mystery cave, mangrove river trips, fishing and bioluminescence trips, plus custom trips for couples, families and celebrations.",
+  image: { src: "/images/rudra-hero.jpeg", width: 1600, height: 1200, alt: "The Rudra Gokarna on calm water off the Gokarna coast, with guests on deck" },
+  cta: { label: "Meet the boat", href: "/#boat" },
+};
 
 export const packagesIntro = {
   title: "Choose your trip",
@@ -368,7 +393,7 @@ export const goodToKnow: readonly { icon: "weather" | "wildlife" | "health" | "d
 const byId = Object.fromEntries(packages.map((item) => [item.id, item])) as Record<TripPackage["id"], TripPackage>;
 const list = (ids: readonly HighlightId[]) => ids.map((id) => highlights[id].toLowerCase()).join(", ");
 
-export const faq: readonly { question: string; answer: string }[] = [
+export const faq: readonly { question: string; answer: string | null }[] = [
   {
     question: "Which package suits us?",
     answer: `Premium covers the most in ${byId.premium.durationHours} hours: ${list(byId.premium.highlights)}. Standard (${byId.standard.durationHours} hours) is a shorter trip with ${list(byId.standard.highlights)}. Exclusive is for fishing and bioluminescence, and River Trips are for the mangroves. Send us your group and date on WhatsApp and we'll help you choose.`,
@@ -384,6 +409,30 @@ export const faq: readonly { question: string; answer: string }[] = [
   {
     question: "What is the Exclusive Package?",
     answer: `A ${byId.exclusive.durationHours}-hour package with ${list(byId.exclusive.highlights)}. Ask us about timing and conditions for your date.`,
+  },
+  {
+    question: "Where do the boat trips start?",
+    answer: `From ${contact.pickup.label}. The pick-up point is marked on Google Maps; the link is in the Book section and the footer.`,
+  },
+  {
+    question: "What time should we arrive for pick-up?",
+    answer: contact.pickupTime, // hidden until the owner confirms it
+  },
+  {
+    question: "Are the boat trips suitable for children?",
+    answer: "Tell us your children's ages when you enquire on WhatsApp, and we'll advise which trip suits your family.",
+  },
+  {
+    question: "Can non-swimmers join a boat trip?",
+    answer: "Tell us if anyone in your group can't swim when you enquire, and we'll advise which trips and activities suit them.",
+  },
+  {
+    question: "What happens if the weather is bad?",
+    answer: "Trips depend on sea and weather conditions. If the weather looks uncertain, message us on WhatsApp before your trip.",
+  },
+  {
+    question: "How do we book a trip?",
+    answer: "Use the booking form on this page to send your trip, date and group size on WhatsApp, or call us. We'll confirm availability and the price.",
   },
 ];
 

@@ -14,7 +14,7 @@ const tabs = [
 // Phones: two columns of squares, with the first tile full width when the count is odd.
 function tileLayout(index: number, count: number) {
   const wideOnPhone = count % 2 === 1 && index === 0;
-  const phone = wideOnPhone ? "col-span-2 aspect-[2/1]" : "aspect-square";
+  const phone = wideOnPhone ? "col-span-2 aspect-[2/1]" : "aspect-[4/5]";
   let desktop = "";
   if (count === 5 && index === 0) desktop = "lg:col-span-2 lg:row-span-2";
   if (count === 6 && (index === 0 || index === 5)) desktop = "lg:col-span-2";
@@ -31,19 +31,25 @@ function TileCard({ item, index, count, onOpen }: { item: Tile; index: number; c
     <li className={layout.className}>
       <article className="group relative h-full overflow-hidden rounded-card bg-navy-700 transition-transform duration-250 ease-out hover:-translate-y-1">
         <Img src={item.image.src} alt={item.image.alt} fill sizes={layout.sizes} className="object-cover transition-transform duration-300 group-hover:scale-[1.03]" />
-        <div aria-hidden="true" className="absolute inset-x-0 bottom-0 h-3/4 bg-linear-to-t from-navy-900/95 via-navy-900/50 to-transparent" />
-        {/* The button fills the tile, so the whole card is the tap target. */}
-        <h3 className="absolute inset-0 font-display text-lg leading-tight font-semibold text-white lg:text-h3">
-          <button
-            type="button"
-            onClick={(event) => {
-              event.currentTarget.focus();
-              onOpen();
-            }}
-            aria-haspopup="dialog" className="flex size-full items-end rounded-card p-4 text-left lg:p-5">
-            {item.title}
-          </button>
-        </h3>
+        <div aria-hidden="true" className="absolute inset-x-0 bottom-0 h-full bg-linear-to-t from-navy-900 via-navy-900/70 to-transparent" />
+        <div className="absolute inset-x-0 bottom-0 p-3 sm:p-4 lg:p-5">
+          <h3 className="font-display text-lg leading-tight font-semibold text-white lg:text-h3">
+            {/* The ::after stretches the button over the whole tile, so the card is the tap target. */}
+            <button
+              type="button"
+              onClick={(event) => {
+                event.currentTarget.focus();
+                onOpen();
+              }}
+              aria-haspopup="dialog"
+              className="block min-h-11 w-full text-left after:absolute after:inset-0 after:rounded-card after:content-['']"
+            >
+              {item.title}
+            </button>
+          </h3>
+          {/* The description is in the page HTML, not only in the sheet. */}
+          <p className="mt-0.5 line-clamp-3 text-sm leading-snug text-mist">{item.description}</p>
+        </div>
       </article>
     </li>
   );

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { activities, business, contact, faq, hero, highlights, packages, places, seo } from "@/data/site";
+import { about, activities, business, contact, faq, hero, highlights, packages, places, seo } from "@/data/site";
 import { absoluteUrl } from "@/lib/url";
 
 // Per-page metadata: canonical URL, Open Graph and Twitter card (with image alt) from one place.
@@ -33,7 +33,7 @@ export function localBusinessJsonLd() {
     "@type": "LocalBusiness",
     "@id": businessId,
     name: business.name,
-    description: seo.description,
+    description: about.canonical,
     url: absoluteUrl("/"),
     image: [absoluteUrl(seo.ogImage.src), absoluteUrl(`${hero.poster.base}-${hero.poster.width}.webp`)],
     logo: absoluteUrl(business.emblem),
@@ -87,7 +87,9 @@ export function faqJsonLd() {
   return {
     "@context": "https://schema.org",
     "@type": "FAQPage",
-    mainEntity: faq.map((item) => ({ "@type": "Question", name: item.question, acceptedAnswer: { "@type": "Answer", text: item.answer } })),
+    mainEntity: faq
+      .filter((item) => item.answer !== null)
+      .map((item) => ({ "@type": "Question", name: item.question, acceptedAnswer: { "@type": "Answer", text: item.answer } })),
   };
 }
 

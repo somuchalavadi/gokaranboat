@@ -44,6 +44,10 @@ export function PackageCard({ item, showAll = false, sizes = carouselSizes, prio
       </div>
       <div className="flex flex-1 flex-col p-5">
         <h3 className="text-h3">{item.name}</h3>
+        <p className="mt-2 text-muted">{item.description}</p>
+        <p className="mt-2 text-sm">
+          <span className="font-semibold">Best for:</span> {item.bestFor}
+        </p>
         <ul className="mt-3 grid gap-1.5">
           {top.map((id) => (
             <HighlightItem key={id} id={id} />
