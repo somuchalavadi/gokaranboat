@@ -1,6 +1,8 @@
 import { Img } from "@/components/ui/Img";
 import { Check, ChevronDown, Clock } from "lucide-react";
+import Link from "next/link";
 import { highlights, type HighlightId, type TripPackage } from "@/data/site";
+import { landingForHighlight, linkLabel, type SeoPageSlug } from "@/data/seo-pages";
 import { buildWhatsAppLink } from "@/lib/whatsapp";
 import { Button } from "@/components/ui/Button";
 
@@ -26,6 +28,7 @@ const carouselSizes = "(max-width: 423px) 85vw, (max-width: 767px) 360px, (max-w
 export function PackageCard({ item, showAll = false, sizes = carouselSizes, priority = false }: { item: TripPackage; showAll?: boolean; sizes?: string; priority?: boolean }) {
   const top = showAll ? item.highlights : item.highlights.slice(0, 3);
   const rest = showAll ? [] : item.highlights.slice(3);
+  const activityPages = [...new Set(item.highlights.map((id) => landingForHighlight[id]).filter((slug): slug is SeoPageSlug => Boolean(slug)))];
 
   return (
     <article
@@ -67,6 +70,19 @@ export function PackageCard({ item, showAll = false, sizes = carouselSizes, prio
               ))}
             </ul>
           </details>
+        )}
+        {activityPages.length > 0 && (
+          <p className="mt-2 text-sm text-muted">
+            <span className="font-semibold text-ink">Included activities:</span>{" "}
+            {activityPages.map((slug, index) => (
+              <span key={slug}>
+                {index > 0 && ", "}
+                <Link href={`/${slug}`} className="whitespace-nowrap underline decoration-ink/40 underline-offset-4 hover:decoration-ink">
+                  {linkLabel(slug)}
+                </Link>
+              </span>
+            ))}
+          </p>
         )}
         <div className="mt-auto pt-4">
           <p className="text-sm text-muted">{priceLine(item.price)}</p>

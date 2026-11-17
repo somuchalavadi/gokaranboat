@@ -1,5 +1,7 @@
 import { Img } from "@/components/ui/Img";
+import Link from "next/link";
 import { packagesFor, type Tile } from "@/data/site";
+import { landingForHighlight, linkLabel } from "@/data/seo-pages";
 
 // Text-first cards for the "Things to do" page: everything the home tiles keep behind a sheet, in plain view.
 // `priorityFirst` loads the first image eagerly at high priority (it's above the fold on phones).
@@ -8,6 +10,7 @@ export function TileGrid({ items, tone, priorityFirst = false }: { items: readon
     <ul data-reveal className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
       {items.map((item, index) => {
         const included = packagesFor(item.highlightIds);
+        const landing = item.highlightIds.map((id) => landingForHighlight[id]).find(Boolean);
         return (
           <li key={item.id}>
             <article className={`h-full overflow-hidden rounded-card ${tone === "navy" ? "bg-navy-700 text-white" : "bg-white text-ink ring-1 ring-line"}`}>
@@ -22,6 +25,11 @@ export function TileGrid({ items, tone, priorityFirst = false }: { items: readon
                   <p className={`mt-3 text-sm ${tone === "navy" ? "text-mist" : "text-muted"}`}>
                     <span className="font-semibold">Included in:</span> {included.map((pkg) => pkg.name).join(", ")}
                   </p>
+                )}
+                {landing && (
+                  <Link href={`/${landing}`} className="mt-2 inline-flex min-h-11 items-center font-semibold underline decoration-current/40 underline-offset-4 hover:decoration-current">
+                    {linkLabel(landing)}
+                  </Link>
                 )}
               </div>
             </article>

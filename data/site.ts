@@ -92,6 +92,8 @@ export type TripPackage = {
   highlights: readonly HighlightId[];
   price: number | null;
   maxGuests: number | null;
+  timings: string | null;
+  minAge: number | null;
   description: string;
   bestFor: string;
   message: string;
@@ -109,6 +111,8 @@ export const packages: readonly TripPackage[] = [
     highlights: ["sightseeing", "lighthouse", "kayaking", "snorkelling", "swimming", "dolphins", "mystery-cave", "fishing-harbour", "sea-river"],
     price: null, // TODO(owner): "From" price in ₹ per person.
     maxGuests: null, // TODO(owner): maximum guests for this trip.
+    timings: null, // TODO(owner): departure times, e.g. "7:00, 10:00 and 15:00".
+    minAge: null, // TODO(owner): minimum age for children on this trip.
     description: "The fullest coastal trip: sightseeing, the lighthouse, the mystery cave and the fishing harbour, with time to kayak, snorkel and swim.",
     bestFor: "Groups who want to see and do the most in one trip.",
     message: "Hi, I'm interested in the Premium package.",
@@ -124,6 +128,8 @@ export const packages: readonly TripPackage[] = [
     highlights: ["sightseeing", "mystery-cave", "dolphins"],
     price: null, // TODO(owner): "From" price in ₹ per person.
     maxGuests: null, // TODO(owner): maximum guests for this trip.
+    timings: null, // TODO(owner): departure times, e.g. "7:00, 10:00 and 15:00".
+    minAge: null, // TODO(owner): minimum age for children on this trip.
     description: "A shorter trip along the coast with sightseeing, the mystery cave and a chance to see dolphins.",
     bestFor: "A first look at the coast in two hours.",
     message: "Hi, I'm interested in the Standard package.",
@@ -139,6 +145,8 @@ export const packages: readonly TripPackage[] = [
     highlights: ["fishing-trips", "bioluminescence"],
     price: null, // TODO(owner): "From" price in ₹ per person.
     maxGuests: null, // TODO(owner): maximum guests for this trip.
+    timings: null, // TODO(owner): departure times, e.g. "7:00, 10:00 and 15:00".
+    minAge: null, // TODO(owner): minimum age for children on this trip.
     description: "A four-hour trip built around fishing and a bioluminescence trip.",
     bestFor: "Fishing fans and anyone curious about bioluminescence.",
     message: "Hi, I'm interested in the Exclusive package.",
@@ -154,6 +162,8 @@ export const packages: readonly TripPackage[] = [
     highlights: ["mangrove-views", "mangrove-kayaking"],
     price: null, // TODO(owner): "From" price in ₹ per person.
     maxGuests: null, // TODO(owner): maximum guests for this trip.
+    timings: null, // TODO(owner): departure times, e.g. "7:00, 10:00 and 15:00".
+    minAge: null, // TODO(owner): minimum age for children on this trip.
     description: "Two hours in the mangroves, with mangrove views and kayaking between the trees.",
     bestFor: "Nature lovers and kayakers.",
     message: "Hi, I'm interested in a River Trip.",
@@ -452,5 +462,8 @@ export const notFound = {
     { label: "Boat trip packages", href: "/packages" },
     { label: "Things to do on the water", href: "/adventures" },
     { label: "Plan and book a trip", href: "/#book" },
+    { label: "Dolphin watching in Gokarna", href: "/dolphin-watching-gokarna" },
+    { label: "Kayaking in Gokarna", href: "/kayaking-in-gokarna" },
+    { label: "Private boat trips in Gokarna", href: "/private-boat-gokarna" },
   ],
 };

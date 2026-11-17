@@ -2,6 +2,7 @@ import { Img } from "@/components/ui/Img";
 import Link from "next/link";
 import { MapPin, MessageCircle, Phone } from "lucide-react";
 import { business, contact, footer, nav } from "@/data/site";
+import { seoPages } from "@/data/seo-pages";
 import { buildWhatsAppLink, outboundRel, telLink } from "@/lib/whatsapp";
 import { Container } from "@/components/ui/Container";
 
@@ -11,7 +12,7 @@ const headingClass = "font-sans text-sm font-semibold tracking-[0.12em] text-mis
 export function Footer() {
   return (
     <footer id="site-footer" className="bg-navy-900 text-white">
-      <Container className="grid gap-10 py-16 md:grid-cols-[1fr_1.2fr_1.3fr]">
+      <Container className="grid gap-10 py-16 md:grid-cols-2 lg:grid-cols-[1fr_1.1fr_1fr_1.2fr]">
         <div>
           <Link href="/" prefetch={false} className="inline-block rounded-md">
             <Img src={business.logo.src} alt={business.logo.alt} width={190} height={80} className="h-20 w-auto" />
@@ -52,6 +53,21 @@ export function Footer() {
                 Things to do
               </Link>
             </li>
+          </ul>
+        </nav>
+
+        <nav aria-labelledby="footer-things-to-do">
+          <h2 id="footer-things-to-do" className={headingClass}>
+            Things to do
+          </h2>
+          <ul className="mt-3 grid">
+            {seoPages.map((page) => (
+              <li key={page.slug}>
+                <Link href={`/${page.slug}`} className={linkClass}>
+                  {page.linkLabel}
+                </Link>
+              </li>
+            ))}
           </ul>
         </nav>
 

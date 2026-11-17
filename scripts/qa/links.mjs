@@ -5,6 +5,8 @@ import { chromium } from "playwright";
 import { mkdir, writeFile } from "node:fs/promises";
 
 const base = process.env.QA_URL ?? "http://localhost:3100";
+// Every page with links to check (add new routes here).
+const pages = ["/", "/packages", "/adventures", "/dolphin-watching-gokarna", "/kayaking-in-gokarna", "/snorkelling-in-gokarna", "/mangrove-river-trip-gokarna", "/fishing-trip-gokarna", "/bioluminescence-gokarna", "/private-boat-gokarna"];
 // The one business number, used for both calls and WhatsApp.
 const number = "917019745857";
 const phones = new Set(["tel:+917019745857"]);
@@ -34,7 +36,7 @@ async function eventually(condition, timeout = 3000) {
 const browser = await chromium.launch();
 
 // 1. Every wa.me and tel: link on every page, at phone and desktop widths.
-for (const path of ["/", "/packages", "/adventures"]) {
+for (const path of pages) {
   for (const width of [375, 1440]) {
     const page = await browser.newPage({ viewport: { width, height: 900 } });
     await page.goto(base + path, { waitUntil: "networkidle" });

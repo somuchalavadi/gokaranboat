@@ -102,13 +102,12 @@ export function thingsToDoJsonLd() {
   };
 }
 
-export function breadcrumbJsonLd(name: string, path: string) {
+// Home › …parents › page
+export function breadcrumbJsonLd(name: string, path: string, parents: readonly { label: string; href: string }[] = []) {
+  const trail = [{ name: "Home", path: "/" }, ...parents.map((parent) => ({ name: parent.label, path: parent.href })), { name, path }];
   return {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
-    itemListElement: [
-      { "@type": "ListItem", position: 1, name: "Home", item: absoluteUrl("/") },
-      { "@type": "ListItem", position: 2, name, item: absoluteUrl(path) },
-    ],
+    itemListElement: trail.map((item, index) => ({ "@type": "ListItem", position: index + 1, name: item.name, item: absoluteUrl(item.path) })),
   };
 }

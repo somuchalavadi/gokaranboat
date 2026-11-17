@@ -1,4 +1,5 @@
 import { events } from "@/data/site";
+import { linkLabel } from "@/data/seo-pages";
 import { buildWhatsAppLink } from "@/lib/whatsapp";
 import { Button } from "@/components/ui/Button";
 import { Section } from "@/components/ui/Section";
@@ -19,6 +20,9 @@ export function Events() {
               </li>
             ))}
           </ul>
+          <Button href="/private-boat-gokarna" variant="text" tone="dark" className="mt-3">
+            {linkLabel("private-boat-gokarna")}
+          </Button>
         </div>
         <Button href={buildWhatsAppLink(events.message)} className="self-start lg:self-center">
           {events.cta}

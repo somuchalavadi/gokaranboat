@@ -1,6 +1,7 @@
 "use client";
 
 import { Img } from "@/components/ui/Img";
+import Link from "next/link";
 import { useRef, useState, type KeyboardEvent } from "react";
 import { activities, packagesFor, places, type Tile } from "@/data/site";
 import { Dialog } from "@/components/ui/Dialog";
@@ -57,7 +58,7 @@ function TileCard({ item, index, count, onOpen }: { item: Tile; index: number; c
   );
 }
 
-export function ExperienceTabs() {
+export function ExperienceTabs({ links = {} }: { links?: Record<string, { href: string; label: string }> }) {
   const [tab, setTab] = useState(0);
   const [open, setOpen] = useState<Tile | null>(null);
   const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
@@ -117,6 +118,11 @@ export function ExperienceTabs() {
               <p className="mt-4">
                 <span className="font-semibold">Included in:</span> {included.map((pkg) => pkg.name).join(", ")}
               </p>
+            )}
+            {links[open.id] && (
+              <Link href={links[open.id].href} className="mt-3 inline-flex min-h-11 items-center font-semibold underline decoration-ink/40 underline-offset-4 hover:decoration-ink">
+                {links[open.id].label}
+              </Link>
             )}
           </div>
         )}
