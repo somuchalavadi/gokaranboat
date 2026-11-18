@@ -2,7 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Fraunces, Inter } from "next/font/google";
 import "./globals.css";
 import { business, seo } from "@/data/site";
-import { jsonLdScript, localBusinessJsonLd } from "@/lib/seo";
+import { jsonLdScript, localBusinessJsonLd, websiteJsonLd } from "@/lib/seo";
 import { siteUrl } from "@/lib/url";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
@@ -43,6 +43,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <RevealObserver />
         <EnquiryLauncher />
         <script type="application/ld+json" dangerouslySetInnerHTML={jsonLdScript(localBusinessJsonLd())} />
+        <script type="application/ld+json" dangerouslySetInnerHTML={jsonLdScript(websiteJsonLd())} />
         {gaId && <Analytics />}
       </body>
     </html>

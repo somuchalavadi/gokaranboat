@@ -147,7 +147,7 @@ export function landingTripJsonLd(page: { h1: string; answerSummary: string; slu
     url: absoluteUrl(`/${page.slug}`),
     image: absoluteUrl(page.heroImage.src),
     provider: { "@id": businessId },
-    subTrip: included.map((item) => ({ "@type": "TouristTrip", name: item.name, description: tripDescription(item), url: absoluteUrl(`/packages#${item.id}`) })),
+    subTrip: included.map((item) => ({ "@type": "TouristTrip", name: item.name, description: tripDescription(item), url: absoluteUrl(`/packages#${item.id}`), provider: { "@id": businessId } })),
     offers: prices.length ? { "@type": "AggregateOffer", lowPrice: Math.min(...prices), priceCurrency: "INR", url: absoluteUrl("/#book") } : null,
   });
 }
@@ -166,5 +166,60 @@ export function sightingsDatasetJsonLd(guide: { h1: string; description: string;
     variableMeasured: ["Trips", "Trips with dolphin sightings"],
     creator: { "@type": "Organization", "@id": businessId, name: business.name },
     isAccessibleForFree: true,
+  });
+}
+
+const websiteId = absoluteUrl("/#website");
+
+// The site itself; every WebPage node points at it with isPartOf.
+export function websiteJsonLd() {
+  return {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "@id": websiteId,
+    name: business.name,
+    url: absoluteUrl("/"),
+    inLanguage: "en-IN",
+    publisher: { "@id": businessId },
+  };
+}
+
+// One WebPage node per page: dates from the data files, part of the WebSite, about the business. Guides and landing
+// pages (`authored`) also name the Organization as author and publisher.
+export function webPageJsonLd({
+  path,
+  name,
+  description,
+  datePublished,
+  dateModified,
+  type = "WebPage",
+  authored = false,
+  image,
+}: {
+  path: string;
+  name: string;
+  description: string;
+  datePublished: string;
+  dateModified: string;
+  type?: "WebPage" | "AboutPage" | "CollectionPage" | "FAQPage" | "ContactPage";
+  authored?: boolean;
+  image?: string;
+}) {
+  const url = absoluteUrl(path);
+  return compact({
+    "@context": "https://schema.org",
+    "@type": type,
+    "@id": `${url}#webpage`,
+    url,
+    name,
+    description,
+    inLanguage: "en-IN",
+    isPartOf: { "@id": websiteId },
+    about: { "@id": businessId },
+    datePublished,
+    dateModified,
+    primaryImageOfPage: image ? { "@type": "ImageObject", url: absoluteUrl(image) } : null,
+    author: authored ? { "@id": businessId } : null,
+    publisher: authored ? { "@id": businessId } : null,
   });
 }

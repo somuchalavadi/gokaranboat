@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
-import { seo } from "@/data/site";
-import { faqJsonLd, jsonLdScript, pageMetadata, touristTripsJsonLd } from "@/lib/seo";
+import { hero, seo } from "@/data/site";
+import { pageSummaries } from "@/data/pages";
+import { faqJsonLd, jsonLdScript, pageMetadata, touristTripsJsonLd, webPageJsonLd } from "@/lib/seo";
 import { Hero } from "@/components/sections/Hero";
 import { TrustStrip } from "@/components/sections/TrustStrip";
 import { About } from "@/components/sections/About";
@@ -29,6 +30,12 @@ export default function Home() {
       <Book />
       <Events />
       <FaqGoodToKnow />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={jsonLdScript(
+          webPageJsonLd({ path: "/", name: hero.title, description: seo.description, datePublished: pageSummaries.home.datePublished, dateModified: pageSummaries.home.updatedAt, image: `${hero.poster.base}-${hero.poster.width}.webp` }),
+        )}
+      />
       <script type="application/ld+json" dangerouslySetInnerHTML={jsonLdScript(touristTripsJsonLd())} />
       <script type="application/ld+json" dangerouslySetInnerHTML={jsonLdScript(faqJsonLd())} />
     </>

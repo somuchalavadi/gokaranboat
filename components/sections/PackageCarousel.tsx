@@ -51,6 +51,7 @@ export function PackageCarousel({ labels, children }: { labels: readonly string[
             className="inline-flex size-11 items-center justify-center rounded-full"
           >
             <span className={`block h-2 rounded-full transition-[width,background-color] duration-200 ${active === index ? "w-6 bg-navy-900" : "w-2 bg-ink/50"}`} />
+            <span className="sr-only">{`Show ${label}`}</span>
           </button>
         ))}
       </div>

@@ -6,7 +6,7 @@ import { mkdir, writeFile } from "node:fs/promises";
 
 const base = process.env.QA_URL ?? "http://localhost:3100";
 // Every page with links to check (add new routes here).
-const pages = ["/", "/packages", "/adventures", "/dolphin-watching-gokarna", "/kayaking-in-gokarna", "/snorkelling-in-gokarna", "/mangrove-river-trip-gokarna", "/fishing-trip-gokarna", "/bioluminescence-gokarna", "/private-boat-gokarna", "/guides/gokarna-boat-trip-guide", "/guides/how-to-reach-gokarna-beach-boat-pickup", "/guides/best-time-for-dolphin-watching-gokarna"];
+const pages = ["/", "/packages", "/adventures", "/dolphin-watching-gokarna", "/kayaking-in-gokarna", "/snorkelling-in-gokarna", "/mangrove-river-trip-gokarna", "/fishing-trip-gokarna", "/bioluminescence-gokarna", "/private-boat-gokarna", "/guides/gokarna-boat-trip-guide", "/guides/how-to-reach-gokarna-beach-boat-pickup", "/guides/best-time-for-dolphin-watching-gokarna", "/about", "/privacy-policy", "/terms"];
 // The one business number, used for both calls and WhatsApp.
 const number = "917019745857";
 const phones = new Set(["tel:+917019745857"]);
@@ -67,6 +67,28 @@ const maps = results.links.filter((l) => l.kind === "maps");
 check(`All WhatsApp links use ${number}, open in a new tab with rel="nofollow noopener" and carry a message`, wa.length > 0 && wa.every((l) => l.ok), `${wa.length} links`);
 check(`All phone links are tel:+${number}`, tel.length > 0 && tel.every((l) => l.ok), `${tel.length} links`);
 check('All pick-up links use the Google Maps short link, in a new tab with rel="nofollow noopener"', maps.length > 0 && maps.every((l) => l.ok), `${maps.length} links`);
+
+// Footer "About / Privacy / Terms" links on every page, and every internal link on those pages, return 200.
+{
+  const page = await browser.newPage();
+  const internal = new Set();
+  let footerOk = true;
+  for (const path of pages) {
+    await page.goto(base + path, { waitUntil: "domcontentloaded" });
+    const footerLinks = await page.$$eval('#site-footer nav a[href^="/"]', (as) => as.map((a) => a.getAttribute("href")));
+    if (!["/about", "/privacy-policy", "/terms"].every((href) => footerLinks.includes(href))) footerOk = false;
+    for (const href of await page.$$eval('main a[href^="/"], #site-footer a[href^="/"]', (as) => as.map((a) => a.getAttribute("href").split("#")[0]))) if (href) internal.add(href);
+  }
+  check("Footer links to About, Privacy policy and Terms on every page", footerOk);
+  const broken = [];
+  for (const href of internal) {
+    const response = await fetch(base + href, { redirect: "manual" });
+    if (response.status !== 200) broken.push(`${href} ${response.status}`);
+  }
+  check(`Every internal link resolves with 200 (no redirects)`, broken.length === 0, `${internal.size} URLs${broken.length ? `; ${broken.join(", ")}` : ""}`);
+  await page.close();
+}
+
 const homeMobile = wa.filter((l) => l.path === "/" && l.width === 375);
 console.log(`\nWhatsApp CTAs on home @375: ${homeMobile.length}`);
 for (const l of homeMobile) console.log(`  • ${l.text.replace(/\s+/g, " ").slice(0, 50).padEnd(50)} → "${l.message}"`);
@@ -171,7 +193,8 @@ for (const l of homeMobile) console.log(`  • ${l.text.replace(/\s+/g, " ").sli
   check("Esc closes the menu and focus returns to the menu button", await eventually(async () => !(await menu.isVisible()) && (await page.evaluate(() => document.activeElement?.getAttribute("aria-label"))) === "Open menu"));
   await menuButton.click();
   await menu.getByRole("link", { name: "Book", exact: true }).click();
-  await page.waitForTimeout(1200);
+  // Smooth scrolling takes longer the further it travels, so poll until it settles rather than waiting a fixed time.
+  await eventually(async () => { const top = await page.evaluate(() => document.getElementById("book").getBoundingClientRect().top); return top >= 0 && top < 120; }, 5000);
   const bookTop = await page.evaluate(() => document.getElementById("book").getBoundingClientRect().top);
   check("A menu link closes the menu and scrolls to its section", !(await menu.isVisible()) && bookTop >= 0 && bookTop < 120, `#book top ${Math.round(bookTop)}px`);
   await page.evaluate(() => window.scrollTo({ top: 0, behavior: "instant" }));
@@ -261,7 +284,8 @@ for (const width of [360, 1280]) {
   const pickup = page.locator(`header a[href="${mapsUrl}"]`);
   const box = await pickup.boundingBox();
   const pickupLink = await pickup.evaluate((a) => ({ target: a.target, rel: a.rel, label: a.getAttribute("aria-label"), text: a.innerText.trim() }));
-  const sized = width < 1024 ? box.width >= 44 && box.height >= 44 && pickupLink.text === "" : box.height >= 48 && pickupLink.text === "Pick-up";
+  // Below 1024px the icon carries visually hidden text (its accessible name in the DOM); from 1024px the label is visible.
+  const sized = width < 1024 ? box.width >= 44 && box.height <= 44.5 && box.height >= 44 && pickupLink.text === "Pick-up point on Google Maps" : box.height >= 48 && pickupLink.text === "Pick-up";
   check(`Header Pick-up @${width}: Maps short link, new tab, nofollow, ${width < 1024 ? "44×44 icon" : "48px labelled pill"}`, pickupLink.target === "_blank" && relOk(pickupLink.rel) && pickupLink.label === "Pick-up point on Google Maps" && sized, `${Math.round(box.width)}×${Math.round(box.height)} "${pickupLink.text}"`);
 
   // Every trigger is a real link to /#book (the no-JavaScript fallback).

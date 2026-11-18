@@ -54,7 +54,8 @@ export const pending = {
   cancellationPolicy: null as string | null, // TODO(owner): cancellation policy.
   season: null as string | null, // TODO(owner): operating season and monsoon closure dates.
   bioluminescenceTiming: null as string | null, // TODO(owner): when bioluminescence trips run.
-  crewAbout: null as string | null, // TODO(owner): a short crew/about paragraph.
+  crewAbout: null as string | null, // TODO(owner): a short crew/about paragraph (shown on /about once filled in).
+  grievanceOfficer: null as string | null, // TODO(owner): name and contact of the person who handles privacy requests (DPDP Act).
   vectorLogo: null as string | null, // TODO(owner): an SVG/vector version of the logo.
   boatRenders: null as string | null, // TODO(owner): higher-resolution boat renders (the current ones are 328–1008px wide).
   tripPhotos: null as string | null, // TODO(owner): real photos of the activities and places, to replace the illustrative stock images.
@@ -299,8 +300,11 @@ export const trust: readonly { id: string; label: string | null; icon: "pin" | "
 
 export const hero = {
   eyebrow: "Gokarna, Karnataka",
-  title: "Gokarna, from the deck.",
-  subtitle: "Boat trips, kayaking and dolphin watching from Gokarna Beach. Two to four hours on the water, or a custom trip planned around your group.",
+  title: "Gokarna boat trips, from the deck.",
+  // Rendered as two display lines (one per entry); the text reads as the title above.
+  titleLines: ["Gokarna boat trips,", "from the deck."],
+  // The first paragraph in <main>: a one-sentence definition of the business, built from data only.
+  subtitle: `${business.name} is a boat-trip operator at ${contact.pickup.street}, ${contact.pickup.region}, running ${Math.min(...packages.map((item) => item.durationHours))}–${Math.max(...packages.map((item) => item.durationHours))} hour sea and mangrove trips with dolphin watching, kayaking and snorkelling.`,
   chips: ["Gokarna Beach pick-up", "2–4 hour trips", "Custom trips"],
   ctaTrips: "See trips",
   ctaWhatsApp: "WhatsApp us",
@@ -340,6 +344,7 @@ export const about = {
 export const packagesIntro = {
   title: "Choose your trip",
   details: "/packages",
+  table: { caption: "Boat trip packages at a glance", head: ["Package", "Duration", "Highlights", "Price"] },
 };
 
 export const experiencesIntro = {
@@ -398,6 +403,9 @@ export const header = {
   pickup: "Pick-up",
   pickupLabel: "Pick-up point on Google Maps",
   menuPickup: "Pick-up point",
+  logoLabel: "Rudra Gokarna Adventures, home",
+  openMenu: "Open menu",
+  about: "About us",
 };
 
 // The phone-only bottom bar.
@@ -456,53 +464,76 @@ export const goodToKnow: readonly { icon: "weather" | "wildlife" | "health" | "d
 ];
 
 const byId = Object.fromEntries(packages.map((item) => [item.id, item])) as Record<TripPackage["id"], TripPackage>;
-const list = (ids: readonly HighlightId[]) => ids.map((id) => highlights[id].toLowerCase()).join(", ");
+
+// Shared answers, reused by the landing pages and guides so the same question gets the same answer everywhere.
+export const commonAnswers = {
+  kids: "Tell us your children's ages when you enquire on WhatsApp or by phone, and we'll advise which trip suits your family. We'll confirm any age limits for your trip at the same time. Trips depend on sea and weather conditions, and everyone on board follows the crew's instructions.",
+  nonSwimmers: "Tell us if anyone in your group can't swim when you enquire, and we'll advise which trips and activities suit them. Some activities, like snorkelling and swimming, happen in the water, while sightseeing and dolphin watching are from the boat. Trips depend on sea and weather conditions.",
+  price: (subject: string) =>
+    `The price of ${subject} is shared when you enquire, because it depends on the trip, your date and your group size. Send those details on WhatsApp or call ${contact.phones[0].display}, and we'll reply with the price and confirm availability. Every trip starts from Gokarna Beach, Gokarna, Karnataka.`,
+  riverTrip: `A River Trip is a ${byId.river.durationHours}-hour trip from Gokarna Beach into the mangroves near Gokarna, with mangrove views from the water and kayaking between the trees. It suits nature lovers and anyone who prefers quiet channels to the open sea. Timings depend on conditions on the day, so ask us when you enquire.`,
+  pickup: `Every boat trip starts from ${contact.pickup.label}. The pick-up point is pinned on Google Maps, with links in the Book section, the footer and the header. Ask us on WhatsApp what time to arrive, and allow a little extra time to find the spot on your first visit.`,
+};
 
 export const faq: readonly { question: string; answer: string | null }[] = [
   {
     question: "Which package suits us?",
-    answer: `Premium covers the most in ${byId.premium.durationHours} hours: ${list(byId.premium.highlights)}. Standard (${byId.standard.durationHours} hours) is a shorter trip with ${list(byId.standard.highlights)}. Exclusive is for fishing and bioluminescence, and River Trips are for the mangroves. Send us your group and date on WhatsApp and we'll help you choose.`,
+    answer: `Choose by what you want to do. Premium (${byId.premium.durationHours} hours) covers the most, including kayaking, snorkelling, swimming and dolphin watching. Standard (${byId.standard.durationHours} hours) is shorter, with sightseeing, the mystery cave and dolphins. Exclusive (${byId.exclusive.durationHours} hours) is for fishing and bioluminescence, and River Trips (${byId.river.durationHours} hours) are for the mangroves. Send your group and date on WhatsApp for advice.`,
   },
   {
     question: "How long is each trip?",
-    answer: `${packages.map((item) => `${item.shortName === "River" ? "River Trips" : item.shortName} ${item.durationHours} hours`).join(", ")}. Custom trips can be ${booking.customDurations.join(", ").replace(/, (\d)$/, " or $1")} hours.`,
+    answer: `Our packages last ${Math.min(...packages.map((item) => item.durationHours))} to ${Math.max(...packages.map((item) => item.durationHours))} hours: ${packages.map((item) => `${item.shortName === "River" ? "River Trips" : item.shortName} ${item.durationHours} hours`).join(", ").replace(/, ([^,]+)$/, " and $1")}. Custom trips can be ${booking.customDurations.join(", ").replace(/, (\d)$/, " or $1")} hours, planned around your group. Every trip starts from Gokarna Beach; ask us which dates and departure times are running when you enquire.`,
   },
-  {
-    question: "What does a River Trip involve?",
-    answer: `A ${byId.river.durationHours}-hour trip for ${list(byId.river.highlights)}.`,
-  },
+  { question: "What does a River Trip involve?", answer: "" },
   {
     question: "What is the Exclusive Package?",
-    answer: `A ${byId.exclusive.durationHours}-hour package with ${list(byId.exclusive.highlights)}. Ask us about timing and conditions for your date.`,
+    answer: `The Exclusive Package is our longest trip: ${byId.exclusive.durationHours} hours from Gokarna Beach, built around fishing and a bioluminescence trip. Bioluminescence is a natural glow in the water that depends on the season, the sea and the night, so it can't be guaranteed. Ask us about timing and conditions for your date.`,
   },
-  {
-    question: "Where do the boat trips start?",
-    answer: `From ${contact.pickup.label}. The pick-up point is marked on Google Maps; the link is in the Book section and the footer.`,
-  },
+  { question: "Where do the boat trips start?", answer: "" },
   {
     question: "What time should we arrive for pick-up?",
     answer: contact.pickupTime, // hidden until the owner confirms it
   },
-  {
-    question: "Are the boat trips suitable for children?",
-    answer: "Tell us your children's ages when you enquire on WhatsApp, and we'll advise which trip suits your family.",
-  },
-  {
-    question: "Can non-swimmers join a boat trip?",
-    answer: "Tell us if anyone in your group can't swim when you enquire, and we'll advise which trips and activities suit them.",
-  },
+  { question: "Are the boat trips suitable for children?", answer: "" },
+  { question: "Can non-swimmers join a boat trip?", answer: "" },
   {
     question: "What happens if the weather is bad?",
-    answer: "Trips depend on sea and weather conditions. If the weather looks uncertain, message us on WhatsApp before your trip.",
+    answer: `Trips depend on sea and weather conditions, so check with us if the forecast looks uncertain. Message us on WhatsApp or call ${contact.phones[0].display} before your trip. Wildlife sightings and bioluminescence also depend on conditions and are never guaranteed, and calm, clear days make dolphins and underwater views easier to see.`,
   },
   {
     question: "How do we book a trip?",
-    answer: "Use the booking form on this page to send your trip, date and group size on WhatsApp, or call us. We'll confirm availability and the price.",
+    answer: `Use the Plan & book form: choose a trip, pick a date and your group size, and add your name and phone number. It opens WhatsApp with your message ready to send, or you can call ${contact.phones[0].display} instead. We'll confirm availability and the price, then meet you at Gokarna Beach.`,
   },
-];
+].map((item) => {
+  const shared: Record<string, string> = {
+    "What does a River Trip involve?": commonAnswers.riverTrip,
+    "Where do the boat trips start?": commonAnswers.pickup,
+    "Are the boat trips suitable for children?": commonAnswers.kids,
+    "Can non-swimmers join a boat trip?": commonAnswers.nonSwimmers,
+  };
+  return item.answer === "" ? { ...item, answer: shared[item.question] } : item;
+});
+
+// "How to book" steps (an ordered list on the home page and the guide hub).
+export const howToBook = {
+  title: "How to book a boat trip in Gokarna",
+  intro: `Booking takes four steps, and nothing is paid on this website. Use the Plan & book form or the "Book now" button, and WhatsApp opens with your details ready to send, or call ${contact.phones[0].display}. We confirm availability and the price before your trip.`,
+  steps: [
+    `Choose a trip: one of our ${["no", "one", "two", "three", "four", "five", "six"][packages.length] ?? packages.length} packages, or a custom trip of ${booking.customDurations.join(", ").replace(/, (\d)$/, " or $1")} hours.`,
+    "Pick a date and your group size.",
+    "Send your request on WhatsApp. We'll confirm availability and the price.",
+    `Meet us at the pick-up point on ${contact.pickup.street}, pinned on Google Maps.`,
+  ],
+};
 
 export const footer = {
   copyright: `© ${new Date().getFullYear()} ${business.name}`,
+  legal: [
+    { label: "About us", href: "/about" },
+    { label: "Privacy policy", href: "/privacy-policy" },
+    { label: "Terms", href: "/terms" },
+  ],
+  legalLabel: "About and policies",
   credit: {
     label: "Designed & developed by",
     name: "Dishan Web Wings",
@@ -523,4 +554,185 @@ export const notFound = {
     { label: "Private boat trips in Gokarna", href: "/private-boat-gokarna" },
     { label: "Gokarna boat trip guide", href: "/guides/gokarna-boat-trip-guide" },
   ],
+};
+
+// ---- Trust pages --------------------------------------------------------------------------------------------
+
+export type InfoSection = { id: string; heading: string; paragraphs: readonly (string | null)[]; list?: readonly string[] | null };
+export type InfoPage = {
+  path: string;
+  h1: string;
+  crumb: string;
+  title: string;
+  description: string;
+  answerSummary: string;
+  sections: readonly InfoSection[];
+  datePublished: string;
+  updatedAt: string;
+};
+
+const minHours = Math.min(...packages.map((item) => item.durationHours));
+const maxHours = Math.max(...packages.map((item) => item.durationHours));
+
+export const aboutPage: InfoPage = {
+  path: "/about",
+  h1: "About Rudra Gokarna Adventures",
+  crumb: "About",
+  title: "About Rudra Gokarna Adventures | Gokarna Boat Trips",
+  description: "Who we are: a boat-trip operator at Gokarna Beach, Karnataka, with The Rudra Gokarna boat, 2–4 hour trips and custom trips. Contact and pick-up.",
+  answerSummary: `${business.name} is a boat-trip operator at Gokarna Beach, Karnataka, running ${minHours}–${maxHours} hour sea and mangrove trips with dolphin watching, kayaking and snorkelling. Trips run aboard our boat, ${business.boatName}, and custom trips are planned for couples, families and celebrations. Book on WhatsApp or by phone.`,
+  sections: [
+    { id: "who-we-are", heading: "Who we are", paragraphs: [about.canonical] },
+    { id: "the-boat", heading: "The boat", paragraphs: [`${business.boatName} is our boat: ${boat.copy.charAt(0).toLowerCase()}${boat.copy.slice(1)}`] },
+    { id: "the-crew", heading: "The crew", paragraphs: [pending.crewAbout] },
+    {
+      id: "not-rudra-adventures-rishikesh",
+      heading: "Are you the same as Rudra Adventures in Rishikesh?",
+      paragraphs: [
+        `No. ${business.name} is a separate company running boat trips from Gokarna Beach, Karnataka. We aren't connected to any business in Rishikesh or Uttarakhand. Our only boat is ${business.boatName}, every trip starts from Gokarna Beach in Uttara Kannada, and you can reach us on ${contact.phones[0].display}.`,
+      ],
+    },
+    {
+      id: "contact",
+      heading: "Contact and pick-up",
+      paragraphs: [
+        `Call or WhatsApp ${contact.phones[0].display} to ask a question or book. Every trip starts from ${contact.pickup.label}, and the pick-up point is pinned on Google Maps.`,
+        contact.email ? `Email: ${contact.email}` : null,
+      ],
+    },
+  ],
+  datePublished: "2026-11-18",
+  updatedAt: "2026-11-18",
+};
+
+const analyticsOn = Boolean(process.env.NEXT_PUBLIC_GA_ID);
+
+export const privacyPage: InfoPage = {
+  path: "/privacy-policy",
+  h1: "Privacy policy",
+  crumb: "Privacy policy",
+  title: "Privacy Policy | Rudra Gokarna Adventures",
+  description: "What Rudra Gokarna Adventures collects on this website and on WhatsApp, why, and your rights under India's DPDP Act 2023.",
+  answerSummary:
+    "This policy explains what information Rudra Gokarna Adventures handles when you use therudraadventure.com or contact us, and why. In short: the booking form and enquiry popup only prepare a WhatsApp message in your browser, nothing you type is stored on our website's servers, and we use your details only to answer you and arrange your trip.",
+  sections: [
+    {
+      id: "who-we-are",
+      heading: "Who we are",
+      paragraphs: [
+        `${business.name} runs boat trips from ${contact.pickup.label}. For this website and the messages you send us, we decide how your personal data is used, which makes us the "Data Fiduciary" under India's Digital Personal Data Protection Act, 2023 (the DPDP Act). You can reach us on ${contact.phones[0].display} by call or WhatsApp.`,
+        contact.email ? `Email: ${contact.email}` : null,
+      ],
+    },
+    {
+      id: "what-we-collect",
+      heading: "What we collect and why",
+      paragraphs: ["We only handle the information you choose to give us, plus the basic technical data any website needs to work."],
+      list: [
+        "Booking form and enquiry popup: the trip, date and group size, and in the booking form your name and phone number. Your browser uses them to write a WhatsApp message; they aren't sent to or stored on our website's servers. If you send the message, we receive it in WhatsApp like any other message.",
+        "Messages and calls: what you tell us on WhatsApp or by phone, used to answer your questions, share the price and arrange your trip.",
+        "Session storage: the enquiry popup remembers the last enquiry type you chose until you close the tab. It stays in your browser and is never sent to us.",
+        analyticsOn
+          ? "Analytics: we use Google Analytics 4 to count visits and clicks on the WhatsApp, phone and map links, with IP anonymisation requested. These events don't include your name, phone number or message. Google Analytics sets cookies on your device."
+          : "Analytics: we don't currently use analytics or advertising cookies. If we add Google Analytics, this page will say so first.",
+        "Technical logs: our hosting provider, Vercel, processes standard request data (such as IP address, browser type and the pages requested) to deliver this website and protect it from abuse.",
+      ],
+    },
+    {
+      id: "third-parties",
+      heading: "WhatsApp, Google Maps and other services",
+      paragraphs: [
+        "Links to WhatsApp (wa.me) and Google Maps open those services, which handle your data under their own privacy policies. Our fonts and images are served from this website itself, not from third-party font or image services.",
+      ],
+    },
+    {
+      id: "sharing",
+      heading: "What we don't do",
+      paragraphs: ["We don't sell your personal data or use it for advertising. We share it only when that's needed to arrange your trip, or when the law requires it."],
+    },
+    {
+      id: "retention",
+      heading: "How long we keep it",
+      paragraphs: ["We keep your messages only as long as we need them to answer you and arrange your trip, or as long as the law requires. You can ask us to delete them at any time."],
+    },
+    {
+      id: "your-rights",
+      heading: "Your rights under the DPDP Act",
+      paragraphs: [`Under the DPDP Act you can ask us for the following. To use any of these rights, call or WhatsApp ${contact.phones[0].display}.`],
+      list: [
+        "A summary of the personal data we hold about you and how we use it",
+        "Correction, completion or updating of your data",
+        "Erasure of your data, unless the law requires us to keep it",
+        "Withdrawal of your consent at any time (this doesn't affect what was done before)",
+        "Redressal of any grievance about how we've handled your data",
+        "Nomination of someone to exercise these rights for you in case of death or incapacity",
+      ],
+    },
+    {
+      id: "complaints",
+      heading: "Complaints",
+      paragraphs: [
+        `If you have a concern, contact us first on ${contact.phones[0].display} and we'll try to resolve it. If you're not satisfied with our response, you can complain to the Data Protection Board of India.`,
+        pending.grievanceOfficer ? `Grievance officer: ${pending.grievanceOfficer}` : null,
+      ],
+    },
+    {
+      id: "children",
+      heading: "Children",
+      paragraphs: ["This website isn't aimed at children, and we don't knowingly collect children's personal data through it. Parents or guardians enquire and book for children."],
+    },
+    {
+      id: "changes",
+      heading: "Changes to this policy",
+      paragraphs: ["If anything changes, we'll update this page. The date at the top shows when it was last updated."],
+    },
+  ],
+  datePublished: "2026-11-18",
+  updatedAt: "2026-11-18",
+};
+
+export const termsPage: InfoPage = {
+  path: "/terms",
+  h1: "Terms of booking",
+  crumb: "Terms",
+  title: "Terms of Booking | Rudra Gokarna Adventures",
+  description: "How booking a boat trip with Rudra Gokarna Adventures works: confirmation on WhatsApp, weather-dependent trips, wildlife and cancellations.",
+  answerSummary:
+    "These terms cover enquiries and bookings with Rudra Gokarna Adventures for boat trips from Gokarna Beach, Gokarna, Karnataka. In short: bookings are made and confirmed on WhatsApp or by phone, every trip depends on sea and weather conditions, and wildlife sightings and bioluminescence depend on nature, so they can't be guaranteed.",
+  sections: [
+    {
+      id: "booking",
+      heading: "Booking",
+      paragraphs: [
+        `You can enquire through the Plan & book form, the enquiry popup, WhatsApp or a phone call on ${contact.phones[0].display}. A booking is confirmed only when we confirm it to you on WhatsApp or by phone, with the trip, date, group size and price.`,
+      ],
+    },
+    { id: "prices", heading: "Prices", paragraphs: ["Prices are shared when you enquire. The price we confirm for your booking is the one that applies."] },
+    {
+      id: "weather",
+      heading: "Weather and sea conditions",
+      paragraphs: ["Every trip depends on sea and weather conditions. If conditions aren't suitable, the trip may be shortened, changed or rescheduled, and we'll tell you as early as we can."],
+    },
+    {
+      id: "wildlife",
+      heading: "Wildlife and natural events",
+      paragraphs: ["Dolphins are wild animals and bioluminescence is a natural event. Both depend on conditions, so neither can be guaranteed on any trip."],
+    },
+    {
+      id: "safety",
+      heading: "Safety on board",
+      paragraphs: [
+        "Tell us about children, non-swimmers and any health needs when you enquire. Everyone on board follows the crew's instructions, and the crew may stop an activity if it isn't safe.",
+      ],
+    },
+    {
+      id: "cancellation",
+      heading: "Cancellation and refunds",
+      paragraphs: [pending.cancellationPolicy ?? `Ask us about cancellation and refunds on WhatsApp or by phone (${contact.phones[0].display}) before you book, and we'll confirm them with your booking.`],
+    },
+    { id: "photos", heading: "Photos on this website", paragraphs: ["Activity and place photos marked as illustrative are stock images, not photos from our trips."] },
+    { id: "law", heading: "Governing law", paragraphs: ["These terms are governed by the laws of India."] },
+  ],
+  datePublished: "2026-11-18",
+  updatedAt: "2026-11-18",
 };

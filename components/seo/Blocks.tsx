@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { KeyFact, PageFaq } from "@/data/seo-pages";
 import { outboundRel } from "@/lib/whatsapp";
+import { slug } from "@/lib/slug";
 
 // Answer-engine friendly building blocks. All render plain server HTML; nothing is collapsed or client-only.
 
@@ -55,7 +56,9 @@ export function FaqList({ id, title, faqs, tone = "sand" }: { id: string; title:
       <div className="mt-6 grid gap-6 md:grid-cols-2">
         {answered.map((faq) => (
           <div key={faq.question}>
-            <h3 className="font-sans text-lg font-semibold">{faq.question}</h3>
+            <h3 id={slug(faq.question)} className="font-sans text-lg font-semibold">
+              {faq.question}
+            </h3>
             <p className={`mt-1 ${tone === "navy" ? "text-mist" : "text-muted"}`}>{faq.answer}</p>
           </div>
         ))}

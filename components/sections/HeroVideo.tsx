@@ -71,6 +71,7 @@ export function HeroVideo({ video }: Props) {
         className="glass-dark absolute right-6 bottom-6 z-20 inline-flex size-11 items-center justify-center rounded-full text-white"
       >
         {paused ? <Play aria-hidden="true" /> : <Pause aria-hidden="true" />}
+        <span className="sr-only">{paused ? "Play background video" : "Pause background video"}</span>
       </button>
     </>
   );

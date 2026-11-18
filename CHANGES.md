@@ -1,5 +1,43 @@
 # Changes — Rudra Gokarna Adventures
 
+## AI-readiness update and keyword map (18 November 2026)
+
+**Keyword map (Phase A of the keyword brief, awaiting approval):** `KEYWORD_MAP.md` is generated from `data/keyword-map.ts` by `scripts/keyword-map.mjs`. It maps 39 clusters to one URL each: 15 live, 3 sections, 16 planned, 4 blocked on owner data, 1 not targeted. Phases B–F wait for approval.
+
+**AI-readiness fixes (all page templates):**
+
+- **Home:** the H1 is "Gokarna boat trips, from the deck." (two display lines). The eyebrow is now a `<span>`, so the first `<p>` in `<main>` is the definition sentence. New: a compact packages `<table>` (`<th scope>`, keyboard-focusable on phones where it scrolls) and "How to book a boat trip in Gokarna" as an `<ol>` above the booking form. The guide hub has the same steps.
+- **Answer-first:** every question heading (66 across 16 pages) is followed by a 40–60 word direct answer, extended only with facts already in `data/`. Landing pages open their first section with a definition ("Kayaking in Gokarna is…"). `scripts/qa/answers.mjs` enforces both rules.
+- **Heading ids:** `lib/slug.ts` gives every data-driven H2/H3 a stable slug id. Every H2/H3 in `<main>` has one, with no duplicates (checked). Guides with 5 or more sections get an "On this page" contents list.
+- **Trust pages:**
+  - `/about`: who we are, the boat, the crew (hidden until `pending.crewAbout`), the Rishikesh disambiguation at `#not-rudra-adventures-rishikesh`, and contact.
+  - `/privacy-policy`: written for the DPDP Act 2023. It reflects GA4 only while `NEXT_PUBLIC_GA_ID` is set.
+  - `/terms`: cancellation comes from `pending.cancellationPolicy`, with an ask-us line until then.
+  - Privacy and terms are marked for owner/legal review in `SEO_COPY.md`.
+  - All three are linked in the footer; About is also in the mobile menu.
+  - The old `/about` → `/#about` redirect is removed.
+- **Schema:**
+  - A `WebSite` node (`/#website`) on every page.
+  - A `WebPage` / `AboutPage` / `CollectionPage` node per page, with `datePublished` (first commit of each route) and `dateModified` from data, `isPartOf` the WebSite and `about` the business.
+  - Landing pages and guides also name the Organization as `author` and `publisher`.
+  - Nested `TouristTrip`s now carry `provider`.
+  - `scripts/qa/jsonld.mjs` validates required properties, ISO dates, `@id` references and the absence of Review/AggregateRating.
+- **Icon-only controls** (header logo and Pick-up pin, menu button, dialog close, lightbox arrows, carousel dots, guest steppers, footer logo) now contain visually hidden text as well as the `aria-label`.
+- **Unchanged on purpose:** the hero image's eager loading, the booking form's `tabindex=-1` focus target, and next/image's formats.
+
+**QA (production build):**
+
+| Check | Result | |
+| --- | --- | --- |
+| Build, lint, typecheck | 0 warnings; 17 pages within title ≤ 60 / description ≤ 155 | ✅ |
+| JSON-LD (`jsonld.mjs`) | 17 pages, 91 blocks, **0 errors** | ✅ |
+| Answer-first (`answers.mjs`) | 66 question headings, all 40–60 words; every H2/H3 has an id, none duplicated | ✅ |
+| `links.mjs` | **74/74**, including footer About/Privacy/Terms on every page and all 16 internal URLs returning 200 with no redirects | ✅ |
+| axe (home, /about, /privacy-policy; page + interactive states) | 19 scans, 0 serious/critical | ✅ |
+| Layout (`screens.mjs`, 9 pages × 6 widths, 360–1440 px) | 54 combinations, 0 overflow / small targets / overlaps / duplicate headings | ✅ |
+| JavaScript off, CSP | 8 pages: all sections visible, 0 CSP violations | ✅ |
+| Lighthouse, home, one run | Desktop **100/100/100/100**. Mobile Accessibility, Best Practices and SEO 100; Performance **92** (simulated LCP, same band as before: 91–93). CLS 0 | ≈ |
+
 ## Header Pick-up button and "Book now" enquiry popup (November 2026)
 
 - **Pick-up in the header:** an outline pill labelled "Pick-up" to the right of "Book now" from 1024px, and a 44×44 map-pin icon between "Book" and the menu below that. It opens the Google Maps short link in a new tab (`rel="nofollow noopener"`). The mobile menu gains a "Pick-up point" link.

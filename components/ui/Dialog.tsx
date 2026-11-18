@@ -104,6 +104,7 @@ export function Dialog({
               className={`absolute top-3 right-3 z-10 inline-flex size-11 items-center justify-center rounded-full ${variant === "fullscreen" ? "glass-dark text-white" : "bg-sand-50 text-ink hover:bg-line"}`}
             >
               <X aria-hidden="true" />
+              <span className="sr-only">Close</span>
             </button>
           )}
           {children}

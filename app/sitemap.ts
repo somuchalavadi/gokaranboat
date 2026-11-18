@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next";
-import { about, activities, gallery, hero, packages, places } from "@/data/site";
+import { about, aboutPage, activities, gallery, hero, packages, places, privacyPage, termsPage } from "@/data/site";
 import { pageSummaries } from "@/data/pages";
 import { seoPages } from "@/data/seo-pages";
 import { guidePath, guides } from "@/data/guides";
@@ -25,6 +25,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "monthly" as const,
       priority: 0.7,
       images: images([page.heroImage.src, ...page.gallery.map((image) => image.src)]),
+    })),
+    ...[aboutPage, privacyPage, termsPage].map((page) => ({
+      url: absoluteUrl(page.path),
+      lastModified: page.updatedAt,
+      changeFrequency: "yearly" as const,
+      priority: page === aboutPage ? 0.5 : 0.2,
+      ...(page === aboutPage ? { images: images([about.image.src]) } : {}),
     })),
     ...guides.map((guide) => ({ url: absoluteUrl(guidePath(guide.slug)), lastModified: guide.updatedAt, changeFrequency: "monthly" as const, priority: 0.6, images: images([guide.image.src]) })),
   ];

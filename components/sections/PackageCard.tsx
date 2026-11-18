@@ -2,6 +2,7 @@ import { Img } from "@/components/ui/Img";
 import { Check, ChevronDown, Clock } from "lucide-react";
 import Link from "next/link";
 import { enquiry, highlights, type HighlightId, type TripPackage } from "@/data/site";
+import { slug } from "@/lib/slug";
 import { landingForHighlight, linkLabel, type SeoPageSlug } from "@/data/seo-pages";
 import { Button } from "@/components/ui/Button";
 
@@ -45,7 +46,9 @@ export function PackageCard({ item, showAll = false, sizes = carouselSizes, prio
         )}
       </div>
       <div className="flex flex-1 flex-col p-5">
-        <h3 className="text-h3">{item.name}</h3>
+        <h3 id={slug(item.name)} className="text-h3">
+          {item.name}
+        </h3>
         <p className="mt-2 text-muted">{item.description}</p>
         <p className="mt-2 text-sm">
           <span className="font-semibold">Best for:</span> {item.bestFor}

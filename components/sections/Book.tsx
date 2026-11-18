@@ -5,6 +5,7 @@ import { outboundRel, telLink } from "@/lib/whatsapp";
 import { Button } from "@/components/ui/Button";
 import { Section } from "@/components/ui/Section";
 import { BookingForm } from "@/components/sections/BookingForm";
+import { HowToBook } from "@/components/sections/HowToBook";
 
 const primaryPhone = contact.phones.find((phone) => phone.primary) ?? contact.phones[0];
 const termClass = "text-sm font-semibold tracking-[0.12em] text-muted uppercase";
@@ -13,6 +14,7 @@ const linkClass = "inline-flex min-h-11 items-center gap-2 text-lg font-semibold
 export function Book() {
   return (
     <Section id="book" tone="sand" title={booking.title} intro={<p>{booking.intro}</p>}>
+      <HowToBook />
       <div className="grid gap-8 lg:grid-cols-12 lg:gap-12">
         <div data-reveal className="relative lg:col-span-7 lg:p-6">
           {/* Desktop only: a photo behind the glass card, so the blur has something to show. */}

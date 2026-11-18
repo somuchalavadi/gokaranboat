@@ -226,6 +226,7 @@ export function BookingForm() {
                   className="inline-flex size-12 shrink-0 items-center justify-center rounded-full bg-white ring-1 ring-ink/25 hover:ring-ink disabled:opacity-40"
                 >
                   <Minus aria-hidden="true" />
+                  <span className="sr-only">Remove a guest</span>
                 </button>
                 <input
                   id="book-guests"
@@ -248,6 +249,7 @@ export function BookingForm() {
                   className="inline-flex size-12 shrink-0 items-center justify-center rounded-full bg-white ring-1 ring-ink/25 hover:ring-ink disabled:opacity-40"
                 >
                   <Plus aria-hidden="true" />
+                  <span className="sr-only">Add a guest</span>
                 </button>
               </div>
               <FieldError id="book-guests-error">{errors.guests}</FieldError>

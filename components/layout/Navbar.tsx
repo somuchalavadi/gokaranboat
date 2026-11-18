@@ -27,7 +27,8 @@ export function Navbar() {
     >
       <div className="mx-auto flex h-full max-w-[1248px] items-center gap-3 px-4 sm:px-6">
         <Link href="/" prefetch={false} className="inline-flex h-11 shrink-0 items-center rounded-md">
-          <Img src={business.logo.src} alt={business.logo.alt} width={95} height={40} loading="eager" className="h-10 w-auto" />
+          <Img src={business.logo.src} alt="" width={95} height={40} loading="eager" className="h-10 w-auto" />
+          <span className="sr-only">{header.logoLabel}</span>
         </Link>
 
         <nav aria-label="Main" className="mx-auto hidden lg:block">
@@ -60,6 +61,7 @@ export function Navbar() {
           className={`${buttonClass("secondary", overHero ? "dark" : "light")} h-11! w-11! px-0! lg:h-12! lg:w-auto! lg:px-5!`}
         >
           <MapPin aria-hidden="true" />
+          <span className="sr-only lg:hidden">{header.pickupLabel}</span>
           <span className="hidden lg:inline">{header.pickup}</span>
         </a>
         <button
@@ -68,12 +70,13 @@ export function Navbar() {
             event.currentTarget.focus();
             setMenuOpen(true);
           }}
-          aria-label="Open menu"
+          aria-label={header.openMenu}
           aria-expanded={menuOpen}
           aria-controls="mobile-menu"
           className="inline-flex size-12 items-center justify-center rounded-full lg:hidden"
         >
           <Menu aria-hidden="true" />
+          <span className="sr-only">{header.openMenu}</span>
         </button>
       </div>
       <MobileMenu open={menuOpen} onClose={() => setMenuOpen(false)} />

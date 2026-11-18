@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { packages } from "@/data/site";
 import { pageSummaries } from "@/data/pages";
-import { breadcrumbJsonLd, faqJsonLd, jsonLdScript, pageMetadata, touristTripsJsonLd } from "@/lib/seo";
+import { breadcrumbJsonLd, faqJsonLd, jsonLdScript, pageMetadata, touristTripsJsonLd, webPageJsonLd } from "@/lib/seo";
 import { Button } from "@/components/ui/Button";
 import { Section } from "@/components/ui/Section";
 import { PageHeader } from "@/components/layout/PageHeader";
@@ -11,11 +11,12 @@ import { FaqGoodToKnow } from "@/components/sections/FaqGoodToKnow";
 import { Events } from "@/components/sections/Events";
 import { KeyFacts, LastUpdated } from "@/components/seo/Blocks";
 
-export const metadata: Metadata = pageMetadata({
+const meta = {
   title: "Gokarna Boat Trip Packages | Rudra Gokarna Adventures",
   description: "Compare 2–4 hour boat packages from Gokarna Beach: sightseeing, kayaking, snorkelling, dolphin watching, fishing, bioluminescence and mangrove trips.",
   path: "/packages",
-});
+};
+export const metadata: Metadata = pageMetadata(meta);
 
 const summary = pageSummaries.packages;
 
@@ -44,6 +45,10 @@ export default function PackagesPage() {
       </Section>
       <FaqGoodToKnow />
       <Events />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={jsonLdScript(webPageJsonLd({ path: meta.path, name: "Gokarna boat packages", description: meta.description, datePublished: summary.datePublished, dateModified: summary.updatedAt, type: "CollectionPage" }))}
+      />
       <script type="application/ld+json" dangerouslySetInnerHTML={jsonLdScript(touristTripsJsonLd())} />
       <script type="application/ld+json" dangerouslySetInnerHTML={jsonLdScript(faqJsonLd())} />
       <script type="application/ld+json" dangerouslySetInnerHTML={jsonLdScript(breadcrumbJsonLd("Packages", "/packages"))} />

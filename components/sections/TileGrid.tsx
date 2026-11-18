@@ -1,6 +1,7 @@
 import { Img } from "@/components/ui/Img";
 import Link from "next/link";
 import { packagesFor, type Tile } from "@/data/site";
+import { slug } from "@/lib/slug";
 import { landingForHighlight, linkLabel } from "@/data/seo-pages";
 
 // Text-first cards for the "Things to do" page: everything the home tiles keep behind a sheet, in plain view.
@@ -18,7 +19,9 @@ export function TileGrid({ items, tone, priorityFirst = false }: { items: readon
                 <Img src={item.image.src} alt={item.image.alt} fill sizes="(max-width: 639px) 100vw, (max-width: 1023px) 50vw, 384px" className="object-cover" {...(priorityFirst && index === 0 ? { loading: "eager", fetchPriority: "high" } : {})} />
               </div>
               <div className="p-5">
-                <h3 className="text-h3">{item.title}</h3>
+                <h3 id={slug(item.title)} className="text-h3">
+                  {item.title}
+                </h3>
                 <p className="mt-2">{item.description}</p>
                 {item.note && <p className={`mt-1 text-sm font-semibold ${tone === "navy" ? "text-mist" : "text-muted"}`}>{item.note}</p>}
                 {included.length > 0 && (

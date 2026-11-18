@@ -49,9 +49,14 @@ export function Hero() {
       {/* The gradient sits behind the text block only, so the sea above stays clear. */}
       <div className="relative bg-linear-to-t from-navy-900 from-35% via-navy-900/80 via-70% to-transparent pt-28 pb-12 md:pb-16 lg:pt-40">
         <Container>
-          <p className="text-sm font-semibold tracking-[0.14em] text-mist uppercase">{hero.eyebrow}</p>
-          <h1 id="hero-title" className="mt-3 max-w-[13ch] text-h1">
-            {hero.title}
+          <span className="block text-sm font-semibold tracking-[0.14em] text-mist uppercase">{hero.eyebrow}</span>
+          <h1 id="hero-title" className="mt-3 text-h1">
+            {hero.titleLines.map((line, index) => (
+              <span key={line}>
+                {index > 0 && " "}
+                <span className="block">{line}</span>
+              </span>
+            ))}
           </h1>
           <p className="mt-4 max-w-xl text-lg text-mist">{hero.subtitle}</p>
           <div className="mt-8 flex flex-wrap gap-3">

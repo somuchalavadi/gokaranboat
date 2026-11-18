@@ -3,9 +3,9 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { MapPin } from "lucide-react";
 import { contact } from "@/data/site";
-import { getGuide, guideHubSlug, guidePath, guides, type GuideSection } from "@/data/guides";
+import { getGuide, guideHubSlug, guidePath, guides, guideUi, type GuideSection } from "@/data/guides";
 import { sightings } from "@/data/sightings";
-import { articleJsonLd, breadcrumbJsonLd, faqJsonLd, jsonLdScript, pageMetadata, sightingsDatasetJsonLd } from "@/lib/seo";
+import { articleJsonLd, breadcrumbJsonLd, faqJsonLd, jsonLdScript, pageMetadata, sightingsDatasetJsonLd, webPageJsonLd } from "@/lib/seo";
 import { buildWhatsAppLink, isOutboundBookingLink, outboundRel } from "@/lib/whatsapp";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { Button } from "@/components/ui/Button";
@@ -55,15 +55,22 @@ function GuideBody({ section }: { section: GuideSection & { paragraphs: string[]
           {paragraph}
         </p>
       ))}
-      {section.list && (
-        <ul className="mt-3 grid list-disc gap-1 pl-5 text-lg text-muted">
-          {section.list.map((item) => (
-            <li key={item}>{item}</li>
-          ))}
-        </ul>
-      )}
+      {section.list &&
+        (section.ordered ? (
+          <ol className="mt-3 grid list-decimal gap-1 pl-6 text-lg text-muted">
+            {section.list.map((item) => (
+              <li key={item}>{item}</li>
+            ))}
+          </ol>
+        ) : (
+          <ul className="mt-3 grid list-disc gap-1 pl-5 text-lg text-muted">
+            {section.list.map((item) => (
+              <li key={item}>{item}</li>
+            ))}
+          </ul>
+        ))}
       {section.table && section.table.rows.length > 0 && (
-        <div className="mt-4 overflow-x-auto rounded-card bg-white ring-1 ring-line">
+        <div role="region" aria-label={section.table.caption} tabIndex={0} className="mt-4 overflow-x-auto rounded-card bg-white ring-1 ring-line">
           <table className="w-full text-left">
             <caption className="sr-only">{section.table.caption}</caption>
             <thead className="text-sm tracking-[0.06em] text-muted uppercase">
@@ -142,6 +149,20 @@ export default async function GuidePage({ params }: Props) {
             <KeyFacts id="key-facts" facts={guide.keyFacts} />
           </aside>
           <article className="grid content-start gap-10 lg:order-1 lg:col-span-7">
+            {sections.length >= guideUi.tocMinSections && (
+              <nav aria-label={guideUi.toc} className="rounded-card bg-white p-5 ring-1 ring-line">
+                <p className="text-sm font-semibold tracking-[0.06em] text-muted uppercase">{guideUi.toc}</p>
+                <ol className="mt-2 grid gap-x-6 sm:grid-cols-2">
+                  {sections.map((section) => (
+                    <li key={section.id}>
+                      <a href={`#section-${section.id}`} className="inline-flex min-h-11 items-center underline decoration-ink/30 underline-offset-4 hover:decoration-ink">
+                        {section.heading}
+                      </a>
+                    </li>
+                  ))}
+                </ol>
+              </nav>
+            )}
             {sections.map((section) => (
               <GuideBody key={section.id} section={section} />
             ))}
@@ -163,6 +184,10 @@ export default async function GuidePage({ params }: Props) {
         </Container>
       </div>
 
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={jsonLdScript(webPageJsonLd({ path, name: guide.h1, description: guide.description, datePublished: guide.datePublished, dateModified: guide.updatedAt, authored: true, image: guide.image.src }))}
+      />
       <script type="application/ld+json" dangerouslySetInnerHTML={jsonLdScript(articleJsonLd({ ...guide, path }))} />
       {guide.slug === "dolphin-sighting-log" && <script type="application/ld+json" dangerouslySetInnerHTML={jsonLdScript(sightingsDatasetJsonLd({ ...guide, path }, sightings))} />}
       {hasFaq && <script type="application/ld+json" dangerouslySetInnerHTML={jsonLdScript(faqJsonLd(guide.faqs))} />}

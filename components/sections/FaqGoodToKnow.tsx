@@ -1,5 +1,6 @@
 import { Binoculars, CalendarDays, CloudSun, HeartPulse } from "lucide-react";
 import { faq, faqIntro, goodToKnow } from "@/data/site";
+import { slug } from "@/lib/slug";
 import { guideHubSlug, guidePath } from "@/data/guides";
 import { Button } from "@/components/ui/Button";
 import { Section } from "@/components/ui/Section";
@@ -13,7 +14,9 @@ export function FaqGoodToKnow() {
   return (
     <Section id="faq" tone="sand" title={faqIntro.title}>
       <div data-reveal>
-        <h3 className="text-h3">{faqIntro.goodToKnowTitle}</h3>
+        <h3 id={slug(faqIntro.goodToKnowTitle)} className="text-h3">
+          {faqIntro.goodToKnowTitle}
+        </h3>
         <ul className="mt-4 grid gap-2 sm:grid-cols-2">
           {goodToKnow.map((item) => {
             const Icon = icons[item.icon];
@@ -33,7 +36,9 @@ export function FaqGoodToKnow() {
         <div className="mt-4 grid gap-x-12 gap-y-6 md:grid-cols-2">
           {answered.map((item) => (
             <div key={item.question}>
-              <h3 className="font-sans text-lg font-semibold">{item.question}</h3>
+              <h3 id={slug(item.question)} className="font-sans text-lg font-semibold">
+                {item.question}
+              </h3>
               <p className="mt-1 text-muted">{item.answer}</p>
             </div>
           ))}

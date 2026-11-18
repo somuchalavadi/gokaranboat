@@ -2,7 +2,7 @@
 // Same rules as data/seo-pages.ts: confirmed facts from data/site.ts plus true, general travel guidance.
 // Unknown facts are null and their lines are left out. Two guides are built only once their data exists:
 // the prices guide (when any package has a price) and the sighting log (when data/sightings.ts has a month).
-import { about, booking, contact, goodToKnow, packages, pending, type ImageAsset } from "@/data/site";
+import { about, booking, contact, goodToKnow, howToBook, packages, pending, type ImageAsset } from "@/data/site";
 import { carry, getSeoPage, joinList, linkLabel, type KeyFact, type PageFaq, type SeoPageSlug } from "@/data/seo-pages";
 import { sightings } from "@/data/sightings";
 
@@ -20,6 +20,8 @@ export type GuideSection = {
   heading: string;
   paragraphs: readonly (string | null)[];
   list?: readonly string[] | null;
+  /** Render the list as numbered steps (<ol>). */
+  ordered?: boolean;
   links?: readonly GuideLink[];
   table?: GuideTable;
 };
@@ -42,9 +44,13 @@ export type Guide = {
 };
 
 export const guideHubSlug: GuideSlug = "gokarna-boat-trip-guide";
+
+// Labels used by the guide template.
+export const guideUi = { toc: "On this page", tocMinSections: 5 };
 export const guidePath = (slug: GuideSlug) => `/guides/${slug}`;
 
 const date = "2026-11-17";
+const updated = "2026-11-18";
 const hours = packages.map((item) => item.durationHours);
 const span = `${Math.min(...hours)} to ${Math.max(...hours)} hours`;
 const priced = packages.filter((item): item is typeof item & { price: number } => item.price !== null);
@@ -78,7 +84,9 @@ const hub: Guide = {
     {
       id: "choose",
       heading: "Which boat trip should you choose?",
-      paragraphs: [`We run ${["no", "one", "two", "three", "four", "five", "six"][packages.length] ?? packages.length} trips from Gokarna Beach. Each one is built around different things to do, so start with what your group wants from the day.`],
+      paragraphs: [
+        `Choosing a boat trip in Gokarna comes down to what your group wants from the day. We run ${["no", "one", "two", "three", "four", "five", "six"][packages.length] ?? packages.length} trips from Gokarna Beach, each built around different activities, from ${Math.min(...hours)}-hour sightseeing to a ${Math.max(...hours)}-hour fishing and bioluminescence trip. Here's what each one includes and who it suits.`,
+      ],
       list: packages.map((item) => `${item.name} (${item.durationHours} hours): ${item.description} Best for: ${item.bestFor.charAt(0).toLowerCase()}${item.bestFor.slice(1)}`),
       links: [{ href: "/packages", label: "Compare every package" }],
     },
@@ -88,7 +96,7 @@ const hub: Guide = {
       paragraphs: [
         priced.length
           ? `Trips start from ${rupees(Math.min(...priced.map((item) => item.price)))}. The price depends on the package and your group size.`
-          : "Prices depend on the package, your date and your group size, so we share them when you enquire. Send your date and group size on WhatsApp and we'll reply with the price for your trip.",
+          : `The cost of a Gokarna boat trip depends on the package, your date and your group size, so we share prices when you enquire. Send those details on WhatsApp or call ${contact.phones[0].display}, and we'll reply with the price for your trip and confirm availability.`,
       ],
       links: priced.length ? [{ href: guidePath("gokarna-boat-trip-prices"), label: "Gokarna boat trip prices" }] : [],
     },
@@ -96,19 +104,28 @@ const hub: Guide = {
       id: "timing",
       heading: "How long are the trips, and when do they run?",
       paragraphs: [
-        `${joinList(packages.map((item) => `${item.name} ${item.durationHours} hours`))}. Custom trips can be ${orList(booking.customDurations.map(String))} hours.`,
+        `Boat trips from Gokarna Beach last ${span}: ${joinList(packages.map((item) => `the ${item.name} ${item.durationHours} hours`))}. Custom trips can be ${orList(booking.customDurations.map(String))} hours. Ask us which dates and departure times are running when you enquire.`,
         pending.season ? `Season: ${pending.season}` : null,
-        "Ask us which dates and departure times are running when you enquire.",
+        "Karnataka's annual monsoon fishing ban runs from June 1 to July 31, and sea conditions are usually rough through the monsoon. Ask us which dates are running.",
       ],
     },
     {
       id: "pickup",
       heading: "Where do the trips start?",
-      paragraphs: [`Every trip starts from ${contact.pickup.label}. The pick-up point is pinned on Google Maps, so you can get directions from wherever you're staying.`],
+      paragraphs: [
+        `Every trip starts from ${contact.pickup.label}. The pick-up point is pinned on Google Maps, so you can get walking, driving or riding directions from wherever you're staying. Ask us on WhatsApp what time to arrive, and leave a little extra time to find the spot.`,
+      ],
       links: [
         { href: guidePath("how-to-reach-gokarna-beach-boat-pickup"), label: "How to reach the Gokarna Beach pick-up" },
         { href: contact.pickup.mapsUrl, label: "Pick-up point on Google Maps" },
       ],
+    },
+    {
+      id: "how-to-book",
+      heading: howToBook.title,
+      paragraphs: [howToBook.intro],
+      list: howToBook.steps,
+      ordered: true,
     },
     {
       id: "safety",
@@ -146,13 +163,22 @@ const hub: Guide = {
     },
   ],
   faqs: [
-    { question: "Do I need to book a Gokarna boat trip in advance?", answer: "Enquiring ahead is the easiest way to get the trip and date you want. Send your date and group size on WhatsApp and we'll confirm availability and the price." },
-    { question: "Can we plan a private or custom trip?", answer: `Yes. Custom trips can be ${orList(booking.customDurations.map(String))} hours and are planned around couples, families, New Year and other occasions.` },
-    { question: "Are dolphin sightings guaranteed?", answer: "No. Dolphins are wild animals, so sightings depend on conditions and nobody can promise one, but a calm sea makes them easier to spot." },
+    {
+      question: "Do I need to book a Gokarna boat trip in advance?",
+      answer: `Enquiring ahead is the easiest way to get the trip and date you want. Send your preferred trip, date and group size on WhatsApp or call ${contact.phones[0].display}, and we'll confirm availability and the price. For a trip at short notice, ask us what's running that day.`,
+    },
+    {
+      question: "Can we plan a private or custom trip?",
+      answer: `Yes. Custom trips can be ${orList(booking.customDurations.map(String))} hours and are planned around couples, families, New Year and other occasions. Choose the places you'd like to see, such as the lighthouse, the mystery cave or the mangroves, then send your date and group size on WhatsApp for the price.`,
+    },
+    {
+      question: "Are dolphin sightings guaranteed?",
+      answer: `No. Dolphins are wild animals, so sightings depend on conditions and nobody can promise one. A calm, clear sea makes fins and splashes much easier to spot. Dolphin watching is part of ${joinList(dolphinPackages.map((item) => `the ${item.durationHours}-hour ${item.name}`))}, both from Gokarna Beach.`,
+    },
   ],
   image: about.image,
   datePublished: date,
-  updatedAt: date,
+  updatedAt: updated,
 };
 
 // ---- How to reach the pick-up ------------------------------------------------------------------
@@ -214,13 +240,16 @@ const reach: Guide = {
     },
   ],
   faqs: [
-    { question: "Where does the Gokarna boat trip start?", answer: `From ${contact.pickup.label}. The pick-up point is pinned on Google Maps.` },
-    { question: "What time should we arrive?", answer: contact.pickupTime ? `Please arrive ${contact.pickupTime}.` : "Ask us on WhatsApp what time to arrive for your trip." },
+    {
+      question: "Where does the Gokarna boat trip start?",
+      answer: `Every trip starts from ${contact.pickup.label}. The exact pick-up point is pinned on Google Maps, so you can open it on your phone for walking, driving or riding directions from wherever you're staying. If you can't find us, call or WhatsApp ${contact.phones[0].display}.`,
+    },
+    { question: "What time should we arrive?", answer: contact.pickupTime ? `Please arrive ${contact.pickupTime}.` : "Ask us on WhatsApp what time to arrive for your trip, because the meeting time depends on the trip and the day. Leave a little extra time to find the pick-up spot on Gokarna Beach, especially on your first visit, and keep your phone handy so we can reach you." },
     { question: "Is there parking near the pick-up?", answer: directions.parking },
   ],
   image: booking.photo,
   datePublished: date,
-  updatedAt: date,
+  updatedAt: updated,
 };
 
 // ---- Best time for dolphin watching ------------------------------------------------------------
@@ -285,13 +314,17 @@ const bestTime: Guide = {
     },
   ],
   faqs: [
-    { question: "What is the best month for dolphin watching in Gokarna?", answer: pending.season ? `Trips run ${pending.season}. Within that, pick a calm day: sea state matters more than the month.` : "Sea conditions matter more than the month: calm, clear days make dolphins easier to spot, and sightings always depend on conditions. Ask us which dates are running." },
-    { question: "Is morning or afternoon better for dolphins?", answer: "Calm water matters more than the hour. Sea conditions change from day to day, so ask us which departure times are running and what the sea is usually like then." },
-    { question: "Can I see dolphins during the monsoon?", answer: "Karnataka's annual monsoon fishing ban runs from June 1 to July 31, and sea conditions are usually rough through the monsoon. Ask us which dates are running." },
+    { question: "What is the best month for dolphin watching in Gokarna?", answer: pending.season ? `Trips run ${pending.season}. Within that, pick a calm day: sea state matters more than the month.` : "Sea conditions matter more than the month: calm, clear days make dolphins easier to spot, and sightings always depend on conditions. Karnataka's annual monsoon fishing ban runs from June 1 to July 31, and sea conditions are usually rough through the monsoon. Ask us which dates are running." },
+    { question: "Is morning or afternoon better for dolphins?", answer: "Calm water matters more than the hour. Sea conditions change from day to day and through the day, so ask us which departure times are running on your date and what the sea is usually like then. Whatever the time, sightings depend on conditions and are never guaranteed." },
+    {
+      question: "Can I see dolphins during the monsoon?",
+      answer:
+        "Karnataka's annual monsoon fishing ban runs from June 1 to July 31, and sea conditions are usually rough through the monsoon. Rough water makes dolphins much harder to spot, because fins and splashes disappear among the waves. Ask us which dates are running before you plan a monsoon trip.",
+    },
   ],
   image: dolphinImage,
   datePublished: date,
-  updatedAt: date,
+  updatedAt: updated,
 };
 
 // ---- Prices (built only once a price exists) --------------------------------------------------
@@ -323,7 +356,7 @@ const prices: Guide = {
   faqs: [],
   image: about.image,
   datePublished: date,
-  updatedAt: date,
+  updatedAt: updated,
 };
 
 // ---- Dolphin sighting log (built only once data/sightings.ts has a month) --------------------
@@ -363,7 +396,7 @@ const sightingLog: Guide = {
   faqs: [],
   image: dolphinImage,
   datePublished: date,
-  updatedAt: date,
+  updatedAt: updated,
 };
 
 export const guides: readonly Guide[] = [hub, reach, bestTime, ...(priced.length ? [prices] : []), ...(sightings.length ? [sightingLog] : [])];

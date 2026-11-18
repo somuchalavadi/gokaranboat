@@ -1,7 +1,7 @@
 import { Img } from "@/components/ui/Img";
 import Link from "next/link";
 import { MapPin, MessageCircle, Phone } from "lucide-react";
-import { business, contact, footer, nav } from "@/data/site";
+import { business, contact, footer, header, nav } from "@/data/site";
 import { seoPages } from "@/data/seo-pages";
 import { guideHubSlug, guidePath } from "@/data/guides";
 import { buildWhatsAppLink, outboundRel, telLink } from "@/lib/whatsapp";
@@ -16,7 +16,8 @@ export function Footer() {
       <Container className="grid gap-10 py-16 md:grid-cols-2 lg:grid-cols-[1fr_1.1fr_1fr_1.2fr]">
         <div>
           <Link href="/" prefetch={false} className="inline-block rounded-md">
-            <Img src={business.logo.src} alt={business.logo.alt} width={190} height={80} className="h-20 w-auto" />
+            <Img src={business.logo.src} alt="" width={190} height={80} className="h-20 w-auto" />
+            <span className="sr-only">{header.logoLabel}</span>
           </Link>
           <p className="mt-4 max-w-xs text-mist">{business.tagline}</p>
           {business.socials && (
@@ -78,7 +79,9 @@ export function Footer() {
         </nav>
 
         <div>
-          <h2 className={headingClass}>Contact</h2>
+          <h2 id="footer-contact" className={headingClass}>
+            Contact
+          </h2>
           <ul className="mt-3 grid gap-1">
             {contact.phones.map((phone) => (
               <li key={phone.tel}>
@@ -117,6 +120,17 @@ export function Footer() {
       <div className="border-t border-line-dark">
         <Container className="flex flex-col gap-2 py-6 text-sm text-mist md:flex-row md:items-center md:justify-between">
           <span>{footer.copyright}</span>
+          <nav aria-label={footer.legalLabel}>
+            <ul className="flex flex-wrap gap-x-5">
+              {footer.legal.map((link) => (
+                <li key={link.href}>
+                  <Link href={link.href} className="inline-flex min-h-11 min-w-11 items-center justify-center hover:underline hover:underline-offset-4">
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
           <span>
             {footer.credit.label}{" "}
             <a

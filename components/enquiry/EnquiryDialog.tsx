@@ -103,6 +103,7 @@ export function EnquiryDialog({ open, preset, onClose }: { open: boolean; preset
                   className={stepperClass}
                 >
                   <Minus aria-hidden="true" />
+                  <span className="sr-only">{enquiry.fewerGuests}</span>
                 </button>
                 <output aria-live="polite" className="min-w-16 text-center font-semibold">
                   {guests ?? enquiry.guestsUnset}
@@ -115,6 +116,7 @@ export function EnquiryDialog({ open, preset, onClose }: { open: boolean; preset
                   className={stepperClass}
                 >
                   <Plus aria-hidden="true" />
+                  <span className="sr-only">{enquiry.moreGuests}</span>
                 </button>
               </div>
             </div>

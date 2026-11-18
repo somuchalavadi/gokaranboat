@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { MapPin, Phone } from "lucide-react";
 import { contact, header, nav } from "@/data/site";
 import { guideHubSlug, guidePath } from "@/data/guides";
@@ -27,6 +28,11 @@ export function MobileMenu({ open, onClose }: { open: boolean; onClose: () => vo
                 <a href={guidePath(guideHubSlug)} onClick={onClose} className="flex h-12 items-center font-display text-h3">
                   Guide
                 </a>
+              </li>
+              <li>
+                <Link href="/about" onClick={onClose} className="flex h-12 items-center font-display text-h3">
+                  {header.about}
+                </Link>
               </li>
               <li>
                 <a href={contact.pickup.mapsUrl} target="_blank" rel={outboundRel} data-ga-source="menu" onClick={onClose} className="flex h-12 items-center gap-3 font-display text-h3">

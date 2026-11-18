@@ -6,7 +6,7 @@ const base = process.env.QA_URL ?? "http://localhost:3100";
 
 // Which parts of each page are new or changed copy. `null` = the whole of <main>.
 const pages = [
-  { path: "/", label: "Home", selectors: ["#about", "#packages article", "#faq"] },
+  { path: "/", label: "Home", selectors: ["section[data-hero]", "#about", "#packages article", "#packages table", "#how-to-book-a-boat-trip-in-gokarna", "#book h3 + p", "#book ol", "#faq"] },
   { path: "/packages", label: "/packages", selectors: ["main > section:first-child", "section[aria-labelledby='packages-key-facts']"] },
   { path: "/adventures", label: "/adventures", selectors: ["main > section:first-child", "section[aria-labelledby='adventures-key-facts']", "#questions"] },
   ...[
@@ -21,6 +21,9 @@ const pages = [
     "/guides/how-to-reach-gokarna-beach-boat-pickup",
     "/guides/best-time-for-dolphin-watching-gokarna",
   ].map((path) => ({ path, label: path, selectors: null })),
+  { path: "/about", label: "/about", selectors: null },
+  { path: "/privacy-policy", label: "/privacy-policy (owner/legal review)", selectors: null },
+  { path: "/terms", label: "/terms (owner/legal review)", selectors: null },
   { path: "/this-page-does-not-exist", label: "404 page", selectors: null },
 ];
 

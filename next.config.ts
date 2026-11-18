@@ -55,7 +55,6 @@ const nextConfig: NextConfig = {
       })),
       // Pages that only duplicated home content now point at the matching section (308).
       { source: "/contact", destination: "/#book", permanent: true },
-      { source: "/about", destination: "/#about", permanent: true },
       { source: "/gallery", destination: "/#gallery", permanent: true },
       { source: "/new-year", destination: "/#events", permanent: true },
       { source: "/guides", destination: "/guides/gokarna-boat-trip-guide", permanent: true },

@@ -1,7 +1,7 @@
 // Landing pages for search intent: one per activity or trip type. Components only render this data.
 // Rules: only facts the owner has confirmed (in data/site.ts) plus true, general travel guidance. Anything
 // unknown is null with a TODO(owner) note, and the page leaves that line out.
-import { contact, highlights, packages, pending, type HighlightId, type ImageAsset, type TripPackage } from "@/data/site";
+import { commonAnswers, contact, highlights, packages, pending, type HighlightId, type ImageAsset, type TripPackage } from "@/data/site";
 
 export type KeyFact = { label: string; value: string | null; href?: string };
 export type ContentSection = { id: string; heading: string; paragraphs: readonly (string | null)[]; list?: readonly string[] | null };
@@ -40,7 +40,7 @@ export type SeoPage = {
 
 // ---- Shared facts and helpers ------------------------------------------------------------------
 
-const updatedAt = "2026-11-17";
+const updatedAt = "2026-11-18";
 const byId = (id: TripPackage["id"]) => packages.find((item) => item.id === id) as TripPackage;
 export const joinList = (items: readonly string[]) => (items.length <= 1 ? (items[0] ?? "") : `${items.slice(0, -1).join(", ")} and ${items[items.length - 1]}`);
 const lower = (ids: readonly HighlightId[]) => ids.map((id) => highlights[id].toLowerCase());
@@ -68,8 +68,10 @@ export function keyFacts(ids: readonly TripPackage["id"][], carryList: readonly 
 }
 
 const safetyLine = "Trips depend on sea and weather conditions. Tell us about children, non-swimmers or any health needs when you enquire, and follow the crew's instructions on board.";
-const priceAnswer = "Prices are shared when you enquire on WhatsApp or by phone. Send your date and group size and we'll reply with the price for your trip.";
-const kidsAnswer = "Tell us your children's ages when you enquire, and we'll advise which trip suits your family.";
+// FAQ answers are 40–60 word direct answers; the shared ones live in data/site.ts (commonAnswers).
+const priceAnswer = commonAnswers.price;
+const kidsAnswer = commonAnswers.kids;
+export const seoPagesPublished = "2026-11-17";
 
 // ---- Pages -------------------------------------------------------------------------------------
 
@@ -90,7 +92,8 @@ export const seoPages: readonly SeoPage[] = [
         id: "what-you-do",
         heading: "What you'll do",
         paragraphs: [
-          `The boat leaves Gokarna Beach and heads along the coast, and part of the trip is spent out at sea watching the water for dolphins. On the ${byId("standard").name} that sits alongside ${joinList(lower(byId("standard").highlights.filter((id) => id !== "dolphins")))}. The ${byId("premium").name} adds ${joinList(lower(byId("premium").highlights.filter((id) => !byId("standard").highlights.includes(id))))}.`,
+          "Dolphin watching in Gokarna is part of a boat trip from Gokarna Beach: time out at sea, scanning the water for fins and splashes.",
+          `The boat heads along the coast, and part of the trip is spent out at sea watching the water for dolphins. On the ${byId("standard").name} that sits alongside ${joinList(lower(byId("standard").highlights.filter((id) => id !== "dolphins")))}. The ${byId("premium").name} adds ${joinList(lower(byId("premium").highlights.filter((id) => !byId("standard").highlights.includes(id))))}.`,
           "Dolphins are wild animals, so whether and where they surface depends on conditions and changes from day to day. Nobody can promise a sighting. What helps is a calm sea and patient eyes: watch for a fin breaking the surface or a splash a little way off, and keep your camera ready rather than glued to your eye.",
         ],
       },
@@ -131,9 +134,15 @@ export const seoPages: readonly SeoPage[] = [
       },
     ],
     faqs: [
-      { question: "Will we definitely see dolphins in Gokarna?", answer: "No. Dolphins are wild, so sightings depend on conditions and aren't guaranteed, but every Premium and Standard trip includes time watching for them out at sea." },
-      { question: "Which boat trips include dolphin watching?", answer: `The ${nameWithHours("standard")} and the ${nameWithHours("premium")}. Both leave from ${contact.pickup.label}.` },
-      { question: "How much is dolphin watching in Gokarna?", answer: priceAnswer },
+      {
+        question: "Will we definitely see dolphins in Gokarna?",
+        answer: `No. Dolphins are wild animals, so sightings depend on sea conditions and are never guaranteed. Every ${byId("premium").name} and ${byId("standard").name} trip includes time out at sea watching for them, and a calm, clear day makes fins and splashes easier to spot. The rest of each trip includes coastal sightseeing and the mystery cave.`,
+      },
+      {
+        question: "Which boat trips include dolphin watching?",
+        answer: `The ${nameWithHours("standard")} and the ${nameWithHours("premium")} both include dolphin watching. Standard pairs it with ${joinList(lower(byId("standard").highlights.filter((id) => id !== "dolphins")))}; Premium adds ${joinList(lower(byId("premium").highlights.filter((id) => !byId("standard").highlights.includes(id))))}. Both leave from ${contact.pickup.label}.`,
+      },
+      { question: "How much is dolphin watching in Gokarna?", answer: priceAnswer("a dolphin-watching trip") },
       { question: "Is dolphin watching suitable for children?", answer: kidsAnswer },
     ],
     relatedSlugs: ["kayaking-in-gokarna", "snorkelling-in-gokarna", "private-boat-gokarna"],
@@ -158,6 +167,7 @@ export const seoPages: readonly SeoPage[] = [
         id: "what-you-do",
         heading: "What you'll do",
         paragraphs: [
+          "Kayaking in Gokarna is paddling a small kayak at water level, either along the coast at sea or through quiet mangrove channels.",
           `There are two ways to kayak with us. On the ${byId("premium").name} the boat takes you along the coast and kayaking is one of the activities, alongside ${joinList(lower(byId("premium").highlights.filter((id) => id !== "kayaking")))}.`,
           `On a River Trip the setting changes completely: you head into the mangroves for ${joinList(lower(byId("river").highlights))}. If you want quieter water and trees instead of open sea, this is the one to choose.`,
           "Kayaking is a gentle workout for the arms and shoulders. Short, steady strokes are easier than big ones, and it's fine to rest and drift for a moment.",
@@ -196,10 +206,16 @@ export const seoPages: readonly SeoPage[] = [
       },
     ],
     faqs: [
-      { question: "Where can I go kayaking in Gokarna?", answer: `At sea on the ${nameWithHours("premium")}, or in the mangroves on a ${byId("river").durationHours}-hour River Trip. Both start from ${contact.pickup.label}.` },
-      { question: "Do I need kayaking experience?", answer: "Tell us your experience when you enquire, and we'll advise which trip suits you." },
-      { question: "How much does kayaking in Gokarna cost?", answer: priceAnswer },
-      { question: "Can non-swimmers go kayaking?", answer: "Tell us if anyone in your group can't swim when you enquire, and we'll advise which trips and activities suit them." },
+      {
+        question: "Where can I go kayaking in Gokarna?",
+        answer: `Kayaking with Rudra Gokarna Adventures happens in two places: at sea on the ${nameWithHours("premium")}, alongside snorkelling, swimming and dolphin watching, or among the mangroves on a ${byId("river").durationHours}-hour River Trip. Both trips start from ${contact.pickup.label}. Choose the River Trip if you prefer quieter water.`,
+      },
+      {
+        question: "Do I need kayaking experience?",
+        answer: `Tell us your kayaking experience when you enquire, and we'll advise which trip suits you. Kayaking is one part of the ${byId("premium").name} and the River Trip rather than the whole trip. Short, steady strokes are easier than big ones, and it's fine to rest and drift for a moment.`,
+      },
+      { question: "How much does kayaking in Gokarna cost?", answer: priceAnswer("a trip with kayaking") },
+      { question: "Can non-swimmers go kayaking?", answer: commonAnswers.nonSwimmers },
     ],
     relatedSlugs: ["mangrove-river-trip-gokarna", "snorkelling-in-gokarna", "dolphin-watching-gokarna"],
     heroImage: { src: "/images/stock/kayaking.webp", width: 1600, height: 1200, alt: "A person paddling a red kayak across calm grey-blue sea (illustrative photo)" },
@@ -223,8 +239,8 @@ export const seoPages: readonly SeoPage[] = [
         id: "what-you-do",
         heading: "What you'll do",
         paragraphs: [
-          `Snorkelling is one of the activities on the ${byId("premium").name}, our fullest trip along the coast. Alongside it you'll have ${joinList(lower(byId("premium").highlights.filter((id) => id !== "snorkelling")))}.`,
-          "With a mask and snorkel you can float face-down and watch the water below while breathing normally. Breathe slowly through your mouth, keep your movements relaxed, and lift your head whenever you need a break.",
+          "Snorkelling is swimming face-down at the surface with a mask and snorkel, watching the water below while breathing normally. Breathe slowly through your mouth, keep your movements relaxed, and lift your head whenever you need a break.",
+          `In Gokarna, snorkelling is one of the activities on the ${byId("premium").name}, our fullest trip along the coast. Alongside it you'll have ${joinList(lower(byId("premium").highlights.filter((id) => id !== "snorkelling")))}.`,
           "How far you can see underwater depends on the day: calm, clear water gives the best views, while wind and waves stir up sand and reduce visibility.",
         ],
       },
@@ -252,9 +268,12 @@ export const seoPages: readonly SeoPage[] = [
       { id: "best-time", heading: "Best time to go", paragraphs: ["Calm, clear days are best for snorkelling, because visibility drops when the sea is rough.", pending.season ? `Trips run ${pending.season}.` : null] },
     ],
     faqs: [
-      { question: "Which boat trip includes snorkelling in Gokarna?", answer: `The ${nameWithHours("premium")}, which also includes swimming, kayaking and dolphin watching.` },
-      { question: "Can non-swimmers snorkel?", answer: "Tell us if anyone in your group can't swim when you enquire, and we'll advise which activities suit them." },
-      { question: "How much does snorkelling in Gokarna cost?", answer: priceAnswer },
+      {
+        question: "Which boat trip includes snorkelling in Gokarna?",
+        answer: `Snorkelling is part of the ${nameWithHours("premium")}, our fullest trip along the coast from Gokarna Beach. The same trip also includes ${joinList(lower(byId("premium").highlights.filter((id) => id !== "snorkelling")))}. Calm, clear days give the best underwater visibility.`,
+      },
+      { question: "Can non-swimmers snorkel?", answer: commonAnswers.nonSwimmers },
+      { question: "How much does snorkelling in Gokarna cost?", answer: priceAnswer("the Premium Package, which includes snorkelling,") },
       { question: "Is snorkelling equipment provided?", answer: null }, // TODO(owner)
     ],
     relatedSlugs: ["kayaking-in-gokarna", "dolphin-watching-gokarna", "private-boat-gokarna"],
@@ -279,7 +298,7 @@ export const seoPages: readonly SeoPage[] = [
         id: "what-you-do",
         heading: "What you'll do",
         paragraphs: [
-          `The River Trip swaps the open sea for the mangroves: ${joinList(lower(byId("river").highlights))}. It's a slower, closer look at a very different side of the Gokarna area.`,
+          `A mangrove river trip is a slower trip away from the open sea, into channels lined with mangrove trees. Ours swaps the coast for ${joinList(lower(byId("river").highlights))}: a closer look at a very different side of the Gokarna area.`,
           "Mangroves are trees that grow in salty, tidal water where rivers meet the sea. Their tangled roots shelter young fish, crabs and other small creatures, and the channels between them are a good place to look out for birds.",
           "Kayaking between the trees puts you right at water level. Paddle gently, keep your voice low and you'll notice much more.",
         ],
@@ -306,10 +325,13 @@ export const seoPages: readonly SeoPage[] = [
       },
     ],
     faqs: [
-      { question: "What does a River Trip involve?", answer: `A ${byId("river").durationHours}-hour trip into the mangroves with ${joinList(lower(byId("river").highlights))}.` },
+      { question: "What does a River Trip involve?", answer: commonAnswers.riverTrip },
       { question: "Which river is the mangrove trip on?", answer: null }, // TODO(owner)
-      { question: "How much is the mangrove river trip?", answer: priceAnswer },
-      { question: "Is the River Trip good for families?", answer: kidsAnswer },
+      { question: "How much is the mangrove river trip?", answer: priceAnswer("a River Trip") },
+      {
+        question: "Is the River Trip good for families?",
+        answer: `The River Trip is ${byId("river").durationHours} hours long on quiet mangrove channels rather than the open sea. Tell us your children's ages and whether everyone can swim when you enquire, and we'll advise whether it suits your family. Trips depend on conditions, and everyone follows the crew's instructions on board.`,
+      },
     ],
     relatedSlugs: ["kayaking-in-gokarna", "dolphin-watching-gokarna", "fishing-trip-gokarna"],
     heroImage: { src: "/images/stock/mangroves.webp", width: 1360, height: 764, alt: "A boat moving along a calm, green, mangrove-lined waterway (illustrative photo)" },
@@ -333,6 +355,7 @@ export const seoPages: readonly SeoPage[] = [
         id: "what-you-do",
         heading: "What you'll do",
         paragraphs: [
+          `A fishing trip in Gokarna with us is part of the ${byId("exclusive").name}: ${byId("exclusive").durationHours} hours on the water from Gokarna Beach.`,
           `Fishing is the heart of the ${byId("exclusive").name}, a ${byId("exclusive").durationHours}-hour trip that pairs ${joinList(lower(byId("exclusive").highlights))}. It's our longest package, built for people who want time out on the water rather than a quick tour.`,
           "Fishing from a boat is a patient pastime: there are quiet stretches and sudden bursts of action. Keep your line steady, be patient, and don't be disappointed by a slow day: fish don't keep schedules.",
         ],
@@ -351,10 +374,16 @@ export const seoPages: readonly SeoPage[] = [
       { id: "best-time", heading: "Best time to go", paragraphs: ["Calm seas make fishing from a boat more comfortable. Ask us which dates are running and what conditions look like.", pending.season ? `Trips run ${pending.season}.` : null] },
     ],
     faqs: [
-      { question: "Which trip includes fishing in Gokarna?", answer: `The ${nameWithHours("exclusive")}, which also includes a bioluminescence trip.` },
+      {
+        question: "Which trip includes fishing in Gokarna?",
+        answer: `Fishing is part of the ${nameWithHours("exclusive")}, our longest trip from Gokarna Beach, which also includes a bioluminescence trip. It's built for people who want unhurried time on the water rather than a quick tour. Ask us about timing and conditions for your date when you enquire on WhatsApp.`,
+      },
       { question: "Is fishing tackle provided?", answer: null }, // TODO(owner)
-      { question: "How much is a fishing trip in Gokarna?", answer: priceAnswer },
-      { question: "Can beginners join a fishing trip?", answer: "Tell us your experience when you enquire, and we'll advise whether the trip suits you." },
+      { question: "How much is a fishing trip in Gokarna?", answer: priceAnswer("the Exclusive Package, which includes fishing,") },
+      {
+        question: "Can beginners join a fishing trip?",
+        answer: `Tell us your fishing experience when you enquire, and we'll advise whether the ${byId("exclusive").name} suits you. Fishing from a boat is a patient pastime, with quiet stretches and sudden bursts of action, so beginners mainly need patience. Ask us whether tackle and bait are provided.`,
+      },
     ],
     relatedSlugs: ["bioluminescence-gokarna", "private-boat-gokarna", "mangrove-river-trip-gokarna"],
     heroImage: { src: "/images/stock/fishing-harbour.webp", width: 1600, height: 1200, alt: "A brightly painted fishing boat on a sandy beach with the sea behind (illustrative photo)" },
@@ -399,10 +428,17 @@ export const seoPages: readonly SeoPage[] = [
       { id: "safety", heading: "Safety", paragraphs: [safetyLine] },
     ],
     faqs: [
-      { question: "Can you see bioluminescence in Gokarna?", answer: `It's part of the ${nameWithHours("exclusive")} from Gokarna Beach. It depends on natural conditions, so it can't be guaranteed.` },
-      { question: "What causes bioluminescence?", answer: "Tiny sea organisms, mostly plankton, that give off light when the water around them is disturbed." },
+      {
+        question: "Can you see bioluminescence in Gokarna?",
+        answer: `It can be, depending on conditions. A bioluminescence trip is part of the ${nameWithHours("exclusive")} from Gokarna Beach, together with fishing. The glow is a natural event, so whether it appears and how bright it is depend on the season, the sea and the night, and it can't be guaranteed.`,
+      },
+      {
+        question: "What causes bioluminescence?",
+        answer:
+          "Bioluminescence is light made by living things. In the sea it usually comes from plankton too small to see individually: when the water is disturbed by a wave, an oar or a hand, they flash, and the water seems to glow blue. Dark, moonless nights away from bright lights make it easier to see.",
+      },
       { question: "When is the best time to see bioluminescence?", answer: pending.bioluminescenceTiming ? `On our trips, usually ${pending.bioluminescenceTiming}.` : null },
-      { question: "How much is the bioluminescence trip?", answer: priceAnswer },
+      { question: "How much is the bioluminescence trip?", answer: priceAnswer("the Exclusive Package, which includes the bioluminescence trip,") },
     ],
     relatedSlugs: ["fishing-trip-gokarna", "private-boat-gokarna", "dolphin-watching-gokarna"],
     heroImage: { src: "/images/stock/exclusive.webp", width: 1539, height: 1200, alt: "Dark shoreline at night with points of blue light glowing in the water (illustrative photo)" },
@@ -434,6 +470,7 @@ export const seoPages: readonly SeoPage[] = [
         id: "what-you-do",
         heading: "What you can plan",
         paragraphs: [
+          "A private boat trip in Gokarna is a custom trip planned around your group: you choose the places and how long it lasts.",
           "A custom trip starts with what you want to see. Choose from the places on our routes: the lighthouse, the mystery cave, the fishing harbour, the sea-river joining point, the mangroves and the Gokarna coastline. Then pick a 2, 3 or 4-hour trip and tell us your date and group size.",
           "We plan trips for couples, families, New Year celebrations and other special occasions. Tell us what you have in mind, whether it's a quiet trip for two, a family day out or a celebration with friends, and we'll come back with what's possible.",
         ],
@@ -455,10 +492,22 @@ export const seoPages: readonly SeoPage[] = [
       { id: "safety", heading: "Safety", paragraphs: [safetyLine] },
     ],
     faqs: [
-      { question: "Can we book a private boat in Gokarna?", answer: "Yes. Custom trips are planned on request for couples, families, New Year and other occasions. Send your date, group size and ideas on WhatsApp." },
-      { question: "How long can a private boat trip be?", answer: "You can choose 2, 3 or 4 hours when you plan a custom trip." },
-      { question: "How much does a private boat cost in Gokarna?", answer: priceAnswer },
-      { question: "Can you arrange a New Year boat trip?", answer: "New Year celebrations are planned on request. Tell us your group size and what you have in mind." },
+      {
+        question: "Can we book a private boat in Gokarna?",
+        answer:
+          "Yes. Rudra Gokarna Adventures plans private and custom boat trips from Gokarna Beach for couples, families, New Year and other occasions. Choose the places you'd like to see and a 2, 3 or 4-hour trip, then send your date, group size and ideas on WhatsApp. We'll confirm availability and the price.",
+      },
+      {
+        question: "How long can a private boat trip be?",
+        answer:
+          "A private or custom trip can be 2, 3 or 4 hours, whichever you choose when you plan it. Shorter trips suit a quick look at the coast, while longer ones leave time for more stops, such as the lighthouse, the mystery cave or the mangroves. Ask us which dates are running.",
+      },
+      { question: "How much does a private boat cost in Gokarna?", answer: priceAnswer("a private boat trip") },
+      {
+        question: "Can you arrange a New Year boat trip?",
+        answer:
+          "New Year boat trips are planned on request, like other celebrations. Tell us your group size, the date and what you have in mind on WhatsApp or by phone, and we'll come back with what's possible and the price. Trips always depend on sea and weather conditions.",
+      },
     ],
     relatedSlugs: ["bioluminescence-gokarna", "dolphin-watching-gokarna", "mangrove-river-trip-gokarna"],
     heroImage: { src: "/images/rudra-hero.jpeg", width: 1600, height: 1200, alt: "The Rudra Gokarna on calm water off the Gokarna coast, with guests on deck" },

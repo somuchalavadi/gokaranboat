@@ -2,6 +2,7 @@
 
 import { Img } from "@/components/ui/Img";
 import Link from "next/link";
+import { slug } from "@/lib/slug";
 import { useRef, useState, type KeyboardEvent } from "react";
 import { activities, packagesFor, places, type Tile } from "@/data/site";
 import { Dialog } from "@/components/ui/Dialog";
@@ -36,7 +37,7 @@ function TileCard({ item, index, count, onOpen }: { item: Tile; index: number; c
         <Img src={item.image.src} alt={item.image.alt} fill sizes={layout.sizes} className="-z-10 object-cover transition-transform duration-300 group-hover:scale-[1.03]" />
         <div aria-hidden="true" className="absolute inset-0 -z-10 bg-linear-to-t from-navy-900 via-navy-900/70 to-transparent" />
         <div className="p-3 sm:p-4 lg:p-5">
-          <h3 className="font-display text-lg leading-tight font-semibold text-white lg:text-h3">
+          <h3 id={slug(item.title)} className="font-display text-lg leading-tight font-semibold text-white lg:text-h3">
             {/* The ::after stretches the button over the whole tile, so the card is the tap target. */}
             <button
               type="button"

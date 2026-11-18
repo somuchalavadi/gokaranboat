@@ -72,9 +72,11 @@ export function Lightbox({ items, index, onIndexChange }: { items: readonly Gall
           <div className="mt-3 flex items-center justify-center gap-4">
             <button type="button" onClick={() => move(-1)} aria-label="Previous" className={control}>
               <ChevronLeft aria-hidden="true" />
+              <span className="sr-only">Previous</span>
             </button>
             <button type="button" onClick={() => move(1)} aria-label="Next" className={control}>
               <ChevronRight aria-hidden="true" />
+              <span className="sr-only">Next</span>
             </button>
           </div>
         </div>
