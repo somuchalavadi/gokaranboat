@@ -1,5 +1,5 @@
 // axe-core (WCAG 2.0/2.1/2.2 A + AA) on every page at phone and desktop widths, plus the interactive
-// states: open menu, compare sheet, tile sheet, lightbox and the booking form showing errors.
+// states: open menu, compare sheet, tile sheet, lightbox, the enquiry popup and the booking form showing errors.
 // Usage: with the site running on QA_URL (default http://localhost:3100): `node scripts/qa/axe.mjs`.
 import { chromium } from "playwright";
 import { AxeBuilder } from "@axe-core/playwright";
@@ -69,6 +69,20 @@ await form.getByRole("button", { name: "Next" }).click();
 await form.getByRole("button", { name: "Next" }).click();
 await scan(page, "/ @375 booking form, date error", "#book");
 await context.close();
+
+// The "Book now" enquiry popup, empty and with a type chosen and the date/guests section open.
+for (const width of [375, 1280]) {
+  const popupContext = await browser.newContext({ viewport: { width, height: 800 }, reducedMotion: "reduce" });
+  const popupPage = await popupContext.newPage();
+  await popupPage.goto(base + "/", { waitUntil: "networkidle" });
+  await popupPage.locator('header a[data-enquire="header"]').click();
+  await popupPage.locator("dialog[open]").waitFor();
+  await scan(popupPage, `/ @${width} enquiry popup open`, "dialog[open]");
+  await popupPage.locator("dialog[open] label").first().click();
+  await popupPage.locator("dialog[open] summary").click();
+  await scan(popupPage, `/ @${width} enquiry popup, type + date/guests`, "dialog[open]");
+  await popupContext.close();
+}
 
 await browser.close();
 await mkdir("artifacts/qa", { recursive: true });

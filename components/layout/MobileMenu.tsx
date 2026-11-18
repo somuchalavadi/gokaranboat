@@ -1,9 +1,9 @@
 "use client";
 
-import { Phone } from "lucide-react";
-import { contact, nav } from "@/data/site";
+import { MapPin, Phone } from "lucide-react";
+import { contact, header, nav } from "@/data/site";
 import { guideHubSlug, guidePath } from "@/data/guides";
-import { telLink } from "@/lib/whatsapp";
+import { outboundRel, telLink } from "@/lib/whatsapp";
 import { Button } from "@/components/ui/Button";
 import { Dialog } from "@/components/ui/Dialog";
 
@@ -26,6 +26,12 @@ export function MobileMenu({ open, onClose }: { open: boolean; onClose: () => vo
               <li>
                 <a href={guidePath(guideHubSlug)} onClick={onClose} className="flex h-12 items-center font-display text-h3">
                   Guide
+                </a>
+              </li>
+              <li>
+                <a href={contact.pickup.mapsUrl} target="_blank" rel={outboundRel} data-ga-source="menu" onClick={onClose} className="flex h-12 items-center gap-3 font-display text-h3">
+                  <MapPin aria-hidden="true" />
+                  {header.menuPickup}
                 </a>
               </li>
             </ul>

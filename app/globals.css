@@ -134,6 +134,27 @@
   }
 }
 
+/* The enquiry popup: slides up and fades in over 200ms. Skipped entirely when reduced motion is preferred. */
+@keyframes dialog-pop {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+}
+@keyframes dialog-fade {
+  from {
+    opacity: 0;
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  dialog.dialog-pop[open] {
+    animation: dialog-pop 200ms ease-out;
+  }
+  dialog.dialog-pop[open]::backdrop {
+    animation: dialog-fade 200ms ease-out;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;

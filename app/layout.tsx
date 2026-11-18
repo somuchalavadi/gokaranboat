@@ -9,6 +9,7 @@ import { Footer } from "@/components/layout/Footer";
 import { MobileBar } from "@/components/layout/MobileBar";
 import { RevealObserver } from "@/components/ui/Reveal";
 import { Analytics } from "@/components/analytics/Analytics";
+import { EnquiryLauncher } from "@/components/enquiry/EnquiryLauncher";
 import { gaId } from "@/lib/analytics";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter", display: "swap" });
@@ -40,6 +41,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <Footer />
         <MobileBar />
         <RevealObserver />
+        <EnquiryLauncher />
         <script type="application/ld+json" dangerouslySetInnerHTML={jsonLdScript(localBusinessJsonLd())} />
         {gaId && <Analytics />}
       </body>

@@ -2,12 +2,13 @@
 
 import { Img } from "@/components/ui/Img";
 import Link from "next/link";
-import { Menu } from "lucide-react";
+import { MapPin, Menu } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
-import { business, nav } from "@/data/site";
+import { business, contact, header, nav } from "@/data/site";
+import { outboundRel } from "@/lib/whatsapp";
 import { useActiveSection, useAnyInView } from "@/lib/hooks";
-import { Button } from "@/components/ui/Button";
+import { Button, buttonClass } from "@/components/ui/Button";
 import { MobileMenu } from "@/components/layout/MobileMenu";
 
 const sectionIds = nav.map((item) => item.id);
@@ -45,10 +46,22 @@ export function Navbar() {
           </ul>
         </nav>
 
-        <Button href="/#book" className="ml-auto px-5 lg:ml-0">
-          <span className="lg:hidden">Book</span>
-          <span className="hidden lg:inline">Book now</span>
+        <Button href="/#book" data-enquire="header" className="ml-auto px-5 lg:ml-0">
+          <span className="lg:hidden">{header.bookShort}</span>
+          <span className="hidden lg:inline">{header.book}</span>
         </Button>
+        {/* Icon-only (44×44) below 1024px, an outline pill with a label from 1024px. */}
+        <a
+          href={contact.pickup.mapsUrl}
+          target="_blank"
+          rel={outboundRel}
+          aria-label={header.pickupLabel}
+          data-ga-source="header"
+          className={`${buttonClass("secondary", overHero ? "dark" : "light")} h-11! w-11! px-0! lg:h-12! lg:w-auto! lg:px-5!`}
+        >
+          <MapPin aria-hidden="true" />
+          <span className="hidden lg:inline">{header.pickup}</span>
+        </a>
         <button
           type="button"
           onClick={(event) => {

@@ -1,5 +1,32 @@
 # Changes — Rudra Gokarna Adventures
 
+## Header Pick-up button and "Book now" enquiry popup (November 2026)
+
+- **Pick-up in the header:** an outline pill labelled "Pick-up" to the right of "Book now" from 1024px, and a 44×44 map-pin icon between "Book" and the menu below that. It opens the Google Maps short link in a new tab (). The mobile menu gains a "Pick-up point" link.
+- **Enquiry popup:** the header "Book now"/"Book", the hero "WhatsApp us", the phone bottom bar's "WhatsApp" and each package card's "Enquire" open a popup instead of going straight to WhatsApp.
+  - Each trigger is a plain link to , so without JavaScript it still reaches the booking section.
+  - The popup's code loads on first use. The only thing every page ships is a small click listener ().
+  - It's built on the existing native- component: modal, focus trapped, Esc and backdrop close, focus returns to the trigger, page scroll locked.
+  - It's a glass card: a bottom sheet on phones and a 480px centred card from 768px, opening with a 200ms slide that's skipped when reduced motion is preferred.
+- **Popup contents** (, every string from  in ):
+  - Seven radio cards (the four packages with their hours, Custom trip, Special occasion / event, Just a question), selectable with the arrow keys.
+  - An optional, collapsed "Add date & group size": the date starts from today, and guests can be 1–20 or left unset.
+  - "Continue on WhatsApp" is a real link whose  URL updates as the visitor chooses; it's disabled until a type is picked. Empty date or guests leave their line out of the message.
+  - The last type is remembered for the browser session. A card's "Enquire" preselects its package.
+  - The "Plan & book" form is unchanged.
+- **GA4 events:** , , , . They aren't checked in QA, since GA is off without an ID.
+
+**QA (production build):**
+
+| Check | Result | |
+| --- | --- | --- |
+| Build, lint, typecheck | 0 warnings; all 14 pages within the title/description limits | ✅ |
+|  (now includes the popup and Pick-up checks) | **72/72**. At 360 and 1280px: keyboard-only open, choose with the arrow keys, add a date and guests, submit with Enter. The opened URL is  with the exact message; the popup closes and focus returns to "Book". Hero reopen remembers the type; Esc closes it and focus returns to the hero button. A card preselects its package with no empty lines. The bottom bar opens it. Bottom sheet on phones, 480px centred card on desktop. Pick-up links are correct in the header (44×44 / 48px pill) and the menu. Triggers fall back to . | ✅ |
+| Header from 1024 to 1280px | One line, logo → nav → Book now → Pick-up in order, no overlap, 64px tall, no overflow (1024, 1100, 1180, 1280) | ✅ |
+| axe on home (page + popup at 375/1280, empty and filled) | 15 scans, 0 serious/critical | ✅ |
+| CSP on home | 0 violations, no console errors | ✅ |
+| Lighthouse, home, one run | Desktop **100/100/100/100**. Mobile Accessibility, Best Practices and SEO 100, Performance **91**: TBT 104 ms (was 237 ms), with the same simulated-LCP variance as before (3.4 s simulated, previous median 93). CLS 0. | ≈ |
+
 ## SEO and answer-engine work (November 2026)
 
 Phases 0–8 of the SEO brief, committed one phase at a time on `main` (`9ac6c6a` … Phase 8). The plan and decisions are in `MASTER_PLAN.md`, the approved copy is in `SEO_COPY.md`, and open owner questions are in `OWNER_QUESTIONS.md`. Every number below was measured on a production build (`npm run build && npx next start -p 3100`) **with a placeholder GA4 ID set locally** (`NEXT_PUBLIC_GA_ID=G-TEST000000`), so analytics is included in the cost. No GA ID is set in Vercel.

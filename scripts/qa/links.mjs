@@ -1,5 +1,5 @@
 // Checks every WhatsApp, phone and pick-up map link, drives the booking form end to end, and exercises the
-// menu, compare sheet, tabs, tile sheet and lightbox (keyboard + focus return).
+// menu, compare sheet, tabs, tile sheet, lightbox, the "Book now" enquiry popup and the header Pick-up button.
 // Usage: with the site running on QA_URL (default http://localhost:3100): `node scripts/qa/links.mjs`.
 import { chromium } from "playwright";
 import { mkdir, writeFile } from "node:fs/promises";
@@ -240,6 +240,124 @@ for (const l of homeMobile) console.log(`  • ${l.text.replace(/\s+/g, " ").sli
   await page.evaluate(() => document.getElementById("site-footer").scrollIntoView({ behavior: "instant" }));
   await page.waitForTimeout(500);
   check("Mobile bar hides while the footer is on screen", !(await bar.isVisible()));
+  await page.close();
+}
+
+// 6. "Book now" enquiry popup and the header Pick-up button, at 360 and 1280px.
+const expectedMessage = (phrase, ...extra) => ["Hi Rudra Gokarna Adventures! " + phrase, ...extra, "(Sent from therudraadventure.com)"].join("\n");
+const waText = (href) => (href ? new URL(href).searchParams.get("text") : null);
+for (const width of [360, 1280]) {
+  const context = await browser.newContext({ viewport: { width, height: 800 } });
+  // WhatsApp opens in a new tab; answer it locally instead of going to wa.me.
+  await context.route("https://wa.me/**", (route) => route.fulfill({ contentType: "text/plain", body: "wa.me" }));
+  const page = await context.newPage();
+  page.on("console", (msg) => msg.type() === "error" && results.consoleErrors.push(msg.text()));
+  page.on("pageerror", (error) => results.consoleErrors.push(String(error)));
+  await page.goto(base + "/", { waitUntil: "networkidle" });
+  const dialog = page.locator("dialog[open]");
+  const popupHref = () => dialog.locator('a[href^="https://wa.me/"]').getAttribute("href").catch(() => null);
+
+  // Pick-up in the header: 44×44 icon on phones, a labelled 48px pill on desktop.
+  const pickup = page.locator(`header a[href="${mapsUrl}"]`);
+  const box = await pickup.boundingBox();
+  const pickupLink = await pickup.evaluate((a) => ({ target: a.target, rel: a.rel, label: a.getAttribute("aria-label"), text: a.innerText.trim() }));
+  const sized = width < 1024 ? box.width >= 44 && box.height >= 44 && pickupLink.text === "" : box.height >= 48 && pickupLink.text === "Pick-up";
+  check(`Header Pick-up @${width}: Maps short link, new tab, nofollow, ${width < 1024 ? "44×44 icon" : "48px labelled pill"}`, pickupLink.target === "_blank" && relOk(pickupLink.rel) && pickupLink.label === "Pick-up point on Google Maps" && sized, `${Math.round(box.width)}×${Math.round(box.height)} "${pickupLink.text}"`);
+
+  // Every trigger is a real link to /#book (the no-JavaScript fallback).
+  const triggerHrefs = await page.$$eval("a[data-enquire]", (as) => [...new Set(as.map((a) => a.getAttribute("href")))]);
+  check(`Popup triggers fall back to /#book without JavaScript @${width}`, triggerHrefs.length === 1 && triggerHrefs[0] === "/#book", triggerHrefs.join(", "));
+
+  // Keyboard only: open from the header, pick a type with the arrow keys, add a date and guests, submit.
+  await page.locator('header a[data-enquire="header"]').focus();
+  await page.keyboard.press("Enter");
+  check(`Header "Book" opens the popup as a modal dialog @${width}`, await eventually(async () => (await dialog.isVisible()) && (await page.evaluate(() => document.querySelector("dialog[open]")?.matches(":modal")))));
+  check(`"Continue on WhatsApp" is disabled until a type is chosen @${width}`, (await dialog.locator("button[disabled]", { hasText: "Continue on WhatsApp" }).count()) === 1 && (await popupHref()) === null);
+  await page.keyboard.press("Tab"); // close button → first option
+  await page.keyboard.press("Space"); // Premium
+  await page.keyboard.press("ArrowDown"); // Standard
+  check(`Arrow keys select an enquiry type @${width}`, await eventually(async () => waText(await popupHref()) === expectedMessage("I'd like to enquire about the Standard Package (2 hrs).")));
+  await page.keyboard.press("Tab"); // "Add date & group size"
+  await page.keyboard.press("Enter");
+  const future = new Date(Date.now() + 40 * 864e5);
+  const iso = `${future.getFullYear()}-${String(future.getMonth() + 1).padStart(2, "0")}-${String(future.getDate()).padStart(2, "0")}`;
+  const shown = `${future.getDate()} ${future.toLocaleDateString("en-IN", { month: "short" })} ${future.getFullYear()}`;
+  const dateInput = dialog.locator('input[type="date"]');
+  const min = await dateInput.getAttribute("min");
+  await dateInput.fill(iso);
+  const more = dialog.getByRole("button", { name: "More guests" });
+  await more.focus();
+  for (let i = 0; i < 4; i++) await page.keyboard.press("Enter");
+  const full = expectedMessage("I'd like to enquire about the Standard Package (2 hrs).", `Date: ${shown}`, "Guests: 4");
+  check(`Date (min today) and guests appear in the message @${width}`, min === new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 10) && (await eventually(async () => waText(await popupHref()) === full)), waText(await popupHref()));
+  const link = dialog.locator('a[href^="https://wa.me/"]');
+  const linkAttrs = await link.evaluate((a) => ({ target: a.target, rel: a.rel, path: new URL(a.href).pathname }));
+  check(`Popup link is wa.me/${number}, new tab, rel="nofollow noopener" @${width}`, linkAttrs.path === `/${number}` && linkAttrs.target === "_blank" && relOk(linkAttrs.rel));
+  await link.focus();
+  const [tab] = await Promise.all([context.waitForEvent("page"), page.keyboard.press("Enter")]);
+  check(`Enter on "Continue on WhatsApp" opens WhatsApp with the message @${width}`, waText(tab.url()) === full, tab.url().slice(0, 80));
+  await tab.close();
+  check(`The popup closes after submit and focus returns to "Book" @${width}`, await eventually(async () => !(await dialog.count()) && (await page.evaluate(() => document.activeElement?.getAttribute("data-enquire"))) === "header"));
+
+  // Reopen from the hero: the last type is remembered; Esc closes and focus returns to the trigger.
+  await page.locator('a[data-enquire="hero"]').click();
+  check(`Hero "WhatsApp us" opens the popup with the last type preselected @${width}`, await eventually(async () => waText(await popupHref())?.includes("Standard Package (2 hrs)") === true));
+  await page.keyboard.press("Escape");
+  check(`Esc closes the popup and focus returns to the hero button @${width}`, await eventually(async () => !(await dialog.count()) && (await page.evaluate(() => document.activeElement?.getAttribute("data-enquire"))) === "hero"));
+
+  // A package card preselects its package; empty optional fields leave their lines out.
+  const card = page.locator('a[data-enquire="package-card"][data-enquire-type="premium"]').first();
+  await card.scrollIntoViewIfNeeded();
+  await card.click();
+  check(`A card's "Enquire" preselects its package, with no date or guest lines @${width}`, await eventually(async () => waText(await popupHref()) === expectedMessage("I'd like to enquire about the Premium Package (3 hrs).")));
+  await page.keyboard.press("Escape");
+  await eventually(async () => !(await dialog.count()));
+
+  if (width < 768) {
+    // Phone bottom bar and the menu's Pick-up link.
+    await page.evaluate(() => document.getElementById("experiences").scrollIntoView({ behavior: "instant" }));
+    const barButton = page.locator('a[data-enquire="mobile-bar"]');
+    await eventually(() => barButton.isVisible());
+    await barButton.click();
+    check("Mobile bar \"WhatsApp\" opens the popup", await eventually(() => dialog.isVisible()));
+    await page.waitForTimeout(300); // let the 200ms open animation finish before measuring
+    const sheetBox = await dialog.boundingBox();
+    check("The popup is a bottom sheet on phones", Math.abs(sheetBox.y + sheetBox.height - 800) <= 2 && sheetBox.width >= 358, `${Math.round(sheetBox.width)}×${Math.round(sheetBox.height)} at y=${Math.round(sheetBox.y)}`);
+    await page.keyboard.press("Escape");
+    await eventually(async () => !(await dialog.count()));
+    await page.getByRole("button", { name: "Open menu" }).click();
+    const menuPickup = page.locator(`#mobile-menu a[href="${mapsUrl}"]`);
+    const menuLink = await menuPickup.evaluate((a) => ({ target: a.target, rel: a.rel, text: a.innerText.trim() }));
+    check('Mobile menu lists "Pick-up point" (Maps, new tab, nofollow)', menuLink.text === "Pick-up point" && menuLink.target === "_blank" && relOk(menuLink.rel));
+  } else {
+    const card2 = await (async () => {
+      await page.locator('header a[data-enquire="header"]').click();
+      await eventually(() => dialog.isVisible());
+      await page.waitForTimeout(300);
+      return dialog.boundingBox();
+    })();
+    check("The popup is a centred card of about 480px on desktop", card2.width <= 482 && Math.abs(card2.x + card2.width / 2 - 640) <= 2, `${Math.round(card2.width)}px wide`);
+    await page.keyboard.press("Escape");
+  }
+  await context.close();
+}
+
+// 7. Header fits on one line from 1024 to 1280px: nav, Book now and Pick-up don't wrap or overlap.
+for (const width of [1024, 1100, 1180, 1280]) {
+  const page = await browser.newPage({ viewport: { width, height: 800 } });
+  await page.goto(base + "/", { waitUntil: "networkidle" });
+  const layout = await page.evaluate(() => {
+    const header = document.querySelector("header");
+    const rect = (el) => el.getBoundingClientRect();
+    const links = [...header.querySelectorAll('nav[aria-label="Main"] a')].map(rect);
+    const book = rect(header.querySelector('a[data-enquire="header"]'));
+    const pickup = rect(header.querySelector('a[href*="maps.app.goo.gl"]'));
+    const logo = rect(header.querySelector("a[href='/']"));
+    const oneLine = links.every((r) => Math.abs(r.top - links[0].top) < 1 && r.height <= 48);
+    const ordered = logo.right <= links[0].left && links[links.length - 1].right <= book.left && book.right <= pickup.left && pickup.right <= document.documentElement.clientWidth;
+    return { oneLine, ordered, height: rect(header).height, overflow: document.documentElement.scrollWidth - document.documentElement.clientWidth };
+  });
+  check(`Header on one line, nothing overlapping @${width}`, layout.oneLine && layout.ordered && layout.height === 64 && layout.overflow <= 0, JSON.stringify(layout));
   await page.close();
 }
 

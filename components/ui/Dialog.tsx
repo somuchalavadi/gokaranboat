@@ -3,12 +3,15 @@
 import { X } from "lucide-react";
 import { useEffect, useRef, type KeyboardEvent, type ReactNode } from "react";
 
-type Variant = "sheet" | "fullscreen";
+type Variant = "sheet" | "compact" | "fullscreen";
 
 const variants: Record<Variant, string> = {
   // Bottom sheet on phones, centred card from 768px.
   sheet:
     "mx-0 mt-auto mb-0 max-h-[85dvh] w-full max-w-none overflow-y-auto rounded-t-card bg-white text-ink md:m-auto md:w-[min(640px,calc(100%-48px))] md:rounded-card",
+  // Bottom sheet on phones, a ~480px centred card from 768px. The caller supplies the surface (e.g. glass-light).
+  compact:
+    "dialog-pop mx-0 mt-auto mb-0 max-h-[90dvh] w-full max-w-none overflow-y-auto rounded-t-card text-ink md:m-auto md:w-[min(480px,calc(100%-48px))] md:rounded-card",
   fullscreen: "m-0 h-dvh max-h-none w-full max-w-none text-white backdrop:bg-transparent",
 };
 

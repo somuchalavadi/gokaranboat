@@ -1,4 +1,4 @@
-import { contact } from "@/data/site";
+import { contact, enquiry } from "@/data/site";
 
 // The single helper every WhatsApp CTA uses.
 export function buildWhatsAppLink(message: string) {
@@ -26,6 +26,23 @@ function formatDate(iso: string) {
   const date = new Date(Date.UTC(year, month - 1, day));
   const part = (options: Intl.DateTimeFormatOptions) => date.toLocaleDateString("en-IN", { ...options, timeZone: "UTC" });
   return `${part({ weekday: "short" })}, ${day} ${part({ month: "short" })} ${year}`;
+}
+
+// "2026-12-20" → "20 Dec 2026"
+function formatShortDate(iso: string) {
+  const [year, month, day] = iso.split("-").map(Number);
+  if (!year || !month || !day) return iso;
+  const monthName = new Date(Date.UTC(year, month - 1, day)).toLocaleDateString("en-IN", { month: "short", timeZone: "UTC" });
+  return `${day} ${monthName} ${year}`;
+}
+
+// The enquiry popup's message. Empty optional fields (no date, guests not set) leave their line out.
+export function buildEnquiryMessage({ phrase, date, guests }: { phrase: string; date: string | null; guests: number | null }) {
+  const lines = [`${enquiry.greeting} ${phrase}`];
+  if (date) lines.push(`${enquiry.dateLine}: ${formatShortDate(date)}`);
+  if (guests !== null) lines.push(`${enquiry.guestsLine}: ${guests}`);
+  lines.push(enquiry.signature);
+  return lines.join("\n");
 }
 
 export function buildBookingMessage(details: BookingDetails) {

@@ -5,7 +5,7 @@ type GtagWindow = Window & { dataLayer?: unknown[]; gtag?: (...args: unknown[]) 
 
 export const gaId = process.env.NEXT_PUBLIC_GA_ID ?? "";
 
-export type AnalyticsEvent = "whatsapp_click" | "call_click" | "maps_click" | "booking_form_submit";
+export type AnalyticsEvent = "whatsapp_click" | "call_click" | "maps_click" | "booking_form_submit" | "booking_popup_open" | "enquiry_type_selected";
 
 // Sets up the gtag queue (the same stub Google's snippet defines) and returns gtag.
 export function gtag() {

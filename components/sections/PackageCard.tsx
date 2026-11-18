@@ -1,9 +1,8 @@
 import { Img } from "@/components/ui/Img";
 import { Check, ChevronDown, Clock } from "lucide-react";
 import Link from "next/link";
-import { highlights, type HighlightId, type TripPackage } from "@/data/site";
+import { enquiry, highlights, type HighlightId, type TripPackage } from "@/data/site";
 import { landingForHighlight, linkLabel, type SeoPageSlug } from "@/data/seo-pages";
-import { buildWhatsAppLink } from "@/lib/whatsapp";
 import { Button } from "@/components/ui/Button";
 
 function HighlightItem({ id }: { id: HighlightId }) {
@@ -87,8 +86,9 @@ export function PackageCard({ item, showAll = false, sizes = carouselSizes, prio
         <div className="mt-auto pt-4">
           <p className="text-sm text-muted">{priceLine(item.price)}</p>
           {item.maxGuests !== null && <p className="text-sm text-muted">Up to {item.maxGuests} guests</p>}
-          <Button href={buildWhatsAppLink(item.message)} variant={item.featured ? "primary" : "secondary"} className="mt-3 w-full">
-            Enquire<span className="sr-only"> about the {item.name}</span>
+          <Button href="/#book" data-enquire="package-card" data-enquire-type={item.id} variant={item.featured ? "primary" : "secondary"} className="mt-3 w-full">
+            {enquiry.cardCta}
+            <span className="sr-only"> about the {item.name}</span>
           </Button>
         </div>
       </div>

@@ -26,7 +26,10 @@ export function Analytics() {
       if (!link) return;
       const href = link.getAttribute("href") ?? "";
       const name = eventForHref(href);
-      if (name) track(name, { link_location: link.closest("[id]")?.id ?? "page" });
+      if (!name) return;
+      // data-ga-source / data-ga-type on the link add "source" and "type" parameters (e.g. maps_click {source: "header"}).
+      const { gaSource, gaType } = (link as HTMLElement).dataset;
+      track(name, { link_location: link.closest("[id]")?.id ?? "page", ...(gaSource ? { source: gaSource } : {}), ...(gaType ? { type: gaType } : {}) });
     }
     document.addEventListener("click", onClick, { capture: true });
 

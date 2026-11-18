@@ -1,7 +1,6 @@
 import { getImageProps } from "next/image";
 import { preload } from "react-dom";
 import { hero } from "@/data/site";
-import { buildWhatsAppLink } from "@/lib/whatsapp";
 import { Button } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
 import { HeroVideo } from "@/components/sections/HeroVideo";
@@ -56,9 +55,9 @@ export function Hero() {
           </h1>
           <p className="mt-4 max-w-xl text-lg text-mist">{hero.subtitle}</p>
           <div className="mt-8 flex flex-wrap gap-3">
-            <Button href="/#packages">See trips</Button>
-            <Button href={buildWhatsAppLink(hero.message)} variant="secondary" tone="dark">
-              WhatsApp us
+            <Button href="/#packages">{hero.ctaTrips}</Button>
+            <Button href="/#book" data-enquire="hero" variant="secondary" tone="dark">
+              {hero.ctaWhatsApp}
             </Button>
           </div>
           <ul className="mt-8 flex flex-wrap gap-2" aria-label="Trip basics">

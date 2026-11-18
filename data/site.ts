@@ -302,6 +302,8 @@ export const hero = {
   title: "Gokarna, from the deck.",
   subtitle: "Boat trips, kayaking and dolphin watching from Gokarna Beach. Two to four hours on the water, or a custom trip planned around your group.",
   chips: ["Gokarna Beach pick-up", "2–4 hour trips", "Custom trips"],
+  ctaTrips: "See trips",
+  ctaWhatsApp: "WhatsApp us",
   message: "Hi, I'd like to know about your boat trips in Gokarna.",
   // Pre-sized AVIF/WebP poster variants from scripts/optimize-assets.mjs (source: rudra-boat-showcase.jpeg):
   // landscape files for desktop and a 3:4 crop centred on the boat for phones. The source is 1600×901, so the
@@ -387,6 +389,49 @@ export const booking = {
   customDurations: [2, 3, 4] as const,
   guests: { min: 1, max: 20 },
   photo: { src: "/images/rudra-coast.jpeg", width: 864, height: 1152, alt: "The Rudra Gokarna on calm water, seen from a rocky Gokarna shore between trees" },
+};
+
+// Header buttons and the mobile menu's extra link.
+export const header = {
+  book: "Book now",
+  bookShort: "Book",
+  pickup: "Pick-up",
+  pickupLabel: "Pick-up point on Google Maps",
+  menuPickup: "Pick-up point",
+};
+
+// The phone-only bottom bar.
+export const mobileBar = {
+  label: "Quick contact",
+  call: "Call",
+  whatsapp: "WhatsApp",
+};
+
+// The "Book now" enquiry popup. Every label and option comes from here; the message is built in lib/whatsapp.ts.
+export type EnquiryTypeId = TripPackage["id"] | "custom" | "occasion" | "question";
+export const enquiry = {
+  title: "What would you like to enquire about?",
+  typesLegend: "Enquiry type",
+  types: [
+    ...packages.map((item) => ({ id: item.id as EnquiryTypeId, label: `${item.name} · ${item.durationHours} hrs`, phrase: `I'd like to enquire about the ${item.name} (${item.durationHours} hrs).` })),
+    { id: "custom" as EnquiryTypeId, label: "Custom trip", phrase: "I'd like to enquire about a custom trip." },
+    { id: "occasion" as EnquiryTypeId, label: "Special occasion / event", phrase: "I'd like to enquire about a special occasion / event." },
+    { id: "question" as EnquiryTypeId, label: "Just a question", phrase: "I have a question about your boat trips." },
+  ],
+  optionalToggle: "Add date & group size",
+  dateLabel: "Date",
+  guestsLabel: "Guests",
+  guestsUnset: "Not set",
+  fewerGuests: "Fewer guests",
+  moreGuests: "More guests",
+  submit: "Continue on WhatsApp",
+  note: "We'll open WhatsApp with your message ready to send.",
+  greeting: "Hi Rudra Gokarna Adventures!",
+  dateLine: "Date",
+  guestsLine: "Guests",
+  signature: "(Sent from therudraadventure.com)",
+  cardCta: "Enquire",
+  guests: booking.guests,
 };
 
 export const events = {

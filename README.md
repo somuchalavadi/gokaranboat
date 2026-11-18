@@ -43,10 +43,12 @@ Events (no names, phone numbers or message text are sent):
 
 | Event | Fires when | Parameters |
 | --- | --- | --- |
-| `whatsapp_click` | Any WhatsApp link is clicked | `link_location` (the id of the section, e.g. `book`, `site-footer`) |
+| `whatsapp_click` | Any WhatsApp link is clicked, including "Continue on WhatsApp" in the enquiry popup | `link_location` (the id of the section, e.g. `book`, `site-footer`); from the popup also `source: "popup"` and `type` |
 | `call_click` | Any phone link is clicked | `link_location` |
-| `maps_click` | Any Google Maps link is clicked | `link_location` |
+| `maps_click` | Any Google Maps link is clicked | `link_location`; the header Pick-up button adds `source: "header"`, the mobile menu `source: "menu"` |
 | `booking_form_submit` | The booking form opens WhatsApp | `trip` (package id or `custom`), `guests` |
+| `booking_popup_open` | The "Book now" enquiry popup opens | `source`: `header`, `hero`, `mobile-bar` or `package-card` |
+| `enquiry_type_selected` | A type is chosen in the popup | `type` (package id, `custom`, `occasion` or `question`) |
 
 **Set up in GA4 (Admin):**
 
